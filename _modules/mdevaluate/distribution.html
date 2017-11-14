@@ -1,0 +1,583 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mdevaluate.distribution &mdash; mdevaluate 17.08 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="mdevaluate 17.08 documentation" href="../../index.html"/>
+        <link rel="up" title="mdevaluate" href="../mdevaluate.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> mdevaluate
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17.08
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general-hints.html">General Hints for Python Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gallery/index.html">Example Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contribution Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Reference Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">mdevaluate</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../mdevaluate.html">mdevaluate</a> &raquo;</li>
+        
+      <li>mdevaluate.distribution</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mdevaluate.distribution</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">.coordinates</span> <span class="k">import</span> <span class="n">rotate_axis</span><span class="p">,</span> <span class="n">polar_coordinates</span><span class="p">,</span> <span class="n">spherical_coordinates</span><span class="p">,</span> <span class="n">Coordinates</span><span class="p">,</span> <span class="n">CoordinatesMap</span>
+<span class="kn">from</span> <span class="nn">.atoms</span> <span class="k">import</span> <span class="n">next_neighbors</span>
+<span class="kn">from</span> <span class="nn">.autosave</span> <span class="k">import</span> <span class="n">autosave_data</span>
+<span class="kn">from</span> <span class="nn">.meta.annotate</span> <span class="k">import</span> <span class="n">deprecated</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">runningmean</span>
+<span class="kn">from</span> <span class="nn">.pbc</span> <span class="k">import</span> <span class="n">pbc_diff</span><span class="p">,</span> <span class="n">pbc_points</span>
+<span class="kn">from</span> <span class="nn">.logging</span> <span class="k">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">spatial</span>
+
+
+<div class="viewcode-block" id="time_average"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.time_average">[docs]</a><span class="nd">@autosave_data</span><span class="p">(</span><span class="n">nargs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kwargs_keys</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;coordinates_b&#39;</span><span class="p">,),</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;time_average-1&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">time_average</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">,</span> <span class="n">coordinates_b</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pool</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the time average of a function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        function:</span>
+<span class="sd">            The function that will be averaged, it has to accept exactly one argument</span>
+<span class="sd">            which is the current atom set</span>
+<span class="sd">        coordinates: The coordinates object of the simulation</span>
+<span class="sd">        pool (multiprocessing.Pool, opt.):</span>
+<span class="sd">            A multiprocessing pool which will be used for cocurrent calculation of the</span>
+<span class="sd">            averaged function</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">pool</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_map</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">imap</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_map</span> <span class="o">=</span> <span class="nb">map</span>
+
+    <span class="n">number_of_averages</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">coordinates_b</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># TODO: check if CoordinatesMap was passed...</span>
+        <span class="c1"># if coordinates._slice != coordinates_b._slice:</span>
+        <span class="c1">#    logger.warning(&quot;Different slice fro coordinates and coordinates_b.&quot;)</span>
+        <span class="n">coordinate_iter</span> <span class="o">=</span> <span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">coordinates</span><span class="p">),</span> <span class="nb">iter</span><span class="p">(</span><span class="n">coordinates_b</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">coordinate_iter</span> <span class="o">=</span> <span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">coordinates</span><span class="p">),)</span>
+
+    <span class="n">evaluated</span> <span class="o">=</span> <span class="n">_map</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">coordinate_iter</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="n">evaluated</span><span class="p">:</span>
+        <span class="n">number_of_averages</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="n">ev</span>
+        <span class="k">if</span> <span class="n">number_of_averages</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;time_average: </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">number_of_averages</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span> <span class="o">/</span> <span class="n">number_of_averages</span></div>
+
+
+<div class="viewcode-block" id="time_histogram"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.time_histogram">[docs]</a><span class="k">def</span> <span class="nf">time_histogram</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">hist_range</span><span class="p">,</span> <span class="n">pool</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">coordinate_iter</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">pool</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_map</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">imap</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_map</span> <span class="o">=</span> <span class="nb">map</span>
+
+    <span class="n">evaluated</span> <span class="o">=</span> <span class="n">_map</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">coordinate_iter</span><span class="p">)</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">hist_results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">ev</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">evaluated</span><span class="p">):</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ev</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">num</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+            <span class="n">histo</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="n">hist_range</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hist_results</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">i</span><span class="p">:</span>
+                <span class="n">hist_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">histo</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">hist_results</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">histo</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">hist_results</span></div>
+
+
+<div class="viewcode-block" id="rdf"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.rdf">[docs]</a><span class="k">def</span> <span class="nf">rdf</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">,</span> <span class="n">atoms_b</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="mi">50000</span><span class="p">,</span> <span class="n">returnx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the radial pair distribution of one or two sets of atoms.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">       g_{AB}(r) = \frac{1}{\langle \rho_B\rangle N_A}\sum\limits_{i\in A}^{N_A}</span>
+<span class="sd">       \sum\limits_{j\in B}^{N_B}\frac{\delta(r_{ij} -r)}{4\pi r^2}</span>
+
+<span class="sd">    For use with :func:`time_average`, define bins through the use of :func:`~functools.partial`,</span>
+<span class="sd">    the atom sets are passed to :func:`time_average`, if a second set of atoms should be used</span>
+<span class="sd">    specify it as ``coordinates_b`` and it will be passed to this function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        atoms_a: First set of atoms, used internally</span>
+<span class="sd">        atoms_b (opt.): Second set of atoms, used internally</span>
+<span class="sd">        bins: Bins of the radial distribution function</span>
+<span class="sd">        box (opt.): Simulations box, if not specified this is taken from ``atoms_a.box``</span>
+<span class="sd">        chunksize (opt.):</span>
+<span class="sd">            For large systems (N &gt; 1000) the distaces have to be computed in chunks so the arrays</span>
+<span class="sd">            fit into memory, this parameter controlls the size of these chunks. It should be</span>
+<span class="sd">            as large as possible, depending on the available memory.</span>
+<span class="sd">        returnx (opt.): If True the x ordinate of the histogram is returned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">bins</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;Bins of the pair distribution have to be defined.&#39;</span>
+    <span class="k">if</span> <span class="n">box</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">box</span> <span class="o">=</span> <span class="n">atoms_a</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">atoms_b</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">atoms_b</span> <span class="o">=</span> <span class="n">atoms_a</span>
+        <span class="n">nr_of_atoms</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">)</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">triu_indices</span><span class="p">(</span><span class="n">nr_of_atoms</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">nr_a</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="n">atoms_a</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">nr_b</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="n">atoms_b</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nr_a</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nr_b</span><span class="p">)])</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="c1"># compute the histogram in chunks for large systems</span>
+    <span class="n">hist</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">nr_of_samples</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">chunksize</span><span class="p">):</span>
+        <span class="n">sl</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">chunk</span> <span class="o">+</span> <span class="n">chunksize</span><span class="p">)</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">pbc_diff</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">sl</span><span class="p">]],</span> <span class="n">atoms_b</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">sl</span><span class="p">]],</span> <span class="n">box</span><span class="p">)</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="p">(</span><span class="n">diff</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+        <span class="n">nr_of_samples</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+        <span class="n">hist</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">bins</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">volume</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">density</span> <span class="o">=</span> <span class="n">nr_of_samples</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">hist</span> <span class="o">/</span> <span class="n">volume</span> <span class="o">/</span> <span class="n">density</span>
+    <span class="k">if</span> <span class="n">returnx</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">runningmean</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">res</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="pbc_tree_rdf"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.pbc_tree_rdf">[docs]</a><span class="k">def</span> <span class="nf">pbc_tree_rdf</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">,</span> <span class="n">atoms_b</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">returnx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">box</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">box</span> <span class="o">=</span> <span class="n">atoms_a</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
+    <span class="n">all_coords</span> <span class="o">=</span> <span class="n">pbc_points</span><span class="p">(</span><span class="n">pbc_diff</span><span class="p">(</span><span class="n">atoms_b</span><span class="p">,</span><span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="p">),</span> <span class="n">box</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span><span class="o">+</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">to_tree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">all_coords</span><span class="p">)</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">to_tree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">pbc_diff</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">,</span><span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="p">),</span><span class="n">k</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms_b</span><span class="p">),</span> <span class="n">distance_upper_bound</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span><span class="o">+</span><span class="mf">0.1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[</span><span class="n">dist</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span>
+    <span class="n">hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">bins</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">volume</span> <span class="o">=</span> <span class="mi">4</span><span class="o">/</span><span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">**</span><span class="mi">3</span><span class="o">-</span><span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">hist</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">box</span><span class="p">)</span> <span class="o">/</span> <span class="n">volume</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms_b</span><span class="p">)</span><span class="o">-</span><span class="n">exclude</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">returnx</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">runningmean</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">res</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="pbc_spm_rdf"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.pbc_spm_rdf">[docs]</a><span class="k">def</span> <span class="nf">pbc_spm_rdf</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">,</span> <span class="n">atoms_b</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">returnx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">box</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">box</span> <span class="o">=</span> <span class="n">atoms_a</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
+    <span class="n">all_coords</span> <span class="o">=</span> <span class="n">pbc_points</span><span class="p">(</span><span class="n">pbc_diff</span><span class="p">(</span><span class="n">atoms_b</span><span class="p">,</span><span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="p">),</span> <span class="n">box</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span><span class="o">+</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">to_tree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">all_coords</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">all_coords</span><span class="o">.</span><span class="n">nbytes</span><span class="o">/</span><span class="mi">1024</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">from_tree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">pbc_diff</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">,</span><span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="p">))</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">to_tree</span><span class="o">.</span><span class="n">sparse_distance_matrix</span><span class="p">(</span><span class="n">from_tree</span><span class="p">,</span> <span class="n">max_distance</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span><span class="o">+</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">output_type</span><span class="o">=</span><span class="s1">&#39;ndarray&#39;</span><span class="p">)</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">tolist</span><span class="p">())[:,</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">bins</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">chunksize</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">all_coords</span><span class="o">.</span><span class="n">nbytes</span><span class="o">/</span><span class="mi">1024</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">)))</span>
+        <span class="n">hist</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">),</span> <span class="n">chunksize</span><span class="p">):</span>
+            <span class="n">sl</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">chunk</span> <span class="o">+</span> <span class="n">chunksize</span><span class="p">)</span>
+            <span class="n">from_tree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">pbc_diff</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">[</span><span class="n">sl</span><span class="p">],</span><span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="p">))</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="n">to_tree</span><span class="o">.</span><span class="n">sparse_distance_matrix</span><span class="p">(</span><span class="n">from_tree</span><span class="p">,</span> <span class="n">max_distance</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span><span class="o">+</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">output_type</span><span class="o">=</span><span class="s1">&#39;ndarray&#39;</span><span class="p">)</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">tolist</span><span class="p">())[:,</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">hist</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">bins</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">volume</span> <span class="o">=</span> <span class="mi">4</span><span class="o">/</span><span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">**</span><span class="mi">3</span><span class="o">-</span><span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">hist</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">box</span><span class="p">)</span> <span class="o">/</span> <span class="n">volume</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms_b</span><span class="p">)</span><span class="o">-</span><span class="n">exclude</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">returnx</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">runningmean</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">res</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="fast_averaged_rdf"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.fast_averaged_rdf">[docs]</a><span class="nd">@autosave_data</span><span class="p">(</span><span class="n">nargs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kwargs_keys</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;to_coords&#39;</span><span class="p">,</span><span class="s1">&#39;times&#39;</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">fast_averaged_rdf</span><span class="p">(</span><span class="n">from_coords</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">to_coords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">times</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">to_coords</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">to_coords</span> <span class="o">=</span> <span class="n">from_coords</span>
+        <span class="n">exclude</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c1"># first find timings for the different rdf functions</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+    <span class="c1"># only consider sparse matrix for this condition</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">from_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">to_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">3000</span> <span class="o">*</span> <span class="mi">2000</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">from_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">to_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="p">):</span>
+        <span class="n">funcs</span> <span class="o">=</span> <span class="p">[</span><span class="n">rdf</span><span class="p">,</span> <span class="n">pbc_tree_rdf</span><span class="p">,</span> <span class="n">pbc_spm_rdf</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">funcs</span> <span class="o">=</span> <span class="p">[</span><span class="n">rdf</span><span class="p">,</span> <span class="n">pbc_tree_rdf</span><span class="p">]</span>
+    <span class="n">timings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">f</span><span class="p">(</span><span class="n">from_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">atoms_b</span><span class="o">=</span><span class="n">to_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">from_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">box</span><span class="p">))</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">timings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">)</span>
+    <span class="n">timings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">timings</span><span class="p">)</span>
+    <span class="n">timings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">timings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># statistics for the other functions is twice as good per frame</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;rdf function timings: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">timings</span><span class="p">))</span>
+    <span class="n">rdffunc</span> <span class="o">=</span> <span class="n">funcs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">timings</span><span class="p">)]</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;rdf function used: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rdffunc</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">rdffunc</span> <span class="o">==</span> <span class="n">rdf</span><span class="p">:</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="n">times</span><span class="o">*</span><span class="mi">2</span> <span class="c1"># duplicate times for same statistics</span>
+
+    <span class="n">frames</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">from_coords</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">from_coords</span><span class="p">)</span><span class="o">/</span><span class="n">times</span><span class="p">)))[:</span><span class="n">times</span><span class="p">]</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">frames</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;multi_radial_pair_distribution: </span><span class="si">%d</span><span class="s1">/</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">))</span>
+        <span class="n">out</span> <span class="o">+=</span> <span class="n">rdffunc</span><span class="p">(</span><span class="n">from_coords</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">to_coords</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">bins</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">from_coords</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">box</span><span class="p">),</span> <span class="n">exclude</span><span class="o">=</span><span class="n">exclude</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="distance_distribution"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.distance_distribution">[docs]</a><span class="k">def</span> <span class="nf">distance_distribution</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">bins</span><span class="p">):</span>
+    <span class="n">connection_vectors</span> <span class="o">=</span> <span class="n">atoms</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">atoms</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:]</span>
+    <span class="n">connection_lengths</span> <span class="o">=</span> <span class="p">(</span><span class="n">connection_vectors</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">**.</span><span class="mi">5</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">connection_lengths</span><span class="p">,</span> <span class="n">bins</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="tetrahedral_order"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.tetrahedral_order">[docs]</a><span class="k">def</span> <span class="nf">tetrahedral_order</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">reference_atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">reference_atoms</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">reference_atoms</span> <span class="o">=</span> <span class="n">atoms</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">next_neighbors</span><span class="p">(</span><span class="n">reference_atoms</span><span class="p">,</span> <span class="n">query_atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">number_of_neighbors</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">neighbors</span> <span class="o">=</span> <span class="n">reference_atoms</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+    <span class="n">neighbors_1</span><span class="p">,</span> <span class="n">neighbors_2</span><span class="p">,</span> <span class="n">neighbors_3</span><span class="p">,</span> <span class="n">neighbors_4</span> <span class="o">=</span> \
+        <span class="n">neighbors</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">neighbors</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">neighbors</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:],</span> <span class="n">neighbors</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="c1"># Connection vectors</span>
+    <span class="n">neighbors_1</span> <span class="o">-=</span> <span class="n">atoms</span>
+    <span class="n">neighbors_2</span> <span class="o">-=</span> <span class="n">atoms</span>
+    <span class="n">neighbors_3</span> <span class="o">-=</span> <span class="n">atoms</span>
+    <span class="n">neighbors_4</span> <span class="o">-=</span> <span class="n">atoms</span>
+
+    <span class="c1"># Normed Connection vectors</span>
+    <span class="n">neighbors_1</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">neighbors_1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">neighbors_2</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">neighbors_2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">neighbors_3</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">neighbors_3</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">neighbors_4</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">neighbors_4</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">a_1_2</span> <span class="o">=</span> <span class="p">((</span><span class="n">neighbors_1</span> <span class="o">*</span> <span class="n">neighbors_2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">a_1_3</span> <span class="o">=</span> <span class="p">((</span><span class="n">neighbors_1</span> <span class="o">*</span> <span class="n">neighbors_3</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">a_1_4</span> <span class="o">=</span> <span class="p">((</span><span class="n">neighbors_1</span> <span class="o">*</span> <span class="n">neighbors_4</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="n">a_2_3</span> <span class="o">=</span> <span class="p">((</span><span class="n">neighbors_2</span> <span class="o">*</span> <span class="n">neighbors_3</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">a_2_4</span> <span class="o">=</span> <span class="p">((</span><span class="n">neighbors_2</span> <span class="o">*</span> <span class="n">neighbors_4</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="n">a_3_4</span> <span class="o">=</span> <span class="p">((</span><span class="n">neighbors_3</span> <span class="o">*</span> <span class="n">neighbors_4</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="n">q</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">8</span> <span class="o">*</span> <span class="p">(</span><span class="n">a_1_2</span> <span class="o">+</span> <span class="n">a_1_3</span> <span class="o">+</span> <span class="n">a_1_4</span> <span class="o">+</span> <span class="n">a_2_3</span> <span class="o">+</span> <span class="n">a_2_4</span> <span class="o">+</span> <span class="n">a_3_4</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">q</span></div>
+
+
+<div class="viewcode-block" id="tetrahedral_order_distribution"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.tetrahedral_order_distribution">[docs]</a><span class="k">def</span> <span class="nf">tetrahedral_order_distribution</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">reference_atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">bins</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;Bin edges of the distribution have to be specified.&#39;</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">tetrahedral_order</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">reference_atoms</span><span class="o">=</span><span class="n">reference_atoms</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="radial_density"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.radial_density">[docs]</a><span class="k">def</span> <span class="nf">radial_density</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">symmetry_axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">height</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">returnx</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the radial density distribution.</span>
+
+<span class="sd">    This function is meant to be used with time_average.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        atoms:</span>
+<span class="sd">            Set of coordinates.</span>
+<span class="sd">        bins:</span>
+<span class="sd">            Bin specification that is passed to numpy.histogram. This needs to be</span>
+<span class="sd">            a list of bin edges if the function is used within time_average.</span>
+<span class="sd">        symmetry_axis (opt.):</span>
+<span class="sd">            Vector of the symmetry axis, around which the radial density is calculated,</span>
+<span class="sd">            default is z-axis.</span>
+<span class="sd">        origin (opt.):</span>
+<span class="sd">            Origin of the rotational symmetry, e.g. center of the pore.</span>
+<span class="sd">        height (opt.):</span>
+<span class="sd">            Height of the pore, necessary for correct normalization of the density.</span>
+<span class="sd">        returnx (opt.):</span>
+<span class="sd">            If True, the x ordinate of the distribution is returned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cartesian</span> <span class="o">=</span> <span class="n">rotate_axis</span><span class="p">(</span><span class="n">atoms</span> <span class="o">-</span> <span class="n">origin</span><span class="p">,</span> <span class="n">symmetry_axis</span><span class="p">)</span>
+    <span class="n">radius</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">polar_coordinates</span><span class="p">(</span><span class="n">cartesian</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cartesian</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">volume</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">height</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">hist</span> <span class="o">/</span> <span class="n">volume</span>
+    <span class="k">if</span> <span class="n">returnx</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">runningmean</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">res</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="shell_density"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.shell_density">[docs]</a><span class="k">def</span> <span class="nf">shell_density</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">shell_radius</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">shell_thickness</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                  <span class="n">symmetry_axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the density distribution on a cylindrical shell.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        atoms: The coordinates of the atoms</span>
+<span class="sd">        shell_radius: Inner radius of the shell</span>
+<span class="sd">        bins: Histogramm bins, this has to be a two-dimensional list of bins: [angle, z]</span>
+<span class="sd">        shell_thickness (opt.): Thicknes of the shell, default is 0.5</span>
+<span class="sd">        symmetry_axis (opt.): The symmtery axis of the pore, the coordinates will be</span>
+<span class="sd">            rotated such that this axis is the z-axis</span>
+<span class="sd">        origin (opt.): Origin of the pore, the coordinates will be moved such that this</span>
+<span class="sd">            is the new origin.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Two-dimensional density distribution of the atoms in the defined shell.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cartesian</span> <span class="o">=</span> <span class="n">rotate_axis</span><span class="p">(</span><span class="n">atoms</span><span class="o">-</span><span class="n">origin</span><span class="p">,</span> <span class="n">symmetry_axis</span><span class="p">)</span>
+    <span class="n">radius</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="n">polar_coordinates</span><span class="p">(</span><span class="n">cartesian</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cartesian</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">shell_indices</span> <span class="o">=</span> <span class="p">(</span><span class="n">shell_radius</span> <span class="o">&lt;=</span> <span class="n">radius</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">radius</span> <span class="o">&lt;=</span> <span class="n">shell_radius</span> <span class="o">+</span> <span class="n">shell_thickness</span><span class="p">)</span>
+    <span class="n">hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram2d</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="n">shell_indices</span><span class="p">],</span> <span class="n">cartesian</span><span class="p">[</span><span class="n">shell_indices</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">bins</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">hist</span></div>
+
+
+<div class="viewcode-block" id="spatial_density"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.spatial_density">[docs]</a><span class="k">def</span> <span class="nf">spatial_density</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the spatial density distribution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">density</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogramdd</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">density</span></div>
+
+
+<div class="viewcode-block" id="mixing_ratio_distribution"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.mixing_ratio_distribution">[docs]</a><span class="k">def</span> <span class="nf">mixing_ratio_distribution</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">,</span> <span class="n">atoms_b</span><span class="p">,</span> <span class="n">bins_ratio</span><span class="p">,</span> <span class="n">bins_density</span><span class="p">,</span>
+                              <span class="n">weights_a</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">weights_b</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">weights_ratio</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the distribution of the mixing ratio of two sets of atoms.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">density_a</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">time_average</span>
+    <span class="n">density_b</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogramdd</span><span class="p">(</span><span class="n">atoms_b</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins_density</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights_b</span><span class="p">)</span>
+    <span class="n">mixing_ratio</span> <span class="o">=</span> <span class="n">density_a</span><span class="o">/</span><span class="p">(</span><span class="n">density_a</span> <span class="o">+</span> <span class="n">density_b</span><span class="p">)</span>
+    <span class="n">good_inds</span> <span class="o">=</span> <span class="p">(</span><span class="n">density_a</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">density_b</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">hist</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">mixing_ratio</span><span class="p">[</span><span class="n">good_inds</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins_ratio</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights_ratio</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hist</span></div>
+
+
+<div class="viewcode-block" id="next_neighbor_distribution"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.next_neighbor_distribution">[docs]</a><span class="k">def</span> <span class="nf">next_neighbor_distribution</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number_of_neighbors</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the distribution of next neighbors with the same residue name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">bins</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;Bins have to be specified.&#39;</span>
+    <span class="k">if</span> <span class="n">reference</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="n">atoms</span>
+    <span class="n">nn</span> <span class="o">=</span> <span class="n">next_neighbors</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">query_atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">number_of_neighbors</span><span class="o">=</span><span class="n">number_of_neighbors</span><span class="p">)</span>
+    <span class="n">resname_nn</span> <span class="o">=</span> <span class="n">reference</span><span class="o">.</span><span class="n">residue_names</span><span class="p">[</span><span class="n">nn</span><span class="p">]</span>
+    <span class="n">count_nn</span> <span class="o">=</span> <span class="p">(</span><span class="n">resname_nn</span> <span class="o">==</span> <span class="n">atoms</span><span class="o">.</span><span class="n">residue_names</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">count_nn</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="n">normed</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Niels Müller.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'17.08',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

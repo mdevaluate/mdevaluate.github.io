@@ -1,0 +1,601 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mdevaluate.utils &mdash; mdevaluate 17.08 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="mdevaluate 17.08 documentation" href="../../index.html"/>
+        <link rel="up" title="mdevaluate" href="../mdevaluate.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> mdevaluate
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17.08
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general-hints.html">General Hints for Python Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gallery/index.html">Example Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contribution Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Reference Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">mdevaluate</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../mdevaluate.html">mdevaluate</a> &raquo;</li>
+        
+      <li>mdevaluate.utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mdevaluate.utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Collection of utility functions.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">FunctionType</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numba</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">.functions</span> <span class="k">import</span> <span class="n">kww</span><span class="p">,</span> <span class="n">kww_1e</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage.filters</span> <span class="k">import</span> <span class="n">uniform_filter1d</span>
+
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="k">import</span> <span class="n">interp1d</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">curve_fit</span>
+
+<span class="kn">from</span> <span class="nn">.logging</span> <span class="k">import</span> <span class="n">logger</span>
+
+
+<div class="viewcode-block" id="five_point_stencil"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.utils.five_point_stencil">[docs]</a><span class="k">def</span> <span class="nf">five_point_stencil</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the derivative dy/dx with a five point stencil.</span>
+<span class="sd">    This algorith is only valid for equally distributed x values.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        xdata: x values of the data points</span>
+<span class="sd">        ydata: y values of the data points</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Values where the derivative was estimated and the value of the derivative at these points.</span>
+
+<span class="sd">    This algorithm is only valid for values on a regular grid, for unevenly distributed</span>
+<span class="sd">    data it is only an approximation, albeit a quite good one.</span>
+
+<span class="sd">    See: https://en.wikipedia.org/wiki/Five-point_stencil</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">xdata</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="p">(</span>
+        <span class="p">(</span><span class="o">-</span><span class="n">ydata</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span> <span class="o">+</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">ydata</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">ydata</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">ydata</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span> <span class="o">/</span>
+        <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">xdata</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span> <span class="o">-</span> <span class="n">xdata</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]))</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="filon_fourier_transformation"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.utils.filon_fourier_transformation">[docs]</a><span class="k">def</span> <span class="nf">filon_fourier_transformation</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">correlation</span><span class="p">,</span>
+                                 <span class="n">frequencies</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">derivative</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">imag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                 <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fourier-transformation for slow varrying functions. The filon algorithmus is</span>
+<span class="sd">    described in detail in ref [Blochowicz]_, ch. 3.2.3.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        time: List of times where the correlation function was sampled.</span>
+<span class="sd">        correlation: Values of the correlation function.</span>
+<span class="sd">        frequencies (opt.):</span>
+<span class="sd">            List of frequencies where the fourier transformation will be calculated.</span>
+<span class="sd">            If None the frequencies will be choosen based on the input times.</span>
+<span class="sd">        derivative (opt.):</span>
+<span class="sd">            Approximation algorithmus for the derivative of the correlation function.</span>
+<span class="sd">            Possible values are: &#39;linear&#39;, &#39;stencil&#39; or a list of derivatives.</span>
+<span class="sd">        imag (opt.): If imaginary part of the integral should be calculated.</span>
+
+<span class="sd">    If frequencies are not explicitly given they will be evenly placed on a log scale</span>
+<span class="sd">    in the interval [1/tmax, 0.1/tmin] where tmin and tmax are the smallest respectively</span>
+<span class="sd">    the biggest time (greater than 0) of the provided times. The frequencies are cut off</span>
+<span class="sd">    at high values by one decade, since the fourier transformation deviates quite strongly</span>
+<span class="sd">    in this regime.</span>
+
+<span class="sd">    .. [Blochowicz]</span>
+<span class="sd">      T. Blochowicz, Broadband dielectric spectroscopy in neat and binary</span>
+<span class="sd">      molecular glass formers, Ph.D. thesis, Uni-versität Bayreuth (2003)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">frequencies</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">f_min</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+        <span class="n">f_max</span> <span class="o">=</span> <span class="mf">0.05</span><span class="o">**</span><span class="p">(</span><span class="mf">1.2</span> <span class="o">-</span> <span class="nb">max</span><span class="p">(</span><span class="n">correlation</span><span class="p">))</span> <span class="o">/</span> <span class="nb">min</span><span class="p">(</span><span class="n">time</span><span class="p">[</span><span class="n">time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">frequencies</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">f_min</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">f_max</span><span class="p">),</span> <span class="n">num</span><span class="o">=</span><span class="mi">60</span>
+        <span class="p">)</span>
+    <span class="n">frequencies</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">derivative</span> <span class="ow">is</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
+        <span class="n">derivative</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">correlation</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">time</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">derivative</span> <span class="ow">is</span> <span class="s1">&#39;stencil&#39;</span><span class="p">:</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">derivative</span> <span class="o">=</span> <span class="n">five_point_stencil</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">correlation</span><span class="p">)</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="p">((</span><span class="n">time</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">time</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span><span class="o">**.</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">derivative</span> <span class="o">=</span> <span class="n">derivative</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">iterable</span><span class="p">(</span><span class="n">derivative</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">time</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">len</span><span class="p">(</span><span class="n">derivative</span><span class="p">):</span>
+        <span class="n">derivative</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s1">&#39;Invalid approximation method </span><span class="si">{}</span><span class="s1">. Possible values are &quot;linear&quot;, &quot;stencil&quot; or a list of values.&#39;</span>
+        <span class="p">)</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">integral</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">frequencies</span> <span class="o">*</span> <span class="n">time</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">frequencies</span> <span class="o">*</span> <span class="n">time</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">/</span> <span class="n">frequencies</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">fourier</span> <span class="o">=</span> <span class="p">(</span><span class="n">derivative</span> <span class="o">*</span> <span class="n">integral</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">imag</span><span class="p">:</span>
+        <span class="n">integral</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">frequencies</span> <span class="o">*</span> <span class="n">time</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">frequencies</span> <span class="o">*</span> <span class="n">time</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">/</span> <span class="n">frequencies</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">fourier</span> <span class="o">=</span> <span class="n">fourier</span> <span class="o">+</span> <span class="p">(</span><span class="n">derivative</span> <span class="o">*</span> <span class="n">integral</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">correlation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">frequencies</span>
+
+    <span class="k">return</span> <span class="n">frequencies</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,),</span> <span class="n">fourier</span></div>
+
+
+<div class="viewcode-block" id="mask2indices"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.utils.mask2indices">[docs]</a><span class="k">def</span> <span class="nf">mask2indices</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the selected indices of an array mask.</span>
+<span class="sd">    If the mask is two-dimensional, the indices will be calculated for the second axis.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; mask2indices([True, False, True, False])</span>
+<span class="sd">        array([0, 2])</span>
+<span class="sd">        &gt;&gt;&gt; mask2indices([[True, True, False], [True, False, True]])</span>
+<span class="sd">        array([[0, 1], [0, 2]])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mask</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">indices</span></div>
+
+
+<div class="viewcode-block" id="superpose"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.utils.superpose">[docs]</a><span class="k">def</span> <span class="nf">superpose</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">x2</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="n">y2</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="n">reg1</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">&lt;</span> <span class="n">x2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">reg2</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">&gt;</span> <span class="n">x1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">x_ol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">x1</span><span class="p">[</span><span class="o">~</span><span class="n">reg1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">x2</span><span class="p">[</span><span class="o">~</span><span class="n">reg2</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.001</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x1</span><span class="p">[</span><span class="o">~</span><span class="n">reg1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">x2</span><span class="p">[</span><span class="o">~</span><span class="n">reg2</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.001</span><span class="p">),</span>
+        <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="o">~</span><span class="n">reg1</span><span class="p">)</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="o">~</span><span class="n">reg2</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">w</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">x_ol</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">x_ol</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">B</span> <span class="o">/</span> <span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">B</span> <span class="o">/</span> <span class="n">A</span><span class="p">))</span><span class="o">**</span><span class="n">damping</span>
+
+    <span class="n">xdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">x1</span><span class="p">[</span><span class="n">reg1</span><span class="p">],</span> <span class="n">x_ol</span><span class="p">,</span> <span class="n">x2</span><span class="p">[</span><span class="n">reg2</span><span class="p">]))</span>
+    <span class="n">y1_interp</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">x1</span><span class="p">[</span><span class="o">~</span><span class="n">reg1</span><span class="p">],</span> <span class="n">y1</span><span class="p">[</span><span class="o">~</span><span class="n">reg1</span><span class="p">])</span>
+    <span class="n">y2_interp</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">x2</span><span class="p">[</span><span class="o">~</span><span class="n">reg2</span><span class="p">],</span> <span class="n">y2</span><span class="p">[</span><span class="o">~</span><span class="n">reg2</span><span class="p">])</span>
+    <span class="n">ydata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span>
+        <span class="n">y1</span><span class="p">[</span><span class="n">x1</span> <span class="o">&lt;</span> <span class="n">x2</span><span class="o">.</span><span class="n">min</span><span class="p">()],</span>
+        <span class="n">w</span><span class="p">(</span><span class="n">x_ol</span><span class="p">)</span> <span class="o">*</span> <span class="n">y1_interp</span><span class="p">(</span><span class="n">x_ol</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">w</span><span class="p">(</span><span class="n">x_ol</span><span class="p">))</span> <span class="o">*</span> <span class="n">y2_interp</span><span class="p">(</span><span class="n">x_ol</span><span class="p">),</span>
+        <span class="n">y2</span><span class="p">[</span><span class="n">x2</span> <span class="o">&gt;</span> <span class="n">x1</span><span class="o">.</span><span class="n">max</span><span class="p">()]</span>
+    <span class="p">))</span>
+    <span class="k">return</span> <span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span></div>
+
+
+<div class="viewcode-block" id="runningmean"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.utils.runningmean">[docs]</a><span class="k">def</span> <span class="nf">runningmean</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">nav</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the running mean of a 1-dimenional array.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: Input data of shape (N, )</span>
+<span class="sd">        nav: Number of points over which the data will be averaged</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Array of shape (N-(nav-1), )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">nav</span><span class="p">,))</span> <span class="o">/</span> <span class="n">nav</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;valid&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="moving_average"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.utils.moving_average">[docs]</a><span class="k">def</span> <span class="nf">moving_average</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the running mean of an array.</span>
+<span class="sd">    Uses the second axis if it is of higher dimensionality.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: Input data of shape (N, )</span>
+<span class="sd">        n: Number of points over which the data will be averaged</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Array of shape (N-(n-1), )</span>
+
+<span class="sd">    Supports 2D-Arrays.</span>
+<span class="sd">    Slower than runningmean for small n but faster for large n.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">k1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">k2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">k2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">uniform_filter1d</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">n</span><span class="p">)[:,</span><span class="n">k1</span><span class="p">:]</span>
+        <span class="k">return</span> <span class="n">uniform_filter1d</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">n</span><span class="p">)[</span><span class="n">k1</span><span class="p">:]</span>
+    <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">uniform_filter1d</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">n</span><span class="p">)[:,</span><span class="n">k1</span><span class="p">:</span><span class="o">-</span><span class="n">k2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">uniform_filter1d</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">n</span><span class="p">)[</span><span class="n">k1</span><span class="p">:</span><span class="o">-</span><span class="n">k2</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="coherent_sum"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.utils.coherent_sum">[docs]</a><span class="k">def</span> <span class="nf">coherent_sum</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">coord_a</span><span class="p">,</span> <span class="n">coord_b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform a coherent sum over two arrays :math:`A, B`.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">      \\frac{1}{N_A N_B}\\sum_i\\sum_j f(A_i, B_j)</span>
+
+<span class="sd">    For numpy arrays this is equal to::</span>
+
+<span class="sd">        N, d = x.shape</span>
+<span class="sd">        M, d = y.shape</span>
+<span class="sd">        coherent_sum(f, x, y) == f(x.reshape(N, 1, d), x.reshape(1, M, d)).sum()</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        func: The function is called for each two items in both arrays, this should return a scalar value.</span>
+<span class="sd">        coord_a, coord_b: The two arrays.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">FunctionType</span><span class="p">):</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="nd">@numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">cohsum</span><span class="p">(</span><span class="n">coord_a</span><span class="p">,</span> <span class="n">coord_b</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coord_a</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coord_b</span><span class="p">)):</span>
+                <span class="n">res</span> <span class="o">+=</span> <span class="n">func</span><span class="p">(</span><span class="n">coord_a</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">coord_b</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">return</span> <span class="n">cohsum</span><span class="p">(</span><span class="n">coord_a</span><span class="p">,</span> <span class="n">coord_b</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="coherent_histogram"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.utils.coherent_histogram">[docs]</a><span class="k">def</span> <span class="nf">coherent_histogram</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">coord_a</span><span class="p">,</span> <span class="n">coord_b</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">distinct</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute a coherent histogram over two arrays, equivalent to coherent_sum.</span>
+<span class="sd">    For numpy arrays ofthis is equal to::</span>
+
+<span class="sd">        N, d = x.shape</span>
+<span class="sd">        M, d = y.shape</span>
+<span class="sd">        bins = np.arange(1, 5, 0.1)</span>
+<span class="sd">        coherent_histogram(f, x, y, bins) == histogram(f(x.reshape(N, 1, d), x.reshape(1, M, d)), bins=bins)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        func: The function is called for each two items in both arrays, this should return a scalar value.</span>
+<span class="sd">        coord_a, coord_b: The two arrays.</span>
+<span class="sd">        bins: The bins used for the histogram must be distributed regular on a linear scale.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">FunctionType</span><span class="p">):</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">bins</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s1">&#39;A regular distribution of bins is required.&#39;</span>
+    <span class="n">hmin</span> <span class="o">=</span> <span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">hmax</span> <span class="o">=</span> <span class="n">bins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">dh</span> <span class="o">=</span> <span class="p">(</span><span class="n">hmax</span> <span class="o">-</span> <span class="n">hmin</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>
+
+    <span class="nd">@numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">cohsum</span><span class="p">(</span><span class="n">coord_a</span><span class="p">,</span> <span class="n">coord_b</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coord_a</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coord_b</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">distinct</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">):</span>
+                    <span class="n">h</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">coord_a</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">coord_b</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">hmin</span> <span class="o">&lt;=</span> <span class="n">h</span> <span class="o">&lt;</span> <span class="n">hmax</span><span class="p">:</span>
+                        <span class="n">res</span><span class="p">[</span><span class="nb">int</span><span class="p">((</span><span class="n">h</span> <span class="o">-</span> <span class="n">hmin</span><span class="p">)</span> <span class="o">/</span> <span class="n">dh</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">return</span> <span class="n">cohsum</span><span class="p">(</span><span class="n">coord_a</span><span class="p">,</span> <span class="n">coord_b</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Sq_from_gr"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.utils.Sq_from_gr">[docs]</a><span class="k">def</span> <span class="nf">Sq_from_gr</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">gr</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">ρ</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the static structure factor as fourier transform of the pair correlation function. [Yarnell]_</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        S(q) - 1 = \\frac{4\\pi \\rho}{q}\\int\\limits_0^\\infty (g(r) - 1)\\,r \\sin(qr) dr</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        r: Radii of the pair correlation function</span>
+<span class="sd">        gr: Values of the pair correlation function</span>
+<span class="sd">        q: List of q values</span>
+<span class="sd">        ρ: Average number density</span>
+
+<span class="sd">    .. [Yarnell]</span>
+<span class="sd">      Yarnell, J. L., Katz, M. J., Wenzel, R. G., &amp; Koenig, S. H. (1973). Physical Review A, 7(6), 2130–2144.</span>
+<span class="sd">      http://doi.org/10.1017/CBO9781107415324.004</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ydata</span> <span class="o">=</span> <span class="p">((</span><span class="n">gr</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">r</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">q</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">r</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">ydata</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">ρ</span> <span class="o">/</span> <span class="n">q</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="Fqt_from_Grt"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.utils.Fqt_from_Grt">[docs]</a><span class="k">def</span> <span class="nf">Fqt_from_Grt</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the ISF from the van Hove function for a given q value by fourier transform.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">      F_q(t) = \\int\\limits_0^\\infty dr \\; G(r, t) \\frac{\\sin(qr)}{qr}</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data:</span>
+<span class="sd">            Input data can be a pandas dataframe with columns &#39;r&#39;, &#39;time&#39; and &#39;G&#39;</span>
+<span class="sd">            or an array of shape (N, 3), of tuples (r, t, G).</span>
+<span class="sd">        q: Value of q.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        If input data was a dataframe the result will be returned as one too, else two arrays</span>
+<span class="sd">        will be returned, which will contain times and values of Fq(t) respectively.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">])</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;isf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sinc</span><span class="p">(</span><span class="n">q</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">])</span>
+    <span class="n">isf</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)[</span><span class="s1">&#39;isf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">isf</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;isf&#39;</span><span class="p">:</span> <span class="n">isf</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">isf</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">isf</span><span class="o">.</span><span class="n">values</span></div>
+
+
+<div class="viewcode-block" id="norm"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.utils.norm">[docs]</a><span class="nd">@numba</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">vec</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">**</span><span class="mf">0.5</span></div>
+
+
+<div class="viewcode-block" id="singledispatchmethod"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.utils.singledispatchmethod">[docs]</a><span class="k">def</span> <span class="nf">singledispatchmethod</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A decorator to define a genric instance method, analogue to functools.singledispatch.&quot;&quot;&quot;</span>
+    <span class="n">dispatcher</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">singledispatch</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+    <span class="n">wrapper</span><span class="o">.</span><span class="n">register</span> <span class="o">=</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">register</span>
+    <span class="n">functools</span><span class="o">.</span><span class="n">update_wrapper</span><span class="p">(</span><span class="n">wrapper</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">wrapper</span></div>
+
+
+<div class="viewcode-block" id="histogram"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.utils.histogram">[docs]</a><span class="k">def</span> <span class="nf">histogram</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">bins</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the histogram of the given data. Uses numpy.bincount function, if possible.&quot;&quot;&quot;</span>
+    <span class="n">dbins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">dbins</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">bins</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">dbins</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Using numpy.bincount for histogramm compuation.&quot;</span><span class="p">)</span>
+        <span class="n">hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">((</span><span class="n">data</span> <span class="o">//</span> <span class="n">dx</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">minlength</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">dbins</span><span class="p">))[:</span><span class="nb">len</span><span class="p">(</span><span class="n">dbins</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">hist</span><span class="p">,</span> <span class="n">runningmean</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="quick1etau"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.utils.quick1etau">[docs]</a><span class="k">def</span> <span class="nf">quick1etau</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Estimate the time for a correlation function that goes from 1 to 0 to decay to 1/e.</span>
+
+<span class="sd">    If successful, returns tau as fine interpolation with a kww fit.</span>
+<span class="sd">    The data is reduce to points around 1/e to remove short and long times from the kww fit!</span>
+<span class="sd">    t is the time</span>
+<span class="sd">    C is C(t) the correlation function</span>
+<span class="sd">    n is the minimum number of points around 1/e required</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># first rough estimate, the closest time. This is returned if the interpolation fails!</span>
+    <span class="n">tau_est</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">C</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)))]</span>
+    <span class="c1"># reduce the data to points around 1/e</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mf">0.1</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">C</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="n">k</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">C</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">-</span><span class="n">k</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">+=</span> <span class="mf">0.01</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">C</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="n">k</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">C</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">-</span><span class="n">k</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="c1"># if enough points are found, try a curve fit, else and in case of failing keep using the estimate</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
+                <span class="n">fit</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">kww</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">C</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">p0</span><span class="o">=</span><span class="p">[</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">tau_est</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span> <span class="n">maxfev</span><span class="o">=</span><span class="mi">100000</span><span class="p">)</span>
+                <span class="n">tau_est</span> <span class="o">=</span> <span class="n">kww_1e</span><span class="p">(</span><span class="o">*</span><span class="n">fit</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">tau_est</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Niels Müller.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'17.08',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

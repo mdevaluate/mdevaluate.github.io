@@ -1,0 +1,482 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Contribution Guide &mdash; mdevaluate 17.08 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="mdevaluate 17.08 documentation" href="index.html"/>
+        <link rel="next" title="Reference Guide" href="modules.html"/>
+        <link rel="prev" title="Spatially resolved analysis in a cylindrical pore" href="gallery/plot_spatialisf.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> mdevaluate
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17.08
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="general-hints.html">General Hints for Python Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gallery/index.html">Example Gallery</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contribution Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#extending-the-documentation">Extending the documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#building-the-docs">Building the docs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#organization-of-the-code">Organization of the code</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#atoms-py">atoms.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#autosave-py">autosave.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#coordinates-py">coordinates.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#correlation-py">correlation.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#distribution-py">distribution.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reader-py">reader.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utils-py">utils.py</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-a-development-environment">Set up a development environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#organization-of-the-repository">Organization of the repository</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-code-to-the-repository">Adding code to the repository</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pulling-updates-from-remote">Pulling updates from remote</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-a-new-branch">Create a new branch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#committing-changes">Committing changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#merging-into-master">Merging into master</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#push-to-remote">Push to remote</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Reference Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mdevaluate</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Contribution Guide</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/contribution.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="contribution-guide">
+<h1>Contribution Guide<a class="headerlink" href="#contribution-guide" title="Permalink to this headline">¶</a></h1>
+<p>This document aims to lay out the basics of contributing code to the <code class="docutils literal"><span class="pre">mdevaluate</span></code> package.
+The code is managed through a git repository, hence this guides gives basic information on the usage of <a class="reference external" href="https://git-scm.com">git</a>.
+Int this document the prefix <code class="docutils literal"><span class="pre">$</span></code> indicates commands which should be ran on a shell.
+For a brief 15 min interactive tutorial visit <a class="reference external" href="https://try.gitbhub.org">try.github.org</a>.</p>
+<p>Let’s start with a short introduction to the terminology.
+Python code is organized in <em>packages</em> and <em>modules</em>:</p>
+<dl class="docutils">
+<dt>Modules:</dt>
+<dd>Any python file (e.g. <code class="docutils literal"><span class="pre">test.py</span></code>) is called a module. A module can be imported (<code class="docutils literal"><span class="pre">import</span> <span class="pre">test</span></code>) an then used
+in other python code if in the python path, for example the working directory.
+In principle, importing a package means executing the code inside the file.
+All definitions, like variables or functions, are then available under the modules name.</dd>
+<dt>Packages:</dt>
+<dd>Python modules can be grouped into packages. A python package is basically a folder,
+which contains at least one mandatory file <code class="docutils literal"><span class="pre">__init__.py</span></code>. This file is the entry
+point into the module that is imported if the package is imported.
+All modules in the folder are treated as submodules, which can be accessed via
+a dot syntax, e.g. <code class="docutils literal"><span class="pre">import</span> <span class="pre">package.test</span></code>. Packages can also contain sub packages.</dd>
+</dl>
+<p>A more <a class="reference external" href="https://docs.python.org/3/tutorial/modules.html">detailed explanation</a> can be found in the official python documentation.</p>
+<div class="section" id="extending-the-documentation">
+<h2>Extending the documentation<a class="headerlink" href="#extending-the-documentation" title="Permalink to this headline">¶</a></h2>
+<p>One of the most important parts of software is its documentation.
+For modular packages like <code class="docutils literal"><span class="pre">mdevaluate</span></code> it’s crucial to have a good coverage of the API,
+since users need to know which functions are provided and how they are used.
+To help others by extending the documentation is thereby a nice way of contributing to mdevaluate.</p>
+<p>The documentation is generated with a third party tools named <a class="reference external" href="http://www.sphinx-doc.org/en/stable/">Sphinx</a>.
+The contents of the documentation are based on the source code (for the reference guide)
+and documents written in the markup language <em>reStructuredText</em> (rst).
+The source of every page can be viewed in the browser through the <em>View page source</em> link in the upper right of the page.
+The name of the rst files can also be derived from the page URL.
+The rst files are placed in the <code class="docutils literal"><span class="pre">doc</span></code> directory of the repository.</p>
+<p>Extending the documentation can be done in different ways, e.g.</p>
+<ul class="simple">
+<li>Correct, clarify or extend existing sections</li>
+<li>Add new sections about the general use of mdevaluate</li>
+<li>Add use cases to the special topics section.</li>
+</ul>
+<p>To add a new sections to special topics, first create a new file for this guide in <code class="docutils literal"><span class="pre">doc/special</span></code>.
+Then add the name of this file (without the .rst extension) to the toctree in the file <code class="docutils literal"><span class="pre">special-topics.rst</span></code>.
+Now write the guide in the newly created file.</p>
+<div class="section" id="building-the-docs">
+<h3>Building the docs<a class="headerlink" href="#building-the-docs" title="Permalink to this headline">¶</a></h3>
+<p>When you have made changes to the docs, first re-build them locally.
+You will need to have the <code class="docutils literal"><span class="pre">sphinx</span></code> python package installed and of course a working environment for <code class="docutils literal"><span class="pre">mdevaluate</span></code>.
+When those requirements are fulfilled build the docs by:</p>
+<ol class="arabic simple">
+<li>Navigate to the <code class="docutils literal"><span class="pre">doc</span></code> directory</li>
+<li>Run <code class="docutils literal"><span class="pre">make</span> <span class="pre">html</span></code> in the shell</li>
+<li>View the produced html files in the browser: <code class="docutils literal"><span class="pre">firefox</span> <span class="pre">_build/html/index.html</span></code></li>
+</ol>
+</div>
+</div>
+<div class="section" id="organization-of-the-code">
+<h2>Organization of the code<a class="headerlink" href="#organization-of-the-code" title="Permalink to this headline">¶</a></h2>
+<p>The code for the evaluation software is organized in two python packages:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">pygmx</span></code>: This package provides a python wrapper for the Gromacs library and
+thereby functionality to read file formats used within Gromacs.</li>
+<li><code class="docutils literal"><span class="pre">mdevaluate</span></code>: This package provides functionality for evaluation of molecular
+dynamics simulations. It uses the <code class="docutils literal"><span class="pre">pygmx</span></code> package to read files, but is
+(in theory) not  limited to Gromacs data.</li>
+</ul>
+<div class="section" id="submodules">
+<h3>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h3>
+<p>Below the content of the submodules of the package is described.</p>
+<div class="section" id="atoms-py">
+<h4>atoms.py<a class="headerlink" href="#atoms-py" title="Permalink to this headline">¶</a></h4>
+<p>Definition of the <code class="docutils literal"><span class="pre">Atom</span></code> class and related functions for atom selection and information.</p>
+</div>
+<div class="section" id="autosave-py">
+<h4>autosave.py<a class="headerlink" href="#autosave-py" title="Permalink to this headline">¶</a></h4>
+<p>Experimental functionality for automatic saving and loading of evaluated data,
+like correlation functions. For each function call a checksum is calculated
+from the input, which changes if the output of the function changes.</p>
+</div>
+<div class="section" id="coordinates-py">
+<h4>coordinates.py<a class="headerlink" href="#coordinates-py" title="Permalink to this headline">¶</a></h4>
+<p>Definition of the <code class="docutils literal"><span class="pre">Coordinates</span></code> class and <code class="docutils literal"><span class="pre">CoordinatesMap</span></code> for coordinates
+transformations and related functions.</p>
+</div>
+<div class="section" id="correlation-py">
+<h4>correlation.py<a class="headerlink" href="#correlation-py" title="Permalink to this headline">¶</a></h4>
+<p>Functionality to calculate correlation functions.</p>
+</div>
+<div class="section" id="distribution-py">
+<h4>distribution.py<a class="headerlink" href="#distribution-py" title="Permalink to this headline">¶</a></h4>
+<p>Functionality to calculate distribution functions.</p>
+</div>
+<div class="section" id="reader-py">
+<h4>reader.py<a class="headerlink" href="#reader-py" title="Permalink to this headline">¶</a></h4>
+<p>Defines reader classes that handle trajectory reading and caching.</p>
+</div>
+<div class="section" id="utils-py">
+<h4>utils.py<a class="headerlink" href="#utils-py" title="Permalink to this headline">¶</a></h4>
+<p>A collection of utility functions.</p>
+</div>
+</div>
+</div>
+<div class="section" id="set-up-a-development-environment">
+<h2>Set up a development environment<a class="headerlink" href="#set-up-a-development-environment" title="Permalink to this headline">¶</a></h2>
+<p>The code is hosted in the groups git server <a class="reference external" href="https://chaos3.fkp.physik.tu-darmstadt.de">https://chaos3.fkp.physik.tu-darmstadt.de</a>,
+use your credentials of the institutes computers for login.
+Authentication has to be done through SSH-Keys, first add the SSH Key of
+your development machine to your account.</p>
+<ol class="arabic simple">
+<li>Copy the public key from the file <code class="docutils literal"><span class="pre">~/.ssh/id_rsa.pub</span></code></li>
+<li>Add it to your account at <a class="reference external" href="https://chaos3.fkp.physik.tu-darmstadt.de/settings/panel/ssh/">https://chaos3.fkp.physik.tu-darmstadt.de/settings/panel/ssh/</a></li>
+<li>Clone the repository</li>
+</ol>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git clone ssh://vcs@chaos3.fkp.physik.tu-darmstadt.de/diffusion/MDE/mdevaluate.git
+</pre></div>
+</div>
+<div class="section" id="organization-of-the-repository">
+<h3>Organization of the repository<a class="headerlink" href="#organization-of-the-repository" title="Permalink to this headline">¶</a></h3>
+<p>The repository is organized through git branches.
+At the moment there exist two branches in the remote repository: <em>master</em> and <em>dev</em>.</p>
+</div>
+</div>
+<div class="section" id="adding-code-to-the-repository">
+<h2>Adding code to the repository<a class="headerlink" href="#adding-code-to-the-repository" title="Permalink to this headline">¶</a></h2>
+<p>All changes to the code are done in your local clone of the repository.
+If a feature is complete, or at least works, the code can be pushed to the remote,
+to make it accessible for others.</p>
+<p>A standard work flow to submit new code is the following</p>
+<ol class="arabic simple">
+<li>Create a new <strong>branch</strong> in your local repository</li>
+<li><strong>Commit</strong> the changes to your local repository</li>
+<li><strong>Merge</strong> the branch into master</li>
+<li><strong>Push</strong> the changes to the remote repository</li>
+</ol>
+<div class="section" id="pulling-updates-from-remote">
+<h3>Pulling updates from remote<a class="headerlink" href="#pulling-updates-from-remote" title="Permalink to this headline">¶</a></h3>
+<p>Before working with the code, the latest updates should be pulled for the master branch</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git checkout master
+<span class="gp">$</span> git pull
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-a-new-branch">
+<h3>Create a new branch<a class="headerlink" href="#create-a-new-branch" title="Permalink to this headline">¶</a></h3>
+<p>Before changing any code, create a new branch in your local repository.
+This helps to keep an overview of all the changes and simplifies merging.
+To create a new branch locally enter the following commands</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git checkout master
+<span class="gp">$</span> git branch my-feature
+<span class="gp">$</span> git checkout my-feature
+</pre></div>
+</div>
+<p>First switch to the master branch to make sure the new branch is based on it.
+Then create the new branch, called <cite>my-feature</cite> and switch to it.
+Now you can start making changes in the code.</p>
+</div>
+<div class="section" id="committing-changes">
+<h3>Committing changes<a class="headerlink" href="#committing-changes" title="Permalink to this headline">¶</a></h3>
+<p>A bundle of changes in the code is called a <em>commit</em>.
+These changes can happen in different files and should be associated with each other.
+Let’s assume, two files have been changed (<code class="docutils literal"><span class="pre">atoms.py</span></code> and <code class="docutils literal"><span class="pre">utils.py</span></code>).
+The command</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git diff atoms.py
+</pre></div>
+</div>
+<p>will show you all changes that were made in the file since the latest commit.
+Before committing changes have to be <em>staged</em>, which is done by</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git add atoms.py utils.py
+</pre></div>
+</div>
+<p>This my be repeated as often as necessary.
+When all changes for a commit are staged, it can actually be created</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git commit
+</pre></div>
+</div>
+<p>This will open up an editor where a commit message has to be entered.
+After writing the commit message, save &amp; close the file, which will create the commit.</p>
+</div>
+<div class="section" id="merging-into-master">
+<h3>Merging into master<a class="headerlink" href="#merging-into-master" title="Permalink to this headline">¶</a></h3>
+<p>When all changes are made and the new feature should be made public, first the branch has to be merged into master.
+Most of the time, the master branch will have been updated, so first pull any updates</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git checkout master
+<span class="gp">$</span> git pull
+</pre></div>
+</div>
+<p>When the master branch is up to date, it can be merged into the feature branch</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git merge my-feature
+</pre></div>
+</div>
+<p>If no conflicting changes were made, merging works automatically.
+If for example the same line was modified in a commit in master and your commits, a merge conflict will occur.
+Git tells you which files have conflicts and asks you to resolve these.
+The respective lines will be marked with conflict-resolution markers in the files.
+The most basic way of resolving a conflict is by editing these files and choosing the appropriate version of the code.
+See the <a class="reference external" href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging#Basic-Merge-Conflicts">git documentation</a> for an explanation.
+After resolving the conflict, the files need to be staged and the merge has to be committed</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git add utils.py
+<span class="gp">$</span> git commit
+</pre></div>
+</div>
+<p>The commit message will be generated automatically, indicating the merge.</p>
+</div>
+<div class="section" id="push-to-remote">
+<h3>Push to remote<a class="headerlink" href="#push-to-remote" title="Permalink to this headline">¶</a></h3>
+<p>After merging the changes can be pushed to the remote</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git push
+</pre></div>
+</div>
+<p>The new code is now available in the remote.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="modules.html" class="btn btn-neutral float-right" title="Reference Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gallery/plot_spatialisf.html" class="btn btn-neutral" title="Spatially resolved analysis in a cylindrical pore" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Niels Müller.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'17.08',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

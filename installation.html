@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Getting started &mdash; mdevaluate 17.08 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="mdevaluate 17.08 documentation" href="index.html"/>
+        <link rel="next" title="General Hints for Python Programming" href="general-hints.html"/>
+        <link rel="prev" title="Documentation of mdevaluate" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> mdevaluate
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17.08
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#manual-installation">Manual Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="general-hints.html">General Hints for Python Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gallery/index.html">Example Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contribution Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Reference Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mdevaluate</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Getting started</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>Mdevaluate itself is a pure Python package and can be imported directly from the source directory, if needed.
+The Gromacs dependency <code class="docutils literal"><span class="pre">pygmx</span></code> has to be installed into the Python distribution,
+since parts are compiled with Cython.
+The easiest way to use mdevaluate on the institutes network is to use the mdevaluate module:</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">module</span> <span class="n">load</span> <span class="n">mdevaluate</span><span class="o">/</span><span class="mf">16.11</span>
+</pre></div>
+</div>
+<p>The mdevaluate module is provided in different versions.
+Since there is no real <em>release schedule</em>, the version numbers are arbitrary and
+follow a <a class="reference external" href="http://calver.org">Calendar Versioning scheme</a>.
+The idea of these versions is to provide a fixed version of the code from time to time,
+which will not be changed, except for major bugs, and assure that scripts don’t stop working.
+The special version <cite>dev</cite> provides the latest version of the code.
+It should not be used in <em>production</em> (e.g. in the end phase of a thesis)
+since it may contain broken code or function signatures may change.</p>
+<p>The module will provide a recent python 3.5 environment through the anaconda3 module
+with all relevant packages for scientific computing already installed.
+After loading th module you can for example start a notebook by running:</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">jupyter</span><span class="o">-</span><span class="n">notebook</span>
+</pre></div>
+</div>
+<p>If any package is missing, it can be installed locally with:</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">PACKAGE</span> <span class="o">--</span><span class="n">user</span>
+</pre></div>
+</div>
+<div class="section" id="manual-installation">
+<h2>Manual Installation<a class="headerlink" href="#manual-installation" title="Permalink to this headline">¶</a></h2>
+<p>The second option is to install the package manually to a local python installation.
+Before installing mdevaluate, some python packages need to be installed on the system.
+Mdevaluate requires <strong>Python 3.5</strong> or higher.</p>
+<div class="section" id="requirements">
+<h3>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h3>
+<p>The package depends on some python packages that can all be installed via pip or conda:</p>
+<ul class="simple">
+<li>NumPy</li>
+<li>SciPy</li>
+</ul>
+<p>The most important dependency is <code class="docutils literal"><span class="pre">pygmx</span></code>, which uses the Gromacs C-library to read data files.
+See the <a class="reference external" href="https://chaos3.fkp.physik.tu-darmstadt.de/diffusion/GMX/">pygmx repository</a> for installation instructions.</p>
+</div>
+<div class="section" id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
+<p>First get the source code of mdevaluate from the <a class="reference external" href="https://chaos3.fkp.physik.tu-darmstadt.de/diffusion/MDE/">git repository</a>.
+Navigate to the source directory and run the installation:</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+</pre></div>
+</div>
+<p>This will compile and install the package to your local python distribution.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="general-hints.html" class="btn btn-neutral float-right" title="General Hints for Python Programming" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Documentation of mdevaluate" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Niels Müller.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'17.08',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,293 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Evaluation of dynamic properties &mdash; mdevaluate 17.08 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="mdevaluate 17.08 documentation" href="index.html"/>
+        <link rel="up" title="User Guide" href="guide.html"/>
+        <link rel="next" title="Special Topics" href="special-topics.html"/>
+        <link rel="prev" title="Evaluation of static properties" href="static-evaluation.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> mdevaluate
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17.08
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="general-hints.html">General Hints for Python Programming</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="guide.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="loading.html">Loading of simulation data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static-evaluation.html">Evaluation of static properties</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Evaluation of dynamic properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#arguments-of-shifted-correlation">Arguments of <code class="docutils literal"><span class="pre">shifted_correlation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="special-topics.html">Special Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gallery/index.html">Example Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contribution Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Reference Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mdevaluate</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="guide.html">User Guide</a> &raquo;</li>
+        
+      <li>Evaluation of dynamic properties</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/dynamic-evaluation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="evaluation-of-dynamic-properties">
+<h1>Evaluation of dynamic properties<a class="headerlink" href="#evaluation-of-dynamic-properties" title="Permalink to this headline">¶</a></h1>
+<p>Dynamic properties like mean square displacement are calculated with the
+function <a class="reference internal" href="mdevaluate.html#mdevaluate.correlation.shifted_correlation" title="mdevaluate.correlation.shifted_correlation"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.correlation.shifted_correlation()</span></code></a>.
+This function takes a correlation function and calculates the averaged
+time series of it, by shifting a time interval over the trajectory.</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mdevaluate</span> <span class="k">import</span> <span class="n">correlation</span>
+
+<span class="n">time</span><span class="p">,</span> <span class="n">msd_amim</span> <span class="o">=</span> <span class="n">correlation</span><span class="o">.</span><span class="n">shifted_correlation</span><span class="p">(</span><span class="n">correlation</span><span class="o">.</span><span class="n">msd</span><span class="p">,</span> <span class="n">com_amim</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span><span class="n">msd_amim</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The result of <code class="xref py py-func docutils literal"><span class="pre">shifted_correlation()</span></code> are two lists, the first one (<code class="docutils literal"><span class="pre">time</span></code>)
+contains the times of the frames that have been used for the correlation.
+The second list <code class="docutils literal"><span class="pre">msd_amim</span></code> is the correlation function at these times.
+If the keyword <code class="docutils literal"><span class="pre">average=False</span></code> is given, the correlation function for each shifted
+time window will be returned.</p>
+<div class="section" id="arguments-of-shifted-correlation">
+<h2>Arguments of <code class="docutils literal"><span class="pre">shifted_correlation</span></code><a class="headerlink" href="#arguments-of-shifted-correlation" title="Permalink to this headline">¶</a></h2>
+<p>The function <a class="reference internal" href="mdevaluate.html#mdevaluate.correlation.shifted_correlation" title="mdevaluate.correlation.shifted_correlation"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.correlation.shifted_correlation()</span></code></a> accepts several keyword arguments.
+With those arguments, the calculation of the correlation function may be controlled in detail.
+The mathematical expression for a correlation function is the following:</p>
+<div class="math">
+\[S(t) = \frac{1}{N} \sum_{i=1}^N C(f, R, t_i, t)\]</div>
+<p>Here <span class="math">\(S(t)\)</span> denotes the correlation function at time t, <span class="math">\(R\)</span> are the coordinates of all atoms
+and <span class="math">\(t_i\)</span> are the onset times (<span class="math">\(N\)</span> is the number of onset times or time windows).
+Note that the outer sum and division by <span class="math">\(N\)</span> is only carried out if <code class="docutils literal"><span class="pre">average=True</span></code>.
+The onset times are defined by the keywords <code class="docutils literal"><span class="pre">segments</span></code> and <code class="docutils literal"><span class="pre">window</span></code>, with
+<span class="math">\(N = segments\)</span> and <span class="math">\(t_i = \frac{ (1 - window) \cdot t_{max}}{N} (i - 1)\)</span> with the total simulation time <span class="math">\(t_{max}\)</span>.
+As can be seen <code class="docutils literal"><span class="pre">segments</span></code> gives the number of onset times and <code class="docutils literal"><span class="pre">window</span></code> defines the part of the simulation time the correlation is calculated for,
+hence <code class="docutils literal"><span class="pre">window</span> <span class="pre">-</span> <span class="pre">1</span></code> is the part of the simulation the onset times a distributed over.</p>
+<p><span class="math">\(C(f, R, t_0, t)\)</span> is the function that actually correlates the function <span class="math">\(f\)</span>.
+For standard correlations the functions <span class="math">\(C(...)\)</span> and <span class="math">\(f\)</span> are defined as:</p>
+<div class="math">
+\[C(f, R, t_0, t) = f(R(t_0), R(t_0 + t))\]</div>
+<div class="math">
+\[f(r_0, r) = \langle s(r_0, r) \rangle\]</div>
+<p>Here the brackets denote an ensemble average, small <span class="math">\(r\)</span> are coordinates of one frame and <span class="math">\(s(r_0, r)\)</span> is the value that is correlated,
+e.g. for the MSD <span class="math">\(s(r_0, r) = (r - r_0)^2\)</span>.</p>
+<p>The function <span class="math">\(C(f, R, t_0, t)\)</span> is specified by the keyword <code class="docutils literal"><span class="pre">correlation</span></code>, the function <span class="math">\(f(r_0, r)\)</span> is given by <code class="docutils literal"><span class="pre">function</span></code>.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="special-topics.html" class="btn btn-neutral float-right" title="Special Topics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="static-evaluation.html" class="btn btn-neutral" title="Evaluation of static properties" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Niels Müller.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'17.08',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

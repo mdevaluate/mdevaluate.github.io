@@ -1,0 +1,274 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Gromacs Energy Files &mdash; mdevaluate 17.08 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="mdevaluate 17.08 documentation" href="../index.html"/>
+        <link rel="up" title="Special Topics" href="../special-topics.html"/>
+        <link rel="next" title="Example Gallery" href="../gallery/index.html"/>
+        <link rel="prev" title="Computing the Overlap Function" href="overlap.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> mdevaluate
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17.08
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general-hints.html">General Hints for Python Programming</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../guide.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../loading.html">Loading of simulation data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../static-evaluation.html">Evaluation of static properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dynamic-evaluation.html">Evaluation of dynamic properties</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../special-topics.html">Special Topics</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="autosave.html">Automatic Saving of Analysis Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spatial.html">Spatial Resolved Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overlap.html">Computing the Overlap Function</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Gromacs Energy Files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gallery/index.html">Example Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contribution Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Reference Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">mdevaluate</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../guide.html">User Guide</a> &raquo;</li>
+        
+          <li><a href="../special-topics.html">Special Topics</a> &raquo;</li>
+        
+      <li>Gromacs Energy Files</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/special/energies.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gromacs-energy-files">
+<h1>Gromacs Energy Files<a class="headerlink" href="#gromacs-energy-files" title="Permalink to this headline">¶</a></h1>
+<p>It is possible to read the energy files (.edr) written out by Gromacs with mdevaluate.
+Those files contain thermodynamic properties of the system, like temperature or pressure.
+The exact contents of an energy file depend on the type of ensemble that was simulated,
+an NVT simulation’s energy file for example will not contain information about the box size.</p>
+<p>To open these files use the function <a class="reference internal" href="../mdevaluate.html#mdevaluate.open_energy" title="mdevaluate.open_energy"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.open_energy()</span></code></a>, which takes the filename of an energy file.
+The types of energies stored in the file can be shown with the <code class="xref py py-attr docutils literal"><span class="pre">types</span></code> attribute of the class <a class="reference internal" href="../mdevaluate.html#mdevaluate.reader.EnergyReader" title="mdevaluate.reader.EnergyReader"><code class="xref py py-class docutils literal"><span class="pre">EnergyReader</span></code></a>,
+the <code class="xref py py-attr docutils literal"><span class="pre">units</span></code> attribute gives the units of these energy types.
+The timesteps at which those energies were written out are accessible through the <code class="xref py py-attr docutils literal"><span class="pre">time</span></code> property.
+The time series of one of these energies can be accessed through the named index, comparable to python dictionaries.</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mdevaluate</span> <span class="k">as</span> <span class="nn">md</span>
+<span class="n">edr</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">open_energy</span><span class="p">(</span><span class="s1">&#39;/path/to/energy.edr&#39;</span><span class="p">)</span>
+<span class="c1"># plot the evolution of temperature</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">edr</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">edr</span><span class="p">[</span><span class="s1">&#39;Temperature&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../gallery/index.html" class="btn btn-neutral float-right" title="Example Gallery" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="overlap.html" class="btn btn-neutral" title="Computing the Overlap Function" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Niels Müller.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'17.08',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

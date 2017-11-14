@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Automatic Saving of Analysis Data &mdash; mdevaluate 17.08 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="mdevaluate 17.08 documentation" href="../index.html"/>
+        <link rel="up" title="Special Topics" href="../special-topics.html"/>
+        <link rel="next" title="Spatial Resolved Analysis" href="spatial.html"/>
+        <link rel="prev" title="Special Topics" href="../special-topics.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> mdevaluate
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17.08
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general-hints.html">General Hints for Python Programming</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../guide.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../loading.html">Loading of simulation data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../static-evaluation.html">Evaluation of static properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dynamic-evaluation.html">Evaluation of dynamic properties</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../special-topics.html">Special Topics</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Automatic Saving of Analysis Data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#a-full-example">A full example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#checksum-of-the-analysis-call">Checksum of the Analysis Call</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#special-keyword-arguments">Special Keyword Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#file-names-and-analysis-descriptions">File names and Analysis Descriptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reusing-the-autosaved-data">Reusing the autosaved data</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spatial.html">Spatial Resolved Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overlap.html">Computing the Overlap Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="energies.html">Gromacs Energy Files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gallery/index.html">Example Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contribution Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Reference Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">mdevaluate</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../guide.html">User Guide</a> &raquo;</li>
+        
+          <li><a href="../special-topics.html">Special Topics</a> &raquo;</li>
+        
+      <li>Automatic Saving of Analysis Data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/special/autosave.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="automatic-saving-of-analysis-data">
+<h1>Automatic Saving of Analysis Data<a class="headerlink" href="#automatic-saving-of-analysis-data" title="Permalink to this headline">¶</a></h1>
+<p>Mdevaluate provides a functionality to save the result of analysis functions automatically.
+The data is saved to a file after it was computed.
+If an analysis was done in the exact same way before, the result is loaded from this file.</p>
+<p>This function may be activated through calling <a class="reference internal" href="../mdevaluate.html#mdevaluate.autosave.enable" title="mdevaluate.autosave.enable"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.autosave.enable()</span></code></a>, which takes a directory as input.
+If this directory is a relative path (e.g. no trailing slash) the results will be saved in a location
+relative to the directory of the trajectory file.
+If the output files of your simulations are located in a subdirectory, like <code class="docutils literal"><span class="pre">/path/to/sim/Output</span></code> it is possible
+to specify the auto save location as <code class="docutils literal"><span class="pre">../data</span></code> such that the result files will be placed under <code class="docutils literal"><span class="pre">/path/to/sim/data</span></code>.</p>
+<p>At the moment the two functions which use this behavior are:</p>
+<ul class="simple">
+<li><a class="reference internal" href="../mdevaluate.html#mdevaluate.correlation.shifted_correlation" title="mdevaluate.correlation.shifted_correlation"><code class="xref py py-func docutils literal"><span class="pre">shifted_correlation()</span></code></a></li>
+<li><a class="reference internal" href="../mdevaluate.html#mdevaluate.distribution.time_average" title="mdevaluate.distribution.time_average"><code class="xref py py-func docutils literal"><span class="pre">time_average()</span></code></a></li>
+</ul>
+<p>Any other function can make use of the autosave mechanism by decorating it with <a class="reference internal" href="../mdevaluate.html#mdevaluate.autosave.autosave_data" title="mdevaluate.autosave.autosave_data"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.autosave.autosave_data()</span></code></a>.</p>
+<div class="section" id="a-full-example">
+<h2>A full example<a class="headerlink" href="#a-full-example" title="Permalink to this headline">¶</a></h2>
+<p>This is how it works, for a detailed explanation see below:</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mdevaluate</span> <span class="k">as</span> <span class="nn">md</span>
+<span class="n">md</span><span class="o">.</span><span class="n">autosave</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="n">water</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;/path/to/sim&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">atom_name</span><span class="o">=</span><span class="s1">&#39;OW&#39;</span><span class="p">)</span>
+<span class="n">md</span><span class="o">.</span><span class="n">correlation</span><span class="o">.</span><span class="n">shifted_correlation</span><span class="p">(</span>
+    <span class="n">md</span><span class="o">.</span><span class="n">correlation</span><span class="o">.</span><span class="n">msd</span><span class="p">,</span>
+    <span class="n">water</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s1">&#39;test&#39;</span>
+<span class="p">)</span>
+<span class="c1"># The result will be saved to the file:</span>
+<span class="c1"># /path/to/sim/data/shifted_correlation_msd_OW_test.npz</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="checksum-of-the-analysis-call">
+<h2>Checksum of the Analysis Call<a class="headerlink" href="#checksum-of-the-analysis-call" title="Permalink to this headline">¶</a></h2>
+<p>The autosave module calculates a checksum for each call of an analysis function,
+which is used to validate a present the data file.
+This way the result should only be loaded from file if the analysis is exactly the same.
+This includes the function code that is evaluated, so the result will be recomputed if any bit of the code changes.
+But there is always the possibility that checksums coincide accidentally,
+by chance or due to a bug in the code, which should be kept in mind when using this functionality.</p>
+</div>
+<div class="section" id="special-keyword-arguments">
+<h2>Special Keyword Arguments<a class="headerlink" href="#special-keyword-arguments" title="Permalink to this headline">¶</a></h2>
+<p>The autosave module introduces two special keyword arguments to the decorated functions:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">autoload</span></code>: This prevents the loading of previously calculated data even if a valid file was found.</li>
+<li><code class="docutils literal"><span class="pre">description</span></code>: A descriptive string of the specific analysis, see below.</li>
+</ul>
+<p>Those keywords may be passed to those function (shifted_correlation, time_average) like any other keyword argument.
+If autosave was not enabled, they will be ignored.</p>
+</div>
+<div class="section" id="file-names-and-analysis-descriptions">
+<h2>File names and Analysis Descriptions<a class="headerlink" href="#file-names-and-analysis-descriptions" title="Permalink to this headline">¶</a></h2>
+<p>The evaluated data is saved to human readable files, whose name is derived from the function call
+and the automatic description of the subset.
+The latter one is assigned based on the <code class="docutils literal"><span class="pre">atom_name</span></code> and <code class="docutils literal"><span class="pre">residue_name</span></code> of the <a class="reference internal" href="../mdevaluate.html#mdevaluate.atoms.AtomSubset.subset" title="mdevaluate.atoms.AtomSubset.subset"><code class="xref py py-func docutils literal"><span class="pre">subset()</span></code></a> method.</p>
+<p>In some cases this is not enough, for example if the same subset is analyzed spatially resolved,
+which would lead to identical filenames that would be overwritten.
+Therefore a more detailed description of each specific analysis call needs to be provided.
+For this reason the autosave module introduces the before mentioned keyword argument <code class="docutils literal"><span class="pre">description</span></code>.
+The value of this keyword is appended to the filename and in addition if any of
+the other arguments of the function call has a attribute description, this will appended as well.
+For example this (pseudo) code will lead to the filename <code class="docutils literal"><span class="pre">shifted_correlation_isf_OW_1-2nm_nice.npz</span></code>:</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">OW</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">atom_name</span><span class="o">=</span><span class="s1">&#39;OW&#39;</span><span class="p">)</span>
+
+<span class="n">corr</span> <span class="o">=</span> <span class="n">subensemble_correlation</span><span class="p">(</span><span class="n">spatial_selector</span><span class="p">)</span>
+<span class="n">corr</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;1-2nm&#39;</span>
+
+<span class="n">shifted_correlation</span><span class="p">(</span>
+  <span class="n">isf</span><span class="p">,</span>
+  <span class="n">OW</span><span class="p">,</span>
+  <span class="n">correlation</span><span class="o">=</span><span class="n">corr</span><span class="p">,</span>
+  <span class="n">description</span><span class="o">=</span><span class="s1">&#39;nice&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="reusing-the-autosaved-data">
+<h2>Reusing the autosaved data<a class="headerlink" href="#reusing-the-autosaved-data" title="Permalink to this headline">¶</a></h2>
+<p>The results of the functions are saved in NumPy’s  npz format, see <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez.html#numpy.savez" title="(in NumPy v1.13)"><code class="xref py py-func docutils literal"><span class="pre">numpy.savez()</span></code></a>.
+If the result should be used in a different place, it can either be loaded with
+<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.load.html#numpy.load" title="(in NumPy v1.13)"><code class="xref py py-func docutils literal"><span class="pre">numpy.load()</span></code></a> or <a class="reference internal" href="../mdevaluate.html#mdevaluate.autosave.load_data" title="mdevaluate.autosave.load_data"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.autosave.load_data()</span></code></a>.
+The latter function will return the result of the function call directly, the former
+returns a dict with the keys <code class="docutils literal"><span class="pre">checksum</span></code> and <code class="docutils literal"><span class="pre">data</span></code>, the latter yielding the results data.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="spatial.html" class="btn btn-neutral float-right" title="Spatial Resolved Analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../special-topics.html" class="btn btn-neutral" title="Special Topics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Niels Müller.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'17.08',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

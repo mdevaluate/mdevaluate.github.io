@@ -1,0 +1,539 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mdevaluate.reader &mdash; mdevaluate 17.08 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="mdevaluate 17.08 documentation" href="../../index.html"/>
+        <link rel="up" title="mdevaluate" href="../mdevaluate.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> mdevaluate
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17.08
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general-hints.html">General Hints for Python Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gallery/index.html">Example Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contribution Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Reference Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">mdevaluate</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../mdevaluate.html">mdevaluate</a> &raquo;</li>
+        
+      <li>mdevaluate.reader</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mdevaluate.reader</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module that provides different readers for trajectory files.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.checksum</span> <span class="k">import</span> <span class="n">checksum</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="nn">array</span> <span class="k">import</span> <span class="n">array</span>
+<span class="kn">from</span> <span class="nn">zipfile</span> <span class="k">import</span> <span class="n">BadZipFile</span>
+<span class="kn">import</span> <span class="nn">builtins</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">sparse</span>
+<span class="kn">from</span> <span class="nn">dask</span> <span class="k">import</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">DASK_VERSION</span>
+
+<span class="kn">import</span> <span class="nn">pygmx</span>
+<span class="kn">from</span> <span class="nn">pygmx.errors</span> <span class="k">import</span> <span class="n">InvalidMagicException</span><span class="p">,</span> <span class="n">InvalidIndexException</span>
+
+<span class="kn">from</span> <span class="nn">.logging</span> <span class="k">import</span> <span class="n">logger</span>
+
+
+<div class="viewcode-block" id="NojumpError"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.NojumpError">[docs]</a><span class="k">class</span> <span class="nc">NojumpError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="open"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.open">[docs]</a><span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Opens a trajectory file with the apropiate reader.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filename (str):</span>
+<span class="sd">            Trajectory file to open, the reader will be chosen</span>
+<span class="sd">            according to the file extension.</span>
+<span class="sd">        cached (opt.):</span>
+<span class="sd">            If Reader should be cached with lru_cache. If this is True, maxsize for</span>
+<span class="sd">            the cache is 128, otherwise the argument is passed as maxsize.</span>
+<span class="sd">            Use cached=None to get an unbound cache.</span>
+<span class="sd">        reindex (opt.): Regenerate the index of the xtc-file</span>
+<span class="sd">        nojump (opt.): If nojump matrixes should be generated.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">cached</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cached</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="n">maxsize</span> <span class="o">=</span> <span class="mi">128</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">maxsize</span> <span class="o">=</span> <span class="n">cached</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">CachedReader</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="n">reindex</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="n">ignore_index_timestamps</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">BaseReader</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="n">reindex</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="n">ignore_index_timestamps</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">reader</span></div>
+
+
+<div class="viewcode-block" id="is_writeable"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.is_writeable">[docs]</a><span class="k">def</span> <span class="nf">is_writeable</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="n">fdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+    <span class="n">ftmp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fdir</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">999999999</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">fdir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">W_OK</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">builtins</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ftmp</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">):</span>
+                <span class="k">pass</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">ftmp</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">PermissionError</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="nojump_filename"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.nojump_filename">[docs]</a><span class="k">def</span> <span class="nf">nojump_filename</span><span class="p">(</span><span class="n">reader</span><span class="p">):</span>
+    <span class="n">directory</span><span class="p">,</span> <span class="n">fname</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s1">&#39;.</span><span class="si">{}</span><span class="s1">.nojump.npz&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fname</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_writeable</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">fname</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">],</span> <span class="s1">&#39;.mdevaluate/nojump&#39;</span><span class="p">),</span>
+            <span class="n">directory</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;.</span><span class="si">{}</span><span class="s1">.nojump.npz&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Saving nojump to </span><span class="si">{}</span><span class="s1">, since original location is not writeable.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fname</span><span class="p">))</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fname</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fname</span></div>
+
+
+<span class="n">CSR_ATTRS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;indices&#39;</span><span class="p">,</span> <span class="s1">&#39;indptr&#39;</span><span class="p">)</span>
+<span class="n">NOJUMP_MAGIC</span> <span class="o">=</span> <span class="mi">2016</span>
+
+
+<div class="viewcode-block" id="parse_jumps"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.parse_jumps">[docs]</a><span class="k">def</span> <span class="nf">parse_jumps</span><span class="p">(</span><span class="n">trajectory</span><span class="p">):</span>
+    <span class="n">prev</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">whole</span>
+    <span class="n">box</span> <span class="o">=</span> <span class="n">prev</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
+    <span class="n">SparseData</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;SparseData&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;col&#39;</span><span class="p">])</span>
+    <span class="n">jump_data</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">SparseData</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">),</span> <span class="n">row</span><span class="o">=</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;l&#39;</span><span class="p">),</span> <span class="n">col</span><span class="o">=</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;l&#39;</span><span class="p">)),</span>
+        <span class="n">SparseData</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">),</span> <span class="n">row</span><span class="o">=</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;l&#39;</span><span class="p">),</span> <span class="n">col</span><span class="o">=</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;l&#39;</span><span class="p">)),</span>
+        <span class="n">SparseData</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">),</span> <span class="n">row</span><span class="o">=</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;l&#39;</span><span class="p">),</span> <span class="n">col</span><span class="o">=</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;l&#39;</span><span class="p">))</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">curr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">trajectory</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">500</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Parse jumps Step: </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="p">((</span><span class="n">curr</span> <span class="o">-</span> <span class="n">prev</span><span class="p">)</span> <span class="o">/</span> <span class="n">box</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span>
+        <span class="n">prev</span> <span class="o">=</span> <span class="n">curr</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+            <span class="n">col</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">delta</span><span class="p">[:,</span> <span class="n">d</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">jump_data</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="o">.</span><span class="n">col</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+            <span class="n">jump_data</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">col</span><span class="p">))</span>
+            <span class="n">jump_data</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">delta</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="n">d</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">jump_data</span></div>
+
+
+<div class="viewcode-block" id="generate_nojump_matrixes"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.generate_nojump_matrixes">[docs]</a><span class="k">def</span> <span class="nf">generate_nojump_matrixes</span><span class="p">(</span><span class="n">trajectory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create the matrixes with pbc jumps for a trajectory.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;generate Nojump Matrixes for: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trajectory</span><span class="p">))</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">jump_data</span> <span class="o">=</span> <span class="n">parse_jumps</span><span class="p">(</span><span class="n">trajectory</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Failed to parse jumps for: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trajectory</span><span class="p">))</span>
+        <span class="k">return</span>
+
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">trajectory</span><span class="p">)</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">trajectory</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">trajectory</span><span class="o">.</span><span class="n">frames</span><span class="o">.</span><span class="n">nojump_matrixes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+        <span class="n">sparse</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">row</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">col</span><span class="p">)),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">M</span><span class="p">))</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">jump_data</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="save_nojump_matrixes"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.save_nojump_matrixes">[docs]</a><span class="k">def</span> <span class="nf">save_nojump_matrixes</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">matrixes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">matrixes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">matrixes</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">nojump_matrixes</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;checksum&#39;</span><span class="p">:</span> <span class="n">checksum</span><span class="p">(</span><span class="n">NOJUMP_MAGIC</span><span class="p">,</span> <span class="n">checksum</span><span class="p">(</span><span class="n">reader</span><span class="p">))}</span>
+    <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">mat</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">matrixes</span><span class="p">):</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;shape&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">CSR_ATTRS</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">d</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+
+    <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">nojump_filename</span><span class="p">(</span><span class="n">reader</span><span class="p">),</span> <span class="o">**</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_nojump_matrixes"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.load_nojump_matrixes">[docs]</a><span class="k">def</span> <span class="nf">load_nojump_matrixes</span><span class="p">(</span><span class="n">reader</span><span class="p">):</span>
+    <span class="n">zipname</span> <span class="o">=</span> <span class="n">nojump_filename</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">zipname</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="n">BadZipFile</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
+        <span class="c1"># npz-files can be corrupted, propably a bug for big arrays saved with savez_compressed?</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Removing zip-File: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">zipname</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">nojump_filename</span><span class="p">(</span><span class="n">reader</span><span class="p">))</span>
+        <span class="k">return</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;checksum&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">checksum</span><span class="p">(</span><span class="n">NOJUMP_MAGIC</span><span class="p">,</span> <span class="n">checksum</span><span class="p">(</span><span class="n">reader</span><span class="p">)):</span>
+            <span class="n">reader</span><span class="o">.</span><span class="n">nojump_matrixes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+                <span class="n">sparse</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">(</span>
+                    <span class="nb">tuple</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">d</span><span class="p">)]</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">CSR_ATTRS</span><span class="p">),</span>
+                    <span class="n">shape</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;shape&#39;</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Loaded Nojump Matrixes: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nojump_filename</span><span class="p">(</span><span class="n">reader</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Invlaid Nojump Data: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nojump_filename</span><span class="p">(</span><span class="n">reader</span><span class="p">)))</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Removing zip-File: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">zipname</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">nojump_filename</span><span class="p">(</span><span class="n">reader</span><span class="p">))</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="BaseReader"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.BaseReader">[docs]</a><span class="k">class</span> <span class="nc">BaseReader</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Base class for trajectory readers.&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rd</span><span class="o">.</span><span class="n">filename</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nojump_matrixes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nojump_matrixes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NojumpError</span><span class="p">(</span><span class="s1">&#39;Nojump Data not available: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nojump_matrixes</span>
+
+    <span class="nd">@nojump_matrixes</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">nojump_matrixes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mats</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nojump_matrixes</span> <span class="o">=</span> <span class="n">mats</span>
+        <span class="n">save_nojump_matrixes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            filename: Trajectory file to open.</span>
+<span class="sd">            reindex (bool, opt.): If True, regenerate the index file if necessary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rd</span> <span class="o">=</span> <span class="n">pygmx</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="n">ignore_index_timestamps</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">InvalidMagicException</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidIndexException</span><span class="p">(</span><span class="s1">&#39;This is not a valid index file: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">InvalidIndexException</span><span class="p">,</span> <span class="ne">EOFError</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">reindex</span><span class="p">:</span>
+                <span class="n">pygmx</span><span class="o">.</span><span class="n">gromacs</span><span class="o">.</span><span class="n">index_xtcfile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rd</span> <span class="o">=</span> <span class="n">pygmx</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">InvalidIndexException</span><span class="p">(</span><span class="s1">&#39;Index file is invalid, us reindex=True to regenerate.&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nojump_matrixes</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">nojump_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+            <span class="n">load_nojump_matrixes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rd</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rd</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__checksum__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">checksum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rd</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rd</span><span class="o">.</span><span class="n">cache</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="CachedReader"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.CachedReader">[docs]</a><span class="k">class</span> <span class="nc">CachedReader</span><span class="p">(</span><span class="n">BaseReader</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A reader that has a least-recently-used cache for frames.&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">cache_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get Information about the lru cache.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_item</span><span class="o">.</span><span class="n">cache_info</span><span class="p">()</span>
+
+<div class="viewcode-block" id="CachedReader.clear_cache"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.CachedReader.clear_cache">[docs]</a>    <span class="k">def</span> <span class="nf">clear_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clear the cache of the frames.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_item</span><span class="o">.</span><span class="n">cache_clear</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            filename (str): Trajectory file that will be opened.</span>
+<span class="sd">            maxsize: Maximum size of the lru_cache or None for infinite cache.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="n">reindex</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="n">ignore_index_timestamps</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_item</span> <span class="o">=</span> <span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">maxsize</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_item</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Buffer function for lru_cache, since __getitem__ can not be cached.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="n">DASK_VERSION</span> <span class="o">&gt;=</span> <span class="s1">&#39;0.15.0&#39;</span><span class="p">:</span>
+    <span class="n">read_xtcframe_delayed</span> <span class="o">=</span> <span class="n">delayed</span><span class="p">(</span><span class="n">pure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">traverse</span><span class="o">=</span><span class="kc">False</span><span class="p">)(</span><span class="n">pygmx</span><span class="o">.</span><span class="n">read_xtcframe</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">read_xtcframe_delayed</span> <span class="o">=</span> <span class="n">delayed</span><span class="p">(</span><span class="n">pure</span><span class="o">=</span><span class="kc">True</span><span class="p">)(</span><span class="n">pygmx</span><span class="o">.</span><span class="n">read_xtcframe</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="DelayedReader"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.DelayedReader">[docs]</a><span class="k">class</span> <span class="nc">DelayedReader</span><span class="p">(</span><span class="n">BaseReader</span><span class="p">):</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rd</span><span class="o">.</span><span class="n">filename</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filename</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">natoms</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rd</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">coordinates</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rd</span><span class="o">.</span><span class="n">cache</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rd</span><span class="o">.</span><span class="n">filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rd</span> <span class="o">=</span> <span class="kc">None</span>
+        
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_get_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">read_xtcframe_delayed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">frame</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">natoms</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_item</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EnergyReader"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.EnergyReader">[docs]</a><span class="k">class</span> <span class="nc">EnergyReader</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A reader for Gromacs energy files.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edrfile</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            edrfile: Filename of the energy file</span>
+<span class="sd">            topology (opt.): Filename of the topology, speeds up file io since the length of the energy file is known</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">edr</span> <span class="o">=</span> <span class="n">pygmx</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">edrfile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">edr</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">edr</span><span class="o">.</span><span class="n">types</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get time series of an energy type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">type</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Energy type </span><span class="si">{}</span><span class="s1"> not found in Energy File.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">))</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Niels Müller.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'17.08',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

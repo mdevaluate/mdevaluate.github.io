@@ -1,0 +1,774 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mdevaluate.coordinates &mdash; mdevaluate 17.08 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="mdevaluate 17.08 documentation" href="../../index.html"/>
+        <link rel="up" title="mdevaluate" href="../mdevaluate.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> mdevaluate
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17.08
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general-hints.html">General Hints for Python Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gallery/index.html">Example Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contribution Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Reference Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">mdevaluate</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../mdevaluate.html">mdevaluate</a> &raquo;</li>
+        
+      <li>mdevaluate.coordinates</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mdevaluate.coordinates</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">lru_cache</span><span class="p">,</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">copy</span>
+<span class="kn">from</span> <span class="nn">.logging</span> <span class="k">import</span> <span class="n">logger</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="k">import</span> <span class="n">cKDTree</span><span class="p">,</span> <span class="n">KDTree</span>
+
+<span class="kn">from</span> <span class="nn">.atoms</span> <span class="k">import</span> <span class="n">AtomSubset</span>
+<span class="kn">from</span> <span class="nn">.pbc</span> <span class="k">import</span> <span class="n">whole</span><span class="p">,</span> <span class="n">nojump</span><span class="p">,</span> <span class="n">pbc_diff</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">mask2indices</span><span class="p">,</span> <span class="n">singledispatchmethod</span>
+<span class="kn">from</span> <span class="nn">.checksum</span> <span class="k">import</span> <span class="n">checksum</span>
+
+
+<div class="viewcode-block" id="UnknownCoordinatesMode"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.UnknownCoordinatesMode">[docs]</a><span class="k">class</span> <span class="nc">UnknownCoordinatesMode</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="rotate_axis"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.rotate_axis">[docs]</a><span class="k">def</span> <span class="nf">rotate_axis</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rotate a set of coordinates to a given axis.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span>
+    <span class="n">zaxis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">axis</span> <span class="o">==</span> <span class="n">zaxis</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">coords</span>
+    <span class="n">rotation_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">zaxis</span><span class="p">)</span>
+    <span class="n">rotation_axis</span> <span class="o">=</span> <span class="n">rotation_axis</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rotation_axis</span><span class="p">)</span>
+
+<div class="viewcode-block" id="spherical_radius"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.spherical_radius">[docs]</a>    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">axis</span> <span class="o">@</span> <span class="n">zaxis</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">axis</span><span class="p">))</span>
+
+    <span class="c1"># return theta/pi, rotation_axis</span>
+
+    <span class="n">ux</span><span class="p">,</span> <span class="n">uy</span><span class="p">,</span> <span class="n">uz</span> <span class="o">=</span> <span class="n">rotation_axis</span>
+    <span class="n">cross_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">uz</span><span class="p">,</span> <span class="n">uy</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">uz</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">ux</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">uy</span><span class="p">,</span> <span class="n">ux</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="p">])</span>
+    <span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">axis</span><span class="p">))</span> \
+        <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span> <span class="o">*</span> <span class="n">rotation_axis</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">@</span> <span class="n">rotation_axis</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> \
+        <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">cross_matrix</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">rotated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">rotation_matrix</span> <span class="o">@</span> <span class="n">xyz</span> <span class="k">for</span> <span class="n">xyz</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rotated</span> <span class="o">=</span> <span class="n">rotation_matrix</span> <span class="o">@</span> <span class="n">coords</span>
+    <span class="k">return</span> <span class="n">rotated</span></div>
+
+
+<span class="k">def</span> <span class="nf">spherical_radius</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transform a frame of cartesian coordinates into the sperical radius.</span>
+<span class="sd">    If origin=None the center of the box is taken as the coordinates origin.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">origin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">origin</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="p">((</span><span class="n">frame</span> <span class="o">-</span> <span class="n">origin</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span></div>
+
+
+<div class="viewcode-block" id="polar_coordinates"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.polar_coordinates">[docs]</a><span class="k">def</span> <span class="nf">polar_coordinates</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert cartesian to polar coordinates.&quot;&quot;&quot;</span>
+    <span class="n">radius</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">radius</span><span class="p">,</span> <span class="n">phi</span></div>
+
+
+<div class="viewcode-block" id="spherical_coordinates"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.spherical_coordinates">[docs]</a><span class="k">def</span> <span class="nf">spherical_coordinates</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert cartesian to spherical coordinates.&quot;&quot;&quot;</span>
+    <span class="n">xy</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">polar_coordinates</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">z</span> <span class="o">/</span> <span class="n">xy</span><span class="p">)</span>
+    <span class="n">radius</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="k">return</span> <span class="n">radius</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">theta</span></div>
+
+
+<div class="viewcode-block" id="radial_selector"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.radial_selector">[docs]</a><span class="k">def</span> <span class="nf">radial_selector</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">,</span> <span class="n">rmin</span><span class="p">,</span> <span class="n">rmax</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a selection of all atoms with radius in the interval [rmin, rmax].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">crd</span> <span class="o">=</span> <span class="n">coordinates</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">step</span><span class="p">]</span>
+    <span class="n">rad</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">polar_coordinates</span><span class="p">(</span><span class="n">crd</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">crd</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">selector</span> <span class="o">=</span> <span class="p">(</span><span class="n">rad</span> <span class="o">&gt;=</span> <span class="n">rmin</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">rad</span> <span class="o">&lt;=</span> <span class="n">rmax</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mask2indices</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="spatial_selector"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.spatial_selector">[docs]</a><span class="k">def</span> <span class="nf">spatial_selector</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">rmin</span><span class="p">,</span> <span class="n">rmax</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Select a subset of atoms which have a radius between rmin and rmax.</span>
+<span class="sd">    Coordinates are filtered by the condition::</span>
+
+<span class="sd">      rmin &lt;= transform(frame) &lt;= rmax</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        frame: The coordinates of the actual trajectory</span>
+<span class="sd">        transform:</span>
+<span class="sd">            A function that transforms the coordinates of the frames into</span>
+<span class="sd">            the one-dimensional spatial coordinate (e.g. radius).</span>
+<span class="sd">        rmin: Minimum value of the radius</span>
+<span class="sd">        rmax: Maximum value of the radius</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+    <span class="n">selector</span> <span class="o">=</span> <span class="p">(</span><span class="n">rmin</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">rmax</span> <span class="o">&gt;=</span> <span class="n">r</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mask2indices</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CoordinateFrame"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.CoordinateFrame">[docs]</a><span class="k">class</span> <span class="nc">CoordinateFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+
+    <span class="n">_known_modes</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;pbc&#39;</span><span class="p">,</span> <span class="s1">&#39;whole&#39;</span><span class="p">,</span> <span class="s1">&#39;nojump&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">box</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">]</span><span class="o">.</span><span class="n">box</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">volume</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span><span class="o">.</span><span class="n">cumprod</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">]</span><span class="o">.</span><span class="n">time</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">masses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">masses</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">atom_subset</span><span class="o">.</span><span class="n">selection</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">charges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">charges</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">atom_subset</span><span class="o">.</span><span class="n">selection</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">residue_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">atom_subset</span><span class="o">.</span><span class="n">residue_ids</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">residue_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">atom_subset</span><span class="o">.</span><span class="n">residue_names</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">atom_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">atom_subset</span><span class="o">.</span><span class="n">atom_names</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">whole</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">whole</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;whole&#39;</span>
+        <span class="k">return</span> <span class="n">frame</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pbc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;pbc&#39;</span>
+        <span class="k">return</span> <span class="n">frame</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nojump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">!=</span> <span class="s1">&#39;nojump&#39;</span><span class="p">:</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="n">nojump</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">frame</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;nojump&#39;</span>
+            <span class="k">return</span> <span class="n">frame</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">subtype</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">buffer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">coordinates</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="n">subtype</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">strides</span><span class="p">)</span>
+
+        <span class="n">obj</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="n">coordinates</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">step</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+    <span class="k">def</span> <span class="nf">__array_finalize__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;coordinates&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;step&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Coordinates"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.Coordinates">[docs]</a><span class="k">class</span> <span class="nc">Coordinates</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Coordinates represent trajectory data, which is used for evaluation functions.</span>
+
+<span class="sd">    Atoms may be selected by specifing a atom_subset or a atom_filter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Coordinates.get_mode"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.Coordinates.get_mode">[docs]</a>    <span class="k">def</span> <span class="nf">get_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom_subset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Coordinates</span><span class="p">(</span><span class="n">frames</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">,</span> <span class="n">atom_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">atom_subset</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">_slice</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Coordinates</span><span class="p">(</span><span class="n">frames</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">,</span> <span class="n">atom_filter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">atom_filter</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">_slice</span><span class="p">]</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pbc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mode</span><span class="p">(</span><span class="s1">&#39;pbc&#39;</span><span class="p">)</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">whole</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mode</span><span class="p">(</span><span class="s1">&#39;whole&#39;</span><span class="p">)</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nojump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mode</span><span class="p">(</span><span class="s1">&#39;nojump&#39;</span><span class="p">)</span>
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span>
+
+    <span class="nd">@mode</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">CoordinateFrame</span><span class="o">.</span><span class="n">_known_modes</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Changing the Coordinates mode directly is deprecated. Use Coordinates.</span><span class="si">%s</span><span class="s1"> instead, which returns a copy.&#39;</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnknownCoordinatesMode</span><span class="p">(</span><span class="s1">&#39;No such mode: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">atom_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atom_subset</span><span class="p">:</span> <span class="n">AtomSubset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            frames: The trajectory reader</span>
+<span class="sd">            atom_filter (opt.): A mask which selects a subset of the system</span>
+<span class="sd">            atom_subset (opt.): A AtomSubset that selects a subset of the system</span>
+<span class="sd">            mode (opt.): PBC mode of the Coordinates, can be pbc, whole or nojump.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            The caching in Coordinates is deprecated, use the CachedReader or the function open</span>
+<span class="sd">            from the reader module instead.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frames</span> <span class="o">=</span> <span class="n">frames</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_slice</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">atom_filter</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">atom_subset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Cannot use both: subset and filter&quot;</span>
+
+        <span class="k">if</span> <span class="n">atom_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">atom_filter</span> <span class="o">=</span> <span class="n">atom_filter</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">atom_subset</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="n">atom_subset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">atom_filter</span> <span class="o">=</span> <span class="n">atom_subset</span><span class="o">.</span><span class="n">selection</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">atom_subset</span> <span class="o">=</span> <span class="n">atom_subset</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atom_subset</span><span class="o">.</span><span class="n">atoms</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">atom_filter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">coordinates</span><span class="p">),),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">atom_subset</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Coordinates.get_frame"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.Coordinates.get_frame">[docs]</a>    <span class="k">def</span> <span class="nf">get_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fnr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the fnr-th frame.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">fnr</span><span class="p">]</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">atom_filter</span><span class="p">]</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">CoordinateFrame</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">fnr</span><span class="p">)</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">CoordinateFrame</span><span class="p">)</span>
+            <span class="n">frame</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="n">frame</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">fnr</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">frame</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">EOFError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span>
+
+        <span class="k">return</span> <span class="n">frame</span></div>
+
+<div class="viewcode-block" id="Coordinates.clear_cache"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.Coordinates.clear_cache">[docs]</a>    <span class="k">def</span> <span class="nf">clear_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clears the frame cache, if it is enabled.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">,</span> <span class="s1">&#39;clear_cache&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="o">.</span><span class="n">clear_cache</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))[</span><span class="bp">self</span><span class="o">.</span><span class="n">_slice</span><span class="p">]:</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="nd">@singledispatchmethod</span>
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="nd">@__getitem__</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="nb">slice</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="n">sliced</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">sliced</span><span class="o">.</span><span class="n">_slice</span> <span class="o">=</span> <span class="n">item</span>
+        <span class="k">return</span> <span class="n">sliced</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__checksum__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">checksum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom_filter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slice</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Coordinates &lt;</span><span class="si">{}</span><span class="s2">&gt;: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom_subset</span><span class="p">)</span>
+
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">AtomSubset</span><span class="o">.</span><span class="n">subset</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">subset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Coordinates</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">,</span> <span class="n">atom_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">atom_subset</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom_subset</span><span class="o">.</span><span class="n">description</span>
+
+    <span class="nd">@description</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">desc</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom_subset</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">desc</span></div>
+
+
+<div class="viewcode-block" id="MeanCoordinates"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.MeanCoordinates">[docs]</a><span class="k">class</span> <span class="nc">MeanCoordinates</span><span class="p">(</span><span class="n">Coordinates</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">atom_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">atom_filter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mean</span> <span class="o">=</span> <span class="n">mean</span>
+        <span class="k">assert</span> <span class="n">mean</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Mean must be positive&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">item</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">item</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean</span><span class="p">):</span>
+            <span class="n">frame</span> <span class="o">+=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">frame</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean</span>
+
+<div class="viewcode-block" id="MeanCoordinates.len"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.MeanCoordinates.len">[docs]</a>    <span class="k">def</span> <span class="nf">len</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="CoordinatesMap"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.CoordinatesMap">[docs]</a><span class="k">class</span> <span class="nc">CoordinatesMap</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="n">coordinates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">frames</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom_subset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">atom_subset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="n">function</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">partial</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="n">item</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">CoordinateFrame</span><span class="p">):</span>
+                <span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">CoordinateFrame</span><span class="p">)</span>
+            <span class="n">frame</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="n">frame</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">item</span>
+            <span class="k">return</span> <span class="n">frame</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">frames</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__checksum__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">checksum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">)</span>
+
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">Coordinates</span><span class="o">.</span><span class="n">subset</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">subset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">CoordinatesMap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+
+    <span class="nd">@description</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">desc</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_description</span> <span class="o">=</span> <span class="n">desc</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nojump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">CoordinatesMap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">nojump</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">whole</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">CoordinatesMap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">whole</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pbc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">CoordinatesMap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">pbc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CoordinatesFilter"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.CoordinatesFilter">[docs]</a><span class="k">class</span> <span class="nc">CoordinatesFilter</span><span class="p">:</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">atom_subset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">,</span> <span class="n">atom_filter</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="n">coordinates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom_filter</span> <span class="o">=</span> <span class="n">atom_filter</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
+            <span class="n">sliced</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">sliced</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">sliced</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">frame</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">atom_filter</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="CoordinatesKDTree"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.CoordinatesKDTree">[docs]</a><span class="k">class</span> <span class="nc">CoordinatesKDTree</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A KDTree of coordinates frames. The KDtrees are cached by a :func:`functools.lru_cache`.</span>
+<span class="sd">    Uses :class:`scipy.spatial.cKDTree` by default, since it&#39;s significantly faster.</span>
+<span class="sd">    Make sure to use scipy 0.17 or later or switch to the normal KDTree, since cKDTree has</span>
+<span class="sd">    a memory leak in earlier versions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="CoordinatesKDTree.clear_cache"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.CoordinatesKDTree.clear_cache">[docs]</a>    <span class="k">def</span> <span class="nf">clear_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clear the LRU cache.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_tree_at_index</span><span class="o">.</span><span class="n">cache_clear</span><span class="p">()</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">cache_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return info about the state of the cache.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tree_at_index</span><span class="o">.</span><span class="n">cache_info</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_get_tree_at_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kdtree</span><span class="p">(</span><span class="n">frame</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="p">(</span><span class="n">frame</span><span class="p">)])</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maxcache</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">ckdtree</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            frames: Trajectory of the simulation, can be Coordinates object or reader</span>
+<span class="sd">            selector: Selector function that selects a subset of each frame</span>
+<span class="sd">            maxcache: Maxsize of the :func:`~functools.lru_cache`</span>
+<span class="sd">            ckdtree: Use :class:`~scipy.spatial.cKDTree` or :class:`~scipy.spatial.KDTree` if False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">selector</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">selector</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frames</span> <span class="o">=</span> <span class="n">frames</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kdtree</span> <span class="o">=</span> <span class="n">cKDTree</span> <span class="k">if</span> <span class="n">ckdtree</span> <span class="k">else</span> <span class="n">KDTree</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_tree_at_index</span> <span class="o">=</span> <span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">maxcache</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_tree_at_index</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tree_at_index</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__checksum__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">checksum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="map_coordinates"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.map_coordinates">[docs]</a><span class="k">def</span> <span class="nf">map_coordinates</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">CoordinatesMap</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">partial</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">wrapped</span></div>
+
+
+<div class="viewcode-block" id="centers_of_mass"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.centers_of_mass">[docs]</a><span class="nd">@map_coordinates</span>
+<span class="k">def</span> <span class="nf">centers_of_mass</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">masses</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    A- 1</span>
+<span class="sd">    B- 2</span>
+<span class="sd">    A- 1</span>
+<span class="sd">    C  3</span>
+<span class="sd">    A-</span>
+<span class="sd">    B-</span>
+<span class="sd">    A-</span>
+<span class="sd">    C</span>
+<span class="sd">    A-</span>
+<span class="sd">    B-</span>
+<span class="sd">    A-</span>
+<span class="sd">    C</span>
+
+
+<span class="sd">    Example:</span>
+<span class="sd">    rd = XTCReader(&#39;t.xtc&#39;)</span>
+<span class="sd">    coordinates = Coordinates(rd)</span>
+<span class="sd">    com = centers_of_mass(coordinates, (1.0, 2.0, 1.0, 3.0))</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># At first, regroup our array</span>
+    <span class="n">number_of_masses</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">masses</span><span class="p">)</span>
+    <span class="n">number_of_coordinates</span><span class="p">,</span> <span class="n">number_of_dimensions</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">number_of_new_coordinates</span> <span class="o">=</span> <span class="n">number_of_coordinates</span> <span class="o">//</span> <span class="n">number_of_masses</span>
+    <span class="n">grouped_masses</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">number_of_new_coordinates</span><span class="p">,</span> <span class="n">number_of_masses</span><span class="p">,</span> <span class="n">number_of_dimensions</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">grouped_masses</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">masses</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="pore_coordinates"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.pore_coordinates">[docs]</a><span class="nd">@map_coordinates</span>
+<span class="k">def</span> <span class="nf">pore_coordinates</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">sym_axis</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Map coordinates of a pore simulation so the pore has cylindrical symmetry.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        coordinates: Coordinates of the simulation</span>
+<span class="sd">        origin: Origin of the pore which will be the coordinates origin after mapping</span>
+<span class="sd">        sym_axis (opt.): Symmtery axis of the pore, may be a literal direction</span>
+<span class="sd">            &#39;x&#39;, &#39;y&#39; or &#39;z&#39; or an array of shape (3,)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">sym_axis</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">):</span>
+        <span class="n">rot_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
+        <span class="n">rot_axis</span><span class="p">[[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">sym_axis</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rot_axis</span> <span class="o">=</span> <span class="n">sym_axis</span>
+
+    <span class="k">return</span> <span class="n">rotate_axis</span><span class="p">(</span><span class="n">coordinates</span> <span class="o">-</span> <span class="n">origin</span><span class="p">,</span> <span class="n">rot_axis</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="vectors"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.vectors">[docs]</a><span class="nd">@map_coordinates</span>
+<span class="k">def</span> <span class="nf">vectors</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">atoms_a</span><span class="p">,</span> <span class="n">atoms_b</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the vectors between the atoms of two subsets.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        coordinates: The Coordinates object the atoms will be taken from</span>
+<span class="sd">        atoms_a: Mask or indices of the first atom subset</span>
+<span class="sd">        atoms_b: Mask or indices of the second atom subset</span>
+<span class="sd">        normed (opt.): If the vectors should be normed</span>
+<span class="sd">        box (opt.): If not None, the vectors are calcualte with PBC</span>
+
+<span class="sd">    The defintion of atoms_a/b can be any possible subript of a numpy array.</span>
+<span class="sd">    They can, for example, be given as a masking array of bool values with the</span>
+<span class="sd">    same length as the frames of the coordinates. Or they can be a list of</span>
+<span class="sd">    indices selecting the atoms of these indices from each frame.</span>
+
+<span class="sd">    It is possible to compute the mean of several atoms before calculating the vectors,</span>
+<span class="sd">    by using a two-dimensional list of indices. The following code computes the vectors</span>
+<span class="sd">    between atoms 0, 3, 6 and the mean coordinate of atoms 1, 4, 7 and 2, 5, 8::</span>
+
+<span class="sd">        &gt;&gt;&gt; inds_a = [0, 3, 6]</span>
+<span class="sd">        &gt;&gt;&gt; inds_b = [[1, 4, 7], [2, 5, 8]]</span>
+<span class="sd">        &gt;&gt;&gt; vectors(coords, inds_a, inds_b)</span>
+<span class="sd">        array([</span>
+<span class="sd">            coords[0] - (coords[1] + coords[2])/2,</span>
+<span class="sd">            coords[3] - (coords[4] + coords[5])/2,</span>
+<span class="sd">            coords[6] - (coords[7] + coords[8])/2,</span>
+<span class="sd">        ])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">coords_a</span> <span class="o">=</span> <span class="n">coordinates</span><span class="p">[</span><span class="n">atoms_a</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords_a</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">coords_a</span> <span class="o">=</span> <span class="n">coords_a</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">coords_b</span> <span class="o">=</span> <span class="n">coordinates</span><span class="p">[</span><span class="n">atoms_b</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords_b</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">coords_b</span> <span class="o">=</span> <span class="n">coords_b</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">vectors</span> <span class="o">=</span> <span class="n">pbc_diff</span><span class="p">(</span><span class="n">coords_a</span><span class="p">,</span> <span class="n">coords_b</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="p">)</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vectors</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">normed</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">vectors</span> <span class="o">/</span> <span class="n">norm</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Niels Müller.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'17.08',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

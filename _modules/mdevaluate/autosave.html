@@ -1,0 +1,409 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mdevaluate.autosave &mdash; mdevaluate 17.08 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="mdevaluate 17.08 documentation" href="../../index.html"/>
+        <link rel="up" title="mdevaluate" href="../mdevaluate.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> mdevaluate
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17.08
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general-hints.html">General Hints for Python Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gallery/index.html">Example Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contribution Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Reference Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">mdevaluate</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../mdevaluate.html">mdevaluate</a> &raquo;</li>
+        
+      <li>mdevaluate.autosave</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mdevaluate.autosave</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+
+<span class="kn">from</span> <span class="nn">.checksum</span> <span class="k">import</span> <span class="n">checksum</span>
+<span class="kn">from</span> <span class="nn">.logging</span> <span class="k">import</span> <span class="n">logger</span>
+
+<span class="n">autosave_directory</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">load_autosave_data</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">verbose_print</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">user_autosave_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">],</span> <span class="s1">&#39;.mdevaluate/autosave&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="notify"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.autosave.notify">[docs]</a><span class="k">def</span> <span class="nf">notify</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">verbose_print</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="enable"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.autosave.enable">[docs]</a><span class="k">def</span> <span class="nf">enable</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">load_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enable auto saving results of functions decorated with :func:`autosave_data`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dir: Directory where the data should be saved.</span>
+<span class="sd">        load_data (opt., bool): If data should also be loaded.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">autosave_directory</span><span class="p">,</span> <span class="n">load_autosave_data</span><span class="p">,</span> <span class="n">verbose_print</span>
+    <span class="n">verbose_print</span> <span class="o">=</span> <span class="n">verbose</span>
+    <span class="c1"># absolute = os.path.abspath(dir)</span>
+    <span class="c1"># os.makedirs(absolute, exist_ok=True)</span>
+    <span class="n">autosave_directory</span> <span class="o">=</span> <span class="nb">dir</span>
+    <span class="n">load_autosave_data</span> <span class="o">=</span> <span class="n">load_data</span>
+    <span class="n">notify</span><span class="p">(</span><span class="s1">&#39;Enabled autosave in directory: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">autosave_directory</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="disable"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.autosave.disable">[docs]</a><span class="k">def</span> <span class="nf">disable</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Disable autosave.&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">autosave_directory</span><span class="p">,</span> <span class="n">load_autosave_data</span>
+    <span class="n">autosave_directory</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">load_autosave_data</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="disabled"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.autosave.disabled">[docs]</a><span class="k">class</span> <span class="nc">disabled</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A context manager that disbales the autosave module within its context.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        import mdevaluate as md</span>
+<span class="sd">        md.autosave.enable(&#39;data&#39;)</span>
+<span class="sd">        with md.autosave.disabled():</span>
+<span class="sd">            # Autosave functionality is disabled within this context.</span>
+<span class="sd">            md.correlation.shifted_correlation(</span>
+<span class="sd">                ...</span>
+<span class="sd">            )</span>
+
+<span class="sd">        # After the context is exited, autosave will work as before.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_autosave_directory</span> <span class="o">=</span> <span class="n">autosave_directory</span>
+        <span class="n">disable</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">enable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_autosave_directory</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_directory"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.autosave.get_directory">[docs]</a><span class="k">def</span> <span class="nf">get_directory</span><span class="p">(</span><span class="n">reader</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the autosave directory for a trajectory reader.&quot;&quot;&quot;</span>
+    <span class="n">outdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">savedir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">autosave_directory</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">savedir</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">savedir</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">PermissionError</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">savedir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">W_OK</span><span class="p">):</span>
+        <span class="n">savedir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">user_autosave_directory</span><span class="p">,</span> <span class="n">savedir</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Switched autosave directory to </span><span class="si">{}</span><span class="s1">, since original location is not writeable.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">savedir</span><span class="p">))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">savedir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">savedir</span></div>
+
+
+<div class="viewcode-block" id="get_filename"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.autosave.get_filename">[docs]</a><span class="k">def</span> <span class="nf">get_filename</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">checksum</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the autosave filename for a specific function call.&quot;&quot;&quot;</span>
+    <span class="n">func_desc</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s1">&#39;__name__&#39;</span><span class="p">):</span>
+            <span class="n">func_desc</span> <span class="o">+=</span> <span class="s1">&#39;_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">):</span>
+            <span class="n">func_desc</span> <span class="o">+=</span> <span class="s1">&#39;_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s1">&#39;frames&#39;</span><span class="p">):</span>
+            <span class="n">savedir</span> <span class="o">=</span> <span class="n">get_directory</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">frames</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">arg</span><span class="o">.</span><span class="n">description</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">description</span> <span class="o">+=</span> <span class="s1">&#39;_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.npz&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">func_desc</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">savedir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="verify_file"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.autosave.verify_file">[docs]</a><span class="k">def</span> <span class="nf">verify_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">checksum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Verify if the file matches the function call.&quot;&quot;&quot;</span>
+    <span class="n">file_checksum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;checksum&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">file_checksum</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;checksum&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">file_checksum</span> <span class="o">==</span> <span class="n">checksum</span></div>
+
+
+<div class="viewcode-block" id="save_data"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.autosave.save_data">[docs]</a><span class="k">def</span> <span class="nf">save_data</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">checksum</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Save data and checksum to a file.&quot;&quot;&quot;</span>
+    <span class="n">notify</span><span class="p">(</span><span class="s1">&#39;Saving result to file: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+        <span class="n">arr</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">arr</span>
+
+    <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">checksum</span><span class="o">=</span><span class="n">checksum</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_data"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.autosave.load_data">[docs]</a><span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load data from a npz file.&quot;&quot;&quot;</span>
+    <span class="n">notify</span><span class="p">(</span><span class="s1">&#39;Loading result from file: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+    <span class="n">fdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;data&#39;</span> <span class="ow">in</span> <span class="n">fdata</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">fdata</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">fdata</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">fdata</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;arr&#39;</span> <span class="ow">in</span> <span class="n">k</span><span class="p">))</span>
+        <span class="n">save_data</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">fdata</span><span class="p">[</span><span class="s1">&#39;checksum&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="autosave_data"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.autosave.autosave_data">[docs]</a><span class="k">def</span> <span class="nf">autosave_data</span><span class="p">(</span><span class="n">nargs</span><span class="p">,</span> <span class="n">kwargs_keys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enable autosaving of results for a function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        nargs: Number of args which are relevant for the calculation.</span>
+<span class="sd">        kwargs_keys (opt.): List of keyword arguments which are relevant for the calculation.</span>
+<span class="sd">        version (opt.): </span>
+<span class="sd">            An optional version number of the decorated function, which replaces the checksum of</span>
+<span class="sd">            the function code, hence the checksum does not depend on the function code.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">decorator_function</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">autosave</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">autoload</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;autoload&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="n">load_autosave_data</span>
+            <span class="k">if</span> <span class="n">autosave_directory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">relevant_args</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">[:</span><span class="n">nargs</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">kwargs_keys</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">kwargs_keys</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                            <span class="n">relevant_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="n">version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">csum</span> <span class="o">=</span> <span class="n">legacy_csum</span> <span class="o">=</span> <span class="n">checksum</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">relevant_args</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">csum</span> <span class="o">=</span> <span class="n">checksum</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="o">*</span><span class="n">relevant_args</span><span class="p">)</span>
+                    <span class="n">legacy_csum</span> <span class="o">=</span> <span class="n">checksum</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">relevant_args</span><span class="p">)</span>
+
+                <span class="n">filename</span> <span class="o">=</span> <span class="n">get_filename</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">csum</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="o">*</span><span class="n">relevant_args</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">autoload</span> <span class="ow">and</span> <span class="p">(</span><span class="n">verify_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">csum</span><span class="p">)</span> <span class="ow">or</span> <span class="n">verify_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">legacy_csum</span><span class="p">)):</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                    <span class="n">save_data</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">csum</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="n">autosave</span>
+    <span class="k">return</span> <span class="n">decorator_function</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Niels Müller.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'17.08',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

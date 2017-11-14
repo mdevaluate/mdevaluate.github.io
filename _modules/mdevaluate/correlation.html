@@ -1,0 +1,526 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mdevaluate.correlation &mdash; mdevaluate 17.08 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="mdevaluate 17.08 documentation" href="../../index.html"/>
+        <link rel="up" title="mdevaluate" href="../mdevaluate.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> mdevaluate
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17.08
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general-hints.html">General Hints for Python Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gallery/index.html">Example Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contribution Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Reference Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">mdevaluate</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../mdevaluate.html">mdevaluate</a> &raquo;</li>
+        
+      <li>mdevaluate.correlation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mdevaluate.correlation</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numba</span>
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="k">import</span> <span class="n">legendre</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">chain</span>
+<span class="kn">import</span> <span class="nn">dask.array</span> <span class="k">as</span> <span class="nn">darray</span>
+
+<span class="kn">from</span> <span class="nn">.meta</span> <span class="k">import</span> <span class="n">annotate</span>
+<span class="kn">from</span> <span class="nn">.autosave</span> <span class="k">import</span> <span class="n">autosave_data</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">filon_fourier_transformation</span><span class="p">,</span> <span class="n">coherent_sum</span><span class="p">,</span> <span class="n">histogram</span>
+<span class="kn">from</span> <span class="nn">.pbc</span> <span class="k">import</span> <span class="n">pbc_diff</span>
+<span class="kn">from</span> <span class="nn">.logging</span> <span class="k">import</span> <span class="n">logger</span>
+
+
+<div class="viewcode-block" id="log_indices"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.correlation.log_indices">[docs]</a><span class="k">def</span> <span class="nf">log_indices</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">ls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">last</span> <span class="o">-</span> <span class="n">first</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">first</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="correlation"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.correlation.correlation">[docs]</a><span class="k">def</span> <span class="nf">correlation</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">frames</span><span class="p">):</span>
+    <span class="n">iterator</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+    <span class="n">start_frame</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">iterator</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">function</span><span class="p">(</span><span class="n">start_frame</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span> <span class="n">chain</span><span class="p">([</span><span class="n">start_frame</span><span class="p">],</span> <span class="n">iterator</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="subensemble_correlation"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.correlation.subensemble_correlation">[docs]</a><span class="k">def</span> <span class="nf">subensemble_correlation</span><span class="p">(</span><span class="n">selector_function</span><span class="p">,</span> <span class="n">correlation_function</span><span class="o">=</span><span class="n">correlation</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">c</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">frames</span><span class="p">):</span>
+        <span class="n">iterator</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+        <span class="n">start_frame</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">iterator</span><span class="p">)</span>
+        <span class="n">selector</span> <span class="o">=</span> <span class="n">selector_function</span><span class="p">(</span><span class="n">start_frame</span><span class="p">)</span>
+        <span class="n">subensemble</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="p">[</span><span class="n">selector</span><span class="p">],</span> <span class="n">chain</span><span class="p">([</span><span class="n">start_frame</span><span class="p">],</span> <span class="n">iterator</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">correlation_function</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">subensemble</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">c</span></div>
+
+
+<div class="viewcode-block" id="shifted_correlation"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.correlation.shifted_correlation">[docs]</a><span class="nd">@autosave_data</span><span class="p">(</span><span class="n">nargs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kwargs_keys</span><span class="o">=</span><span class="p">(</span>
+    <span class="s1">&#39;index_distribution&#39;</span><span class="p">,</span> <span class="s1">&#39;correlation&#39;</span><span class="p">,</span> <span class="s1">&#39;segments&#39;</span><span class="p">,</span> <span class="s1">&#39;window&#39;</span><span class="p">,</span> <span class="s1">&#39;skip&#39;</span><span class="p">,</span> <span class="s1">&#39;average&#39;</span>
+<span class="p">),</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;shifted_correlation-1&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">shifted_correlation</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span>
+                        <span class="n">index_distribution</span><span class="o">=</span><span class="n">log_indices</span><span class="p">,</span> <span class="n">correlation</span><span class="o">=</span><span class="n">correlation</span><span class="p">,</span>
+                        <span class="n">segments</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">average</span><span class="o">=</span><span class="kc">False</span><span class="p">,):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the time series for a correlation function.</span>
+
+<span class="sd">    The times at which the correlation is calculated are determined automatically by the</span>
+<span class="sd">    function given as ``index_distribution``. The default is a logarithmic distribution.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        function:   The function that should be correlated</span>
+<span class="sd">        frames:     The coordinates of the simulation data</span>
+<span class="sd">        index_distribution (opt.):</span>
+<span class="sd">                    A function that returns the indices for which the timeseries</span>
+<span class="sd">                    will be calculated</span>
+<span class="sd">        correlation (function, opt.):</span>
+<span class="sd">                    The correlation function</span>
+<span class="sd">        segments (int, opt.):</span>
+<span class="sd">                    The number of segments the time window will be shifted</span>
+<span class="sd">        window (float, opt.):</span>
+<span class="sd">                    The fraction of the simulation the time series will cover</span>
+<span class="sd">        skip (float, opt.):</span>
+<span class="sd">                    The fraction of the trajectory that will be skipped at the beginning,</span>
+<span class="sd">                    if this is None the start index of the frames slice will be used,</span>
+<span class="sd">                    which defaults to 0.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple:</span>
+<span class="sd">            A list of length N that contains the indices of the frames at which</span>
+<span class="sd">            the time series was calculated and a numpy array of shape (segments, N)</span>
+<span class="sd">            that holds the (non-avaraged) correlation data</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        Calculating the mean square displacement of a coordinates object named ``coords``:</span>
+
+<span class="sd">        &gt;&gt;&gt; indices, data = shifted_correlation(msd, coords)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">skip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">skip</span> <span class="o">=</span> <span class="n">frames</span><span class="o">.</span><span class="n">_slice</span><span class="o">.</span><span class="n">start</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">skip</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">window</span> <span class="o">+</span> <span class="n">skip</span> <span class="o">&lt;</span> <span class="mi">1</span>
+
+    <span class="n">start_frames</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span> <span class="o">*</span> <span class="n">skip</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">window</span><span class="p">),</span>
+        <span class="n">num</span><span class="o">=</span><span class="n">segments</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span>
+    <span class="p">))</span>
+    <span class="n">num_frames</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">window</span><span class="p">))</span>
+
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">index_distribution</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_frames</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">correlate</span><span class="p">(</span><span class="n">start_frame</span><span class="p">):</span>
+        <span class="n">shifted_idx</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">+</span> <span class="n">start_frame</span>
+        <span class="k">return</span> <span class="n">correlation</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">frames</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">,</span> <span class="n">shifted_idx</span><span class="p">))</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">start_frame</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">start_frames</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;shifted_correlation: segment </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1"> (index=</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">start_frame</span><span class="p">))</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">correlate</span><span class="p">(</span><span class="n">start_frame</span><span class="p">)))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">average</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">frames</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">time</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">])</span> <span class="o">-</span> <span class="n">frames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">time</span>
+    <span class="k">return</span> <span class="n">times</span><span class="p">,</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="msd"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.correlation.msd">[docs]</a><span class="k">def</span> <span class="nf">msd</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Mean square displacement</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vec</span> <span class="o">=</span> <span class="n">start</span> <span class="o">-</span> <span class="n">frame</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">vec</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="isf"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.correlation.isf">[docs]</a><span class="k">def</span> <span class="nf">isf</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Incoherent intermediate scattering function. To specify q, use</span>
+<span class="sd">    water_isf = functools.partial(isf, q=22.77) # q has the value 22.77 nm^-1</span>
+
+<span class="sd">    :param q: length of scattering vector</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vec</span> <span class="o">=</span> <span class="n">start</span> <span class="o">-</span> <span class="n">frame</span>
+    <span class="n">distance</span> <span class="o">=</span> <span class="p">(</span><span class="n">vec</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="o">.</span><span class="mi">5</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sinc</span><span class="p">(</span><span class="n">distance</span> <span class="o">*</span> <span class="n">q</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="rotational_autocorrelation"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.correlation.rotational_autocorrelation">[docs]</a><span class="k">def</span> <span class="nf">rotational_autocorrelation</span><span class="p">(</span><span class="n">onset</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the rotaional autocorrelation of the legendre polynamial for the given vectors.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        onset, frame: CoordinateFrames of vectors</span>
+<span class="sd">        order (opt.): Order of the legendre polynomial.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Skalar value of the correltaion function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scalar_prod</span> <span class="o">=</span> <span class="p">(</span><span class="n">onset</span> <span class="o">*</span> <span class="n">frame</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">poly</span> <span class="o">=</span> <span class="n">legendre</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">poly</span><span class="p">(</span><span class="n">scalar_prod</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="oaf"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.correlation.oaf">[docs]</a><span class="nd">@annotate</span><span class="o">.</span><span class="n">untested</span>
+<span class="k">def</span> <span class="nf">oaf</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Orientation autocorrelation function. start and frame must be connection vectors, not absolute coordinates. Use for</span>
+<span class="sd">    example oaf_indexed to define connection vectors.</span>
+
+<span class="sd">    :param start:</span>
+<span class="sd">    :param frame:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vec_start_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+    <span class="n">vec_frame_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+
+    <span class="n">dot_prod</span> <span class="o">=</span> <span class="p">(</span><span class="n">start</span> <span class="o">*</span> <span class="n">frame</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">vec_start_norm</span><span class="p">,</span> <span class="n">vec_frame_norm</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">dot_prod</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2.0</span></div>
+
+
+<div class="viewcode-block" id="oaf_indexed"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.correlation.oaf_indexed">[docs]</a><span class="k">def</span> <span class="nf">oaf_indexed</span><span class="p">(</span><span class="n">index_from</span><span class="p">,</span> <span class="n">index_to</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a OAF correlation function. Example</span>
+<span class="sd">    oaf_indexed(t[:,1] == &#39;C&#39;, t[:,1] == &#39;O&#39;)</span>
+<span class="sd">    :param index_from:</span>
+<span class="sd">    :param index_to:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="k">lambda</span> <span class="n">start</span><span class="p">,</span> <span class="n">frame</span><span class="p">:</span> <span class="n">oaf</span><span class="p">(</span><span class="n">start</span><span class="p">[</span><span class="n">index_to</span><span class="p">]</span> <span class="o">-</span> <span class="n">start</span><span class="p">[</span><span class="n">index_from</span><span class="p">],</span>
+                                    <span class="n">frame</span><span class="p">[</span><span class="n">index_to</span><span class="p">]</span> <span class="o">-</span> <span class="n">frame</span><span class="p">[</span><span class="n">index_from</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="van_hove_self"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.correlation.van_hove_self">[docs]</a><span class="k">def</span> <span class="nf">van_hove_self</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">bins</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the self part of the Van Hove autocorrelation function.</span>
+
+<span class="sd">    ..math::</span>
+<span class="sd">      G(r, t) = \sum_i \delta(|\vec r_i(0) - \vec r_i(t)| - r)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vec</span> <span class="o">=</span> <span class="n">start</span> <span class="o">-</span> <span class="n">end</span>
+    <span class="n">delta_r</span> <span class="o">=</span> <span class="p">((</span><span class="n">vec</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">**.</span><span class="mi">5</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">start</span><span class="p">)</span> <span class="o">*</span> <span class="n">histogram</span><span class="p">(</span><span class="n">delta_r</span><span class="p">,</span> <span class="n">bins</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="van_hove_distinct"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.correlation.van_hove_distinct">[docs]</a><span class="k">def</span> <span class="nf">van_hove_distinct</span><span class="p">(</span><span class="n">onset</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_dask</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bincount</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the distinct part of the Van Hove autocorrelation function.</span>
+
+<span class="sd">    ..math::</span>
+<span class="sd">      G(r, t) = \sum_{i, j} \delta(|\vec r_i(0) - \vec r_j(t)| - r)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">box</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">box</span> <span class="o">=</span> <span class="n">onset</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
+    <span class="n">dimension</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">onset</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">use_dask</span><span class="p">:</span>
+        <span class="n">onset</span> <span class="o">=</span> <span class="n">darray</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">onset</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">dimension</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">dimension</span><span class="p">)</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">darray</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">dimension</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dimension</span><span class="p">)</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="p">((</span><span class="n">pbc_diff</span><span class="p">(</span><span class="n">onset</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">box</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e6</span><span class="p">:</span>
+            <span class="n">dx</span> <span class="o">=</span> <span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">hist</span> <span class="o">=</span> <span class="n">darray</span><span class="o">.</span><span class="n">bincount</span><span class="p">((</span><span class="n">dist</span> <span class="o">//</span> <span class="n">dx</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">minlength</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">hist</span> <span class="o">=</span> <span class="n">darray</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">hist</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span> <span class="o">/</span> <span class="n">N</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">comp</span><span class="p">:</span>
+
+            <span class="n">dx</span> <span class="o">=</span> <span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">minlength</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+            <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">pbc_diff</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">box</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">((</span><span class="n">d</span> <span class="o">//</span> <span class="n">dx</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">minlength</span><span class="o">=</span><span class="n">minlength</span><span class="p">)[:</span><span class="n">minlength</span><span class="p">]</span>
+            <span class="n">hist</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">onset</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="p">(</span><span class="n">pbc_diff</span><span class="p">(</span><span class="n">onset</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">frame</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">box</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+            <span class="n">hist</span> <span class="o">=</span> <span class="n">histogram</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">hist</span> <span class="o">/</span> <span class="n">N</span></div>
+
+
+<div class="viewcode-block" id="overlap"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.correlation.overlap">[docs]</a><span class="k">def</span> <span class="nf">overlap</span><span class="p">(</span><span class="n">onset</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">crds_tree</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the overlap with a reference configuration defined in a CoordinatesTree.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        onset: Initial frame, this is only used to get the frame index</span>
+<span class="sd">        frame: The current configuration</span>
+<span class="sd">        crds_tree: A CoordinatesTree of the reference configurations</span>
+<span class="sd">        radius: The cutoff radius for the overlap</span>
+
+<span class="sd">    This function is intended to be used with :func:`shifted_correlation`.</span>
+<span class="sd">    As usual the first two arguments are used internally and the remaining ones</span>
+<span class="sd">    should be defined with :func:`functools.partial`.</span>
+
+<span class="sd">    If the overlap of a subset of the system should be calculated, this has to be</span>
+<span class="sd">    defined through a selection of the reference configurations in the CoordinatesTree.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; shifted_correlation(</span>
+<span class="sd">        ...     partial(overlap, crds_tree=CoordinatesTree(traj), radius=0.11),</span>
+<span class="sd">        ...     traj</span>
+<span class="sd">        ... )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tree</span> <span class="o">=</span> <span class="n">crds_tree</span><span class="p">[</span><span class="n">onset</span><span class="o">.</span><span class="n">step</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">frame</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">radius</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">tree</span><span class="o">.</span><span class="n">n</span></div>
+
+
+<div class="viewcode-block" id="susceptibility"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.correlation.susceptibility">[docs]</a><span class="k">def</span> <span class="nf">susceptibility</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">correlation</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the susceptibility of a correlation function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        time: Timesteps of the correlation data</span>
+<span class="sd">        correlation: Value of the correlation function</span>
+<span class="sd">        **kwargs (opt.):</span>
+<span class="sd">            Additional keyword arguments will be passed to :func:`filon_fourier_transformation`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">frequencies</span><span class="p">,</span> <span class="n">fourier</span> <span class="o">=</span> <span class="n">filon_fourier_transformation</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">correlation</span><span class="p">,</span> <span class="n">imag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">frequencies</span><span class="p">,</span> <span class="n">frequencies</span> <span class="o">*</span> <span class="n">fourier</span></div>
+
+
+<div class="viewcode-block" id="coherent_scattering_function"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.correlation.coherent_scattering_function">[docs]</a><span class="k">def</span> <span class="nf">coherent_scattering_function</span><span class="p">(</span><span class="n">onset</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the coherent scattering function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">box</span> <span class="o">=</span> <span class="n">onset</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
+    <span class="n">dimension</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+
+    <span class="nd">@numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">scfunc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="n">sqdist</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dimension</span><span class="p">):</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="n">box</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">d</span> <span class="o">-=</span> <span class="n">box</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">box</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">d</span> <span class="o">+=</span> <span class="n">box</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">sqdist</span> <span class="o">+=</span> <span class="n">d</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">sqdist</span><span class="o">**</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">q</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">1.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">x</span>
+
+    <span class="k">return</span> <span class="n">coherent_sum</span><span class="p">(</span><span class="n">scfunc</span><span class="p">,</span> <span class="n">onset</span><span class="o">.</span><span class="n">pbc</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">pbc</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">onset</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="non_gaussian"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.correlation.non_gaussian">[docs]</a><span class="k">def</span> <span class="nf">non_gaussian</span><span class="p">(</span><span class="n">onset</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the Non-Gaussian parameter :</span>
+<span class="sd">    ..math:</span>
+<span class="sd">      \alpha_2 (t) = \frac{3}{5}\frac{\langle r_i^4(t)\rangle}{\langle r_i^2(t)\rangle^2} - 1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">r_2</span> <span class="o">=</span> <span class="p">((</span><span class="n">frame</span> <span class="o">-</span> <span class="n">onset</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="n">r_2</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Niels Müller.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'17.08',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
