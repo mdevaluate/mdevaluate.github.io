@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Calculating the ISF of Water &mdash; mdevaluate 17.08 documentation</title>
+  <title>Calculating the ISF of Water &mdash; mdevaluate dev-17.11 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="mdevaluate 17.08 documentation" href="../index.html"/>
+    <link rel="top" title="mdevaluate dev-17.11 documentation" href="../index.html"/>
         <link rel="up" title="Example Gallery" href="index.html"/>
         <link rel="next" title="Spatially resolved analysis in a cylindrical pore" href="plot_spatialisf.html"/>
         <link rel="prev" title="Four-Point susceptibility" href="plot_chi4.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                17.08
+                dev-17.11
               </div>
             
           
@@ -94,7 +94,7 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../general-hints.html">General Hints for Python Programming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide.html">User Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Example Gallery</a><ul class="current">
@@ -104,7 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="plot_spatialisf.html">Spatially resolved analysis in a cylindrical pore</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contribution Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Reference Guide</a></li>
 </ul>
 
@@ -171,11 +171,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="calculating-the-isf-of-water">
+  <a href="https://github.com/mdevaluate/mdevaluate"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a><div class="section" id="calculating-the-isf-of-water">
 <span id="sphx-glr-gallery-plot-isf-py"></span><h1>Calculating the ISF of Water<a class="headerlink" href="#calculating-the-isf-of-water" title="Permalink to this headline">¶</a></h1>
 <p>In this example the ISF of water oxygens is calculated for a bulk simulation.
 Additionally a KWW function is fitted to the results.</p>
 <img alt="../_images/sphx_glr_plot_isf_001.png" class="align-center" src="../_images/sphx_glr_plot_isf_001.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-python3"><div class="highlight"><pre><span></span><span class="n">Loading</span> <span class="n">topology</span><span class="p">:</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">niels</span><span class="o">/</span><span class="n">sim</span><span class="o">/</span><span class="n">water</span><span class="o">/</span><span class="n">bulk</span><span class="o">/</span><span class="mi">260</span><span class="n">K</span><span class="o">/</span><span class="n">topol</span><span class="o">.</span><span class="n">tpr</span>
+<span class="n">Loading</span> <span class="n">trajectory</span><span class="p">:</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">niels</span><span class="o">/</span><span class="n">sim</span><span class="o">/</span><span class="n">water</span><span class="o">/</span><span class="n">bulk</span><span class="o">/</span><span class="mi">260</span><span class="n">K</span><span class="o">/</span><span class="n">out</span><span class="o">/</span><span class="n">traj_full_water1000bulk260</span><span class="o">.</span><span class="n">xtc</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
@@ -201,14 +209,13 @@ Additionally a KWW function is fitted to the results.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
 </div>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.414 seconds)</p>
-<div class="sphx-glr-footer docutils container">
+<p><strong>Total running time of the script:</strong>
+(0 minutes 0.906 seconds)</p>
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../_downloads/plot_isf.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_isf.py</span></code></a></div>
+<strong>Download Python source code:</strong> <a class="reference download internal" href="../_downloads/plot_isf.py" download=""><code class="xref download docutils literal"><span class="pre">plot_isf.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../_downloads/plot_isf.ipynb" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_isf.ipynb</span></code></a></div>
-</div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Generated by Sphinx-Gallery</a></p>
+<strong>Download IPython notebook:</strong> <a class="reference download internal" href="../_downloads/plot_isf.ipynb" download=""><code class="xref download docutils literal"><span class="pre">plot_isf.ipynb</span></code></a></div>
+<p class="sphx-glr-signature"><a class="reference external" href="http://sphinx-gallery.readthedocs.io">Generated by Sphinx-Gallery</a></p>
 </div>
 
 
@@ -255,7 +262,7 @@ Additionally a KWW function is fitted to the results.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'17.08',
+            VERSION:'dev-17.11',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

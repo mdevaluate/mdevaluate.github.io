@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>mdevaluate.distribution &mdash; mdevaluate 17.08 documentation</title>
+  <title>mdevaluate.distribution &mdash; mdevaluate dev-17.11 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="mdevaluate 17.08 documentation" href="../../index.html"/>
+    <link rel="top" title="mdevaluate dev-17.11 documentation" href="../../index.html"/>
         <link rel="up" title="mdevaluate" href="../mdevaluate.html"/> 
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                17.08
+                dev-17.11
               </div>
             
           
@@ -92,11 +92,11 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../general-hints.html">General Hints for Python Programming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../gallery/index.html">Example Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contribution Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">Reference Guide</a></li>
 </ul>
 
@@ -164,13 +164,11 @@
            <div itemprop="articleBody">
             
   <h1>Source code for mdevaluate.distribution</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">.coordinates</span> <span class="k">import</span> <span class="n">rotate_axis</span><span class="p">,</span> <span class="n">polar_coordinates</span><span class="p">,</span> <span class="n">spherical_coordinates</span><span class="p">,</span> <span class="n">Coordinates</span><span class="p">,</span> <span class="n">CoordinatesMap</span>
+<span class="kn">from</span> <span class="nn">.coordinates</span> <span class="k">import</span> <span class="n">rotate_axis</span><span class="p">,</span> <span class="n">polar_coordinates</span><span class="p">,</span> <span class="n">spherical_coordinates</span>
 <span class="kn">from</span> <span class="nn">.atoms</span> <span class="k">import</span> <span class="n">next_neighbors</span>
 <span class="kn">from</span> <span class="nn">.autosave</span> <span class="k">import</span> <span class="n">autosave_data</span>
-<span class="kn">from</span> <span class="nn">.meta.annotate</span> <span class="k">import</span> <span class="n">deprecated</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">runningmean</span>
 <span class="kn">from</span> <span class="nn">.pbc</span> <span class="k">import</span> <span class="n">pbc_diff</span><span class="p">,</span> <span class="n">pbc_points</span>
 <span class="kn">from</span> <span class="nn">.logging</span> <span class="k">import</span> <span class="n">logger</span>
@@ -201,9 +199,8 @@
     <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">if</span> <span class="n">coordinates_b</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># TODO: check if CoordinatesMap was passed...</span>
-        <span class="c1"># if coordinates._slice != coordinates_b._slice:</span>
-        <span class="c1">#    logger.warning(&quot;Different slice fro coordinates and coordinates_b.&quot;)</span>
+        <span class="k">if</span> <span class="n">coordinates</span><span class="o">.</span><span class="n">_slice</span> <span class="o">!=</span> <span class="n">coordinates_b</span><span class="o">.</span><span class="n">_slice</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Different slice for coordinates and coordinates_b.&quot;</span><span class="p">)</span>
         <span class="n">coordinate_iter</span> <span class="o">=</span> <span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">coordinates</span><span class="p">),</span> <span class="nb">iter</span><span class="p">(</span><span class="n">coordinates_b</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">coordinate_iter</span> <span class="o">=</span> <span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">coordinates</span><span class="p">),)</span>
@@ -316,6 +313,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">res</span></div>
 
+
 <div class="viewcode-block" id="pbc_spm_rdf"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.pbc_spm_rdf">[docs]</a><span class="k">def</span> <span class="nf">pbc_spm_rdf</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">,</span> <span class="n">atoms_b</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">returnx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">box</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">box</span> <span class="o">=</span> <span class="n">atoms_a</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
@@ -342,6 +340,7 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">runningmean</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">res</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">res</span></div>
+
 
 <div class="viewcode-block" id="fast_averaged_rdf"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.fast_averaged_rdf">[docs]</a><span class="nd">@autosave_data</span><span class="p">(</span><span class="n">nargs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kwargs_keys</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;to_coords&#39;</span><span class="p">,</span><span class="s1">&#39;times&#39;</span><span class="p">))</span>
 <span class="k">def</span> <span class="nf">fast_averaged_rdf</span><span class="p">(</span><span class="n">from_coords</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">to_coords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">times</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -551,7 +550,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'17.08',
+            VERSION:'dev-17.11',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

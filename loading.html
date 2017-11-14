@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Loading of simulation data &mdash; mdevaluate 17.08 documentation</title>
+  <title>Loading of simulation data &mdash; mdevaluate dev-17.11 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="mdevaluate 17.08 documentation" href="index.html"/>
+    <link rel="top" title="mdevaluate dev-17.11 documentation" href="index.html"/>
         <link rel="up" title="User Guide" href="guide.html"/>
         <link rel="next" title="Evaluation of static properties" href="static-evaluation.html"/>
         <link rel="prev" title="User Guide" href="guide.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                17.08
+                dev-17.11
               </div>
             
           
@@ -94,7 +94,7 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="general-hints.html">General Hints for Python Programming</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="guide.html">User Guide</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Loading of simulation data</a><ul>
@@ -102,13 +102,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#selecting-a-subset">Selecting a subset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#specifying-data-files">Specifying data files</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#caching-of-frames">Caching of frames</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#freeing-cached-frames">Freeing cached frames</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#the-deprecated-way-of-loading-simulations">The deprecated way of loading simulations</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#atoms">Atoms</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#trajectory">Trajectory</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#coordinates">Coordinates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#clearing-cached-frames">Clearing cached frames</a></li>
 </ul>
 </li>
 </ul>
@@ -119,7 +113,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gallery/index.html">Example Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contribution Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">Reference Guide</a></li>
 </ul>
 
@@ -186,14 +180,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="loading-of-simulation-data">
+  <a href="https://github.com/mdevaluate/mdevaluate"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a><div class="section" id="loading-of-simulation-data">
 <h1>Loading of simulation data<a class="headerlink" href="#loading-of-simulation-data" title="Permalink to this headline">¶</a></h1>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The process of loading simulations has been simplified in the latest version of mdevaluate.
-The previous way is described below for completeness and people with an older code base.</p>
-</div>
-<p>Mdevaulate provides a convenient function <a class="reference internal" href="mdevaluate.html#mdevaluate.load_simulation" title="mdevaluate.load_simulation"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.load_simulation()</span></code></a>
+<p>Mdevaulate provides a convenient function <code class="xref py py-func docutils literal"><span class="pre">mdevaluate.load_simulation()</span></code>
 that loads a simulation more or less automatically.
 It takes a path as input and looks for all files it needs in this directory.</p>
 <p>For information about the topology either a <cite>tpr</cite> or <cite>gro</cite> a file is read,
@@ -201,7 +190,7 @@ where the former is the preferred choice.
 Trajectory data will be read from a xtc file.
 If the directory contains more than one file of any type, the desired file
 has to be specified with the appropriate keyword argument.
-For details see <a class="reference internal" href="mdevaluate.html#mdevaluate.load_simulation" title="mdevaluate.load_simulation"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.load_simulation()</span></code></a>.</p>
+For details see <a class="reference internal" href="mdevaluate.html#mdevaluate.open" title="mdevaluate.open"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.open()</span></code></a>.</p>
 <p>The function will return a coordinates object, for the whole system.
 A subset of the system may be obtained directly from the coordinates object by
 calling its <a class="reference internal" href="mdevaluate.html#mdevaluate.coordinates.Coordinates.subset" title="mdevaluate.coordinates.Coordinates.subset"><code class="xref py py-func docutils literal"><span class="pre">subset()</span></code></a> method.
@@ -276,8 +265,8 @@ with an integer any other maximum size may be set.
 The special value <code class="docutils literal"><span class="pre">None</span></code> will set the cache size to infinite, so all frames will be cached.
 This will prevent the frames from being loaded twice but can also consume a whole lot of memory,
 since a single frame can easily take 1 MB of memory.</p>
-<div class="section" id="freeing-cached-frames">
-<h3>Freeing cached frames<a class="headerlink" href="#freeing-cached-frames" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="clearing-cached-frames">
+<h3>Clearing cached frames<a class="headerlink" href="#clearing-cached-frames" title="Permalink to this headline">¶</a></h3>
 <p>In some scenarios it may be advisable to free cached frames which are no longer needed.
 For this case the reader has a function <code class="docutils literal"><span class="pre">clear_cache()</span></code>.
 The current state of the cache can be displayed with the <code class="docutils literal"><span class="pre">cache_info</span></code> property:</p>
@@ -290,91 +279,6 @@ The current state of the cache can be displayed with the <code class="docutils l
 </div>
 <p>Clearing the cache when it is not needed anymore is advisable since this will help the
 Python interpreter to reuse the memory.</p>
-</div>
-</div>
-<div class="section" id="the-deprecated-way-of-loading-simulations">
-<h2>The deprecated way of loading simulations<a class="headerlink" href="#the-deprecated-way-of-loading-simulations" title="Permalink to this headline">¶</a></h2>
-<p>For the evaluation, two data sets are necessary:</p>
-<ol class="arabic simple">
-<li>Information about the atoms of the simulation, which is read from gro-files</li>
-<li>The trajectory of the simulation, which is read from xtc- or trr-files</li>
-</ol>
-<p>These two data sets are combined to a coordinates object, that selects only the requested atoms.
-This object can also be used to perform coordinate transformations like computing a center of mass.</p>
-<div class="section" id="atoms">
-<h3>Atoms<a class="headerlink" href="#atoms" title="Permalink to this headline">¶</a></h3>
-<p>Atom information is read from gro-files via the function <a class="reference internal" href="mdevaluate.html#mdevaluate.atoms.from_grofile" title="mdevaluate.atoms.from_grofile"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.atoms.from_grofile()</span></code></a>,
-which takes the path to a gro-file as argument and an optional gromacs index file.</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mdevaluate</span> <span class="k">import</span> <span class="n">atoms</span>
-
-<span class="n">all_atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">from_grofile</span><span class="p">(</span><span class="s1">&#39;/data/niels/tutorial/conf.gro&#39;</span><span class="p">,</span>
-                               <span class="n">index</span><span class="o">=</span><span class="s1">&#39;/data/niels/tutorial/index.ndx&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>For many evaluations, a subset of the system must be selected.
-Atoms can be selected by name, residue or direct indices:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">H11_atoms</span> <span class="o">=</span> <span class="n">all_atoms</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">atom_name</span><span class="o">=</span><span class="s1">&#39;H11&#39;</span><span class="p">)</span>
-<span class="n">amim_atoms</span> <span class="o">=</span> <span class="n">all_atoms</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">residue_name</span><span class="o">=</span><span class="s1">&#39;AMIM&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Atom subset can be combined with logical operators to obtain the intersection or union of two or more subsets.
-The union is equal to a logical or, the intersection is equal to a logical and:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">union</span> <span class="o">=</span> <span class="n">H11_atoms</span> <span class="o">|</span> <span class="n">amim_atoms</span>
-<span class="n">intersection</span> <span class="o">=</span> <span class="n">H11_atoms</span> <span class="o">&amp;</span> <span class="n">amim_atoms</span>
-</pre></div>
-</div>
-<p>Excluding atoms from a larger subset can also be done easily with negation:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">exclusion</span> <span class="o">=</span> <span class="n">amim_atoms</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">H11_atoms</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="trajectory">
-<h3>Trajectory<a class="headerlink" href="#trajectory" title="Permalink to this headline">¶</a></h3>
-<p>The trajectory is read from xtc-files or trr-files, usually the former are used.
-For effective data loading, these files have to be indexed <strong>once</strong> before they can be used with mdevaluate.
-This is done with the command line tool <code class="docutils literal"><span class="pre">index-xtc</span></code>:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span>$ index-xtc /data/niels/tutorial/traj.xtc
-</pre></div>
-</div>
-<p>The trajectory is than read with an appropiate reader:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mdevaluate.gromacs.reader</span> <span class="k">import</span> <span class="n">XTCReader</span>
-
-<span class="n">trajectory</span> <span class="o">=</span> <span class="n">XTCReader</span><span class="p">(</span><span class="s1">&#39;/data/niels/tutorial/traj.xtc&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>From this trajectory, single frames can be selected by index:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">[</span><span class="mi">42</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">box</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">coordinates</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">To this time, even though implemented, the usage of trr-files has not been fully tested.</p>
-</div>
-</div>
-<div class="section" id="coordinates">
-<h3>Coordinates<a class="headerlink" href="#coordinates" title="Permalink to this headline">¶</a></h3>
-<p>A coordinates object for the evaluation is obtained by combining the trajectory and an atom subset:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mdevaluate</span> <span class="k">import</span> <span class="n">coordinates</span>
-
-<span class="n">cords_amim</span> <span class="o">=</span> <span class="n">coordinates</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">(</span><span class="n">trajectory</span><span class="p">,</span> <span class="n">atom_subset</span><span class="o">=</span><span class="n">amim_atoms</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>These coordinates can be transformed if necessary.
-The center of mass can be computed with the function <a class="reference internal" href="mdevaluate.html#mdevaluate.coordinates.centers_of_mass" title="mdevaluate.coordinates.centers_of_mass"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.coordinates.centers_of_mass()</span></code></a>,
-which takes coordinates and a list of masses as input.
-Only the first set of atom masses has to be given, which will be repeated for the rest of the atoms.
-The only requirement is that the length of the list of atoms is an integral multiple of the number of masses given.</p>
-<p>To compute a center of mass of the amim molecule:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">masses</span> <span class="o">=</span> <span class="p">[</span><span class="mi">14</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">15</span> <span class="o">+</span> <span class="p">[</span><span class="mi">12</span><span class="p">]</span><span class="o">*</span><span class="mi">8</span>
-<span class="n">com_amim</span> <span class="o">=</span> <span class="n">coordinates</span><span class="o">.</span><span class="n">centers_of_mass</span><span class="p">(</span><span class="n">cords_amim</span><span class="p">,</span> <span class="n">masses</span><span class="o">=</span><span class="n">masses</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Note that the coordinate transformation is not limited to center of masses at all.
-Look at the definition of <code class="xref py py-func docutils literal"><span class="pre">centers_of_mass()</span></code> for hints how to implement a different transformation.
-On important bit is the decorator <code class="docutils literal"><span class="pre">&#64;coordinates_map</span></code> that is necessary for the transformation to work.</p>
 </div>
 </div>
 </div>
@@ -423,7 +327,7 @@ On important bit is the decorator <code class="docutils literal"><span class="pr
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'17.08',
+            VERSION:'dev-17.11',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>mdevaluate.reader &mdash; mdevaluate 17.08 documentation</title>
+  <title>mdevaluate.reader &mdash; mdevaluate dev-17.11 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="mdevaluate 17.08 documentation" href="../../index.html"/>
+    <link rel="top" title="mdevaluate dev-17.11 documentation" href="../../index.html"/>
         <link rel="up" title="mdevaluate" href="../mdevaluate.html"/> 
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                17.08
+                dev-17.11
               </div>
             
           
@@ -92,11 +92,11 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../general-hints.html">General Hints for Python Programming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../gallery/index.html">Example Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contribution Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">Reference Guide</a></li>
 </ul>
 
@@ -166,9 +166,13 @@
   <h1>Source code for mdevaluate.reader</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Module that provides different readers for trajectory files.</span>
-<span class="sd">&quot;&quot;&quot;</span>
 
+<span class="sd">It also provides a common interface layer between the file IO packages,</span>
+<span class="sd">namely pygmx and mdanalysis, and mdevaluate.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">.checksum</span> <span class="k">import</span> <span class="n">checksum</span>
+<span class="kn">from</span> <span class="nn">.logging</span> <span class="k">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">atoms</span>
 
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">lru_cache</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
@@ -177,24 +181,94 @@
 <span class="kn">from</span> <span class="nn">array</span> <span class="k">import</span> <span class="n">array</span>
 <span class="kn">from</span> <span class="nn">zipfile</span> <span class="k">import</span> <span class="n">BadZipFile</span>
 <span class="kn">import</span> <span class="nn">builtins</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">sparse</span>
 <span class="kn">from</span> <span class="nn">dask</span> <span class="k">import</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">DASK_VERSION</span>
 
-<span class="kn">import</span> <span class="nn">pygmx</span>
-<span class="kn">from</span> <span class="nn">pygmx.errors</span> <span class="k">import</span> <span class="n">InvalidMagicException</span><span class="p">,</span> <span class="n">InvalidIndexException</span>
 
-<span class="kn">from</span> <span class="nn">.logging</span> <span class="k">import</span> <span class="n">logger</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pygmx</span>
+    <span class="kn">from</span> <span class="nn">pygmx.errors</span> <span class="k">import</span> <span class="n">InvalidMagicException</span><span class="p">,</span> <span class="n">InvalidIndexException</span><span class="p">,</span> <span class="n">FileTypeError</span>
+    <span class="n">PYGMX_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">PYGMX_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mdanalysis</span>
+    <span class="n">MADANALYSIS_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">MADANALYSIS_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">assert</span> <span class="n">PYGMX_AVAILABLE</span> <span class="ow">or</span> <span class="n">MADANALYSIS_AVAILABLE</span><span class="p">,</span> <span class="s1">&#39;Could not import any file IO package; make sure too install either pygmx or mdanalysis.&#39;</span>
 
 
 <div class="viewcode-block" id="NojumpError"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.NojumpError">[docs]</a><span class="k">class</span> <span class="nc">NojumpError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="open"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.open">[docs]</a><span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="NoReaderAvailabelError"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.NoReaderAvailabelError">[docs]</a><span class="k">class</span> <span class="nc">NoReaderAvailabelError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="open_with_mdanalysis"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.open_with_mdanalysis">[docs]</a><span class="k">def</span> <span class="nf">open_with_mdanalysis</span><span class="p">(</span><span class="n">topology</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Open a the topology and trajectory with mdanalysis.&quot;&quot;&quot;</span>
+    <span class="n">uni</span> <span class="o">=</span> <span class="n">mdanalysis</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">topology</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">,</span> <span class="n">convert_units</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cached</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cached</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">maxsize</span> <span class="o">=</span> <span class="mi">128</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">maxsize</span> <span class="o">=</span> <span class="n">cached</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">CachedReader</span><span class="p">(</span><span class="n">uni</span><span class="o">.</span><span class="n">trajectory</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">BaseReader</span><span class="p">(</span><span class="n">uni</span><span class="o">.</span><span class="n">trajectory</span><span class="p">)</span>
+    <span class="n">reader</span><span class="o">.</span><span class="n">universe</span> <span class="o">=</span> <span class="n">uni</span>
+    <span class="n">atms</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">Atoms</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">uni</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">resids</span><span class="p">,</span> <span class="n">uni</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">resnames</span><span class="p">,</span> <span class="n">uni</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">names</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">charges</span><span class="o">=</span><span class="n">uni</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">charges</span><span class="p">,</span> <span class="n">masses</span><span class="o">=</span><span class="n">uni</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">masses</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">subset</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">atms</span><span class="p">,</span> <span class="n">reader</span></div>
+
+
+<div class="viewcode-block" id="open_with_pygmx"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.open_with_pygmx">[docs]</a><span class="k">def</span> <span class="nf">open_with_pygmx</span><span class="p">(</span><span class="n">topology</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Open a topology and trajectory with pygmx.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">rd</span> <span class="o">=</span> <span class="n">pygmx</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">trajectory</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="n">ignore_index_timestamps</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">InvalidMagicException</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidIndexException</span><span class="p">(</span><span class="s1">&#39;This is not a valid index file: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trajectory</span><span class="p">))</span>
+    <span class="k">except</span> <span class="n">InvalidIndexException</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">reindex</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">pygmx</span><span class="o">.</span><span class="n">index_filename_for_xtc</span><span class="p">(</span><span class="n">trajectory</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="n">rd</span> <span class="o">=</span> <span class="n">pygmx</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">trajectory</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidIndexException</span><span class="p">(</span><span class="s1">&#39;Index file is invalid, us reindex=True to regenerate.&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cached</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cached</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="n">maxsize</span> <span class="o">=</span> <span class="mi">128</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">maxsize</span> <span class="o">=</span> <span class="n">cached</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">CachedReader</span><span class="p">(</span><span class="n">rd</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">BaseReader</span><span class="p">(</span><span class="n">rd</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">topology</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.tpr&#39;</span><span class="p">):</span>
+        <span class="n">atms</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">from_tprfile</span><span class="p">(</span><span class="n">topology</span><span class="p">,</span> <span class="n">index_file</span><span class="o">=</span><span class="n">index_file</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">topology</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.gro&#39;</span><span class="p">):</span>
+        <span class="n">atms</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">from_grofile</span><span class="p">(</span><span class="n">topology</span><span class="p">,</span> <span class="n">index_file</span><span class="o">=</span><span class="n">index_file</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">atms</span><span class="p">,</span> <span class="n">reader</span></div>
+
+
+<div class="viewcode-block" id="open"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.open">[docs]</a><span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="n">topology</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Opens a trajectory file with the apropiate reader.</span>
+<span class="sd">    Open a trajectory file with the apropiate reader.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        filename (str):</span>
@@ -208,22 +282,21 @@
 <span class="sd">        nojump (opt.): If nojump matrixes should be generated.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">if</span> <span class="n">cached</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cached</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
-            <span class="n">maxsize</span> <span class="o">=</span> <span class="mi">128</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">maxsize</span> <span class="o">=</span> <span class="n">cached</span>
-        <span class="n">reader</span> <span class="o">=</span> <span class="n">CachedReader</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="n">reindex</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="n">ignore_index_timestamps</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">PYGMX_AVAILABLE</span> <span class="ow">and</span> <span class="n">trajectory</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.xtc&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">topology</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s1">&#39;.tpr&#39;</span><span class="p">,</span> <span class="s1">&#39;.gro&#39;</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">open_with_pygmx</span><span class="p">(</span><span class="n">topology</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                               <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_file</span><span class="o">=</span><span class="n">index_file</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">MADANALYSIS_AVAILABLE</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">open_with_mdanalysis</span><span class="p">(</span><span class="n">topology</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">,</span> <span class="n">cached</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">reader</span> <span class="o">=</span> <span class="n">BaseReader</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="n">reindex</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="n">ignore_index_timestamps</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">reader</span></div>
+        <span class="k">raise</span> <span class="n">NoReaderAvailabelError</span><span class="p">(</span><span class="s1">&#39;No reader package found, install pygmx or mdanalysis.&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="is_writeable"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.is_writeable">[docs]</a><span class="k">def</span> <span class="nf">is_writeable</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Test if a directory is actually writeable, by writing a temporary file.&quot;&quot;&quot;</span>
     <span class="n">fdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
     <span class="n">ftmp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fdir</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">999999999</span><span class="p">)))</span>
+    <span class="k">while</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ftmp</span><span class="p">):</span>
+        <span class="n">ftmp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fdir</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">999999999</span><span class="p">)))</span>
 
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">fdir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">W_OK</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -286,12 +359,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;generate Nojump Matrixes for: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trajectory</span><span class="p">))</span>
 
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">jump_data</span> <span class="o">=</span> <span class="n">parse_jumps</span><span class="p">(</span><span class="n">trajectory</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Failed to parse jumps for: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trajectory</span><span class="p">))</span>
-        <span class="k">return</span>
-
+    <span class="n">jump_data</span> <span class="o">=</span> <span class="n">parse_jumps</span><span class="p">(</span><span class="n">trajectory</span><span class="p">)</span>
     <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">trajectory</span><span class="p">)</span>
     <span class="n">M</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">trajectory</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
@@ -357,24 +425,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_nojump_matrixes</span> <span class="o">=</span> <span class="n">mats</span>
         <span class="n">save_nojump_matrixes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rd</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            filename: Trajectory file to open.</span>
 <span class="sd">            reindex (bool, opt.): If True, regenerate the index file if necessary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">rd</span> <span class="o">=</span> <span class="n">pygmx</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="n">ignore_index_timestamps</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">InvalidMagicException</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidIndexException</span><span class="p">(</span><span class="s1">&#39;This is not a valid index file: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
-        <span class="k">except</span> <span class="p">(</span><span class="n">InvalidIndexException</span><span class="p">,</span> <span class="ne">EOFError</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">reindex</span><span class="p">:</span>
-                <span class="n">pygmx</span><span class="o">.</span><span class="n">gromacs</span><span class="o">.</span><span class="n">index_xtcfile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">rd</span> <span class="o">=</span> <span class="n">pygmx</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">InvalidIndexException</span><span class="p">(</span><span class="s1">&#39;Index file is invalid, us reindex=True to regenerate.&#39;</span><span class="p">)</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">rd</span> <span class="o">=</span> <span class="n">rd</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nojump_matrixes</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">nojump_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
             <span class="n">load_nojump_matrixes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -386,7 +443,13 @@
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rd</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__checksum__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">checksum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rd</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rd</span><span class="o">.</span><span class="n">cache</span><span class="p">))</span></div>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rd</span><span class="p">,</span> <span class="s1">&#39;cache&#39;</span><span class="p">):</span>
+            <span class="c1"># Has an pygmx reader</span>
+            <span class="k">return</span> <span class="n">checksum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rd</span><span class="o">.</span><span class="n">cache</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rd</span><span class="p">,</span> <span class="s1">&#39;_xdr&#39;</span><span class="p">):</span>
+            <span class="c1"># Has an mdanalysis reader</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rd</span><span class="o">.</span><span class="n">_xdr</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">tobytes</span><span class="p">())</span>
+            <span class="k">return</span> <span class="n">checksum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">cache</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="CachedReader"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.reader.CachedReader">[docs]</a><span class="k">class</span> <span class="nc">CachedReader</span><span class="p">(</span><span class="n">BaseReader</span><span class="p">):</span>
@@ -401,13 +464,13 @@
         <span class="sd">&quot;&quot;&quot;Clear the cache of the frames.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_item</span><span class="o">.</span><span class="n">cache_clear</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rd</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            filename (str): Trajectory file that will be opened.</span>
 <span class="sd">            maxsize: Maximum size of the lru_cache or None for infinite cache.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="n">reindex</span><span class="p">,</span> <span class="n">ignore_index_timestamps</span><span class="o">=</span><span class="n">ignore_index_timestamps</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rd</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_item</span> <span class="o">=</span> <span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">maxsize</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_item</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
@@ -507,7 +570,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'17.08',
+            VERSION:'dev-17.11',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

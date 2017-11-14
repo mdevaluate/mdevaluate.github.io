@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Module contents &mdash; mdevaluate 17.08 documentation</title>
+  <title>Module contents &mdash; mdevaluate dev-17.11 documentation</title>
   
 
   
@@ -37,9 +37,8 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="mdevaluate 17.08 documentation" href="index.html"/>
+    <link rel="top" title="mdevaluate dev-17.11 documentation" href="index.html"/>
         <link rel="up" title="Reference Guide" href="modules.html"/>
-        <link rel="next" title="mdevaluate.meta package" href="mdevaluate.meta.html"/>
         <link rel="prev" title="Reference Guide" href="modules.html"/> 
 
   
@@ -69,7 +68,7 @@
             
             
               <div class="version">
-                17.08
+                dev-17.11
               </div>
             
           
@@ -94,11 +93,11 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="general-hints.html">General Hints for Python Programming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery/index.html">Example Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contribution Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Reference Guide</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Module contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-mdevaluate.autosave">mdevaluate.autosave</a></li>
@@ -106,15 +105,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-mdevaluate.coordinates">mdevaluate.coordinates</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-mdevaluate.correlation">mdevaluate.correlation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-mdevaluate.distribution">mdevaluate.distribution</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-mdevaluate.evaluation">mdevaluate.evaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mdevaluate-evaluation">mdevaluate.evaluation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-mdevaluate.functions">mdevaluate.functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-mdevaluate.pbc">mdevaluate.pbc</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-mdevaluate.reader">mdevaluate.reader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-mdevaluate.utils">mdevaluate.utils</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="mdevaluate.meta.html">mdevaluate.meta package</a></li>
 </ul>
 </li>
 </ul>
@@ -184,40 +179,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-mdevaluate">
+  <a href="https://github.com/mdevaluate/mdevaluate"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a><div class="section" id="module-mdevaluate">
 <span id="module-contents"></span><h1>Module contents<a class="headerlink" href="#module-mdevaluate" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="mdevaluate.load_simulation">
-<code class="descclassname">mdevaluate.</code><code class="descname">load_simulation</code><span class="sig-paren">(</span><em>directory</em>, <em>xtc='*.xtc'</em>, <em>tpr='*.tpr'</em>, <em>gro='*.gro'</em>, <em>index_file=None</em>, <em>caching=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate.html#load_simulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.load_simulation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load a simulation from a directory.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>directory</strong> – The directory where the simulation is located</li>
-<li><strong>xtc</strong> (<em>opt.</em>) – Descriptor of the trajectory file</li>
-<li><strong>tpr</strong> (<em>opt.</em>) – Descriptors of the tpr file, if this is None no tpr file will be used.</li>
-<li><strong>gro</strong> (<em>opt.</em>) – Descriptors of the gro file, if this is None no gro file will be used.</li>
-<li><strong>index_file</strong> – Name of a index file that will be loaded with the gro file</li>
-<li><strong>caching</strong> – If caching should be activated in the Coordinates</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>Only one topology filename has to be specified, tpr files will be prefered.
-The function uses <a class="reference internal" href="#mdevaluate.trajectory_from_xtc" title="mdevaluate.trajectory_from_xtc"><code class="xref py py-func docutils literal"><span class="pre">trajectory_from_xtc()</span></code></a> to load the xtc file, hence a new
-xtc-index file will be generated if necessary.</p>
-<p>The file descriptors can use unix style pathname expansion to define the filenames.
-For example: ‘out/nojump*.xtc’ would match xtc files in a subdirectory <cite>out</cite> that
-start with <cite>nojump</cite> and end with <cite>.xtc</cite>.</p>
-<p>For more details see: <a class="reference external" href="https://docs.python.org/3/library/glob.html">https://docs.python.org/3/library/glob.html</a></p>
-</dd></dl>
-
-<dl class="function">
 <dt id="mdevaluate.open">
-<code class="descclassname">mdevaluate.</code><code class="descname">open</code><span class="sig-paren">(</span><em>directory</em>, <em>topology='*.tpr'</em>, <em>trajectory='*.xtc'</em>, <em>index_file=None</em>, <em>cached=False</em>, <em>reindex=True</em>, <em>verbose=True</em>, <em>nojump=False</em>, <em>ignore_index_timestamps=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate.html#open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.open" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mdevaluate.</code><code class="descname">open</code><span class="sig-paren">(</span><em>directory=''</em>, <em>topology='*.tpr'</em>, <em>trajectory='*.xtc'</em>, <em>index_file=None</em>, <em>cached=False</em>, <em>reindex=True</em>, <em>verbose=True</em>, <em>nojump=False</em>, <em>ignore_index_timestamps=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate.html#open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.open" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open a simulation from a directory.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -264,13 +230,6 @@ start with <cite>nojump</cite> and end with <cite>.xtc</cite>.</p>
 <dt id="mdevaluate.open_energy">
 <code class="descclassname">mdevaluate.</code><code class="descname">open_energy</code><span class="sig-paren">(</span><em>energyfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate.html#open_energy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.open_energy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open an energy file with EnergyReader.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="mdevaluate.trajectory_from_xtc">
-<code class="descclassname">mdevaluate.</code><code class="descname">trajectory_from_xtc</code><span class="sig-paren">(</span><em>xtc_file</em>, <em>generate_index=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate.html#trajectory_from_xtc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.trajectory_from_xtc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load a trajectory from a xtc file. If no index file is found,
-a new one will be generated if generate_index is true.</p>
 </dd></dl>
 
 <div class="section" id="module-mdevaluate.autosave">
@@ -1019,38 +978,6 @@ angle^2} - 1</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="mdevaluate.correlation.oaf">
-<code class="descclassname">mdevaluate.correlation.</code><code class="descname">oaf</code><span class="sig-paren">(</span><em>start</em>, <em>frame</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/correlation.html#oaf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.correlation.oaf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Orientation autocorrelation function. start and frame must be connection vectors, not absolute coordinates. Use for
-example oaf_indexed to define connection vectors.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>start</strong> – </li>
-<li><strong>frame</strong> – </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="mdevaluate.correlation.oaf_indexed">
-<code class="descclassname">mdevaluate.correlation.</code><code class="descname">oaf_indexed</code><span class="sig-paren">(</span><em>index_from</em>, <em>index_to</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/correlation.html#oaf_indexed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.correlation.oaf_indexed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a OAF correlation function. Example
-oaf_indexed(t[:,1] == ‘C’, t[:,1] == ‘O’)
-:param index_from:
-:param index_to:
-:return:</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="mdevaluate.correlation.overlap">
 <code class="descclassname">mdevaluate.correlation.</code><code class="descname">overlap</code><span class="sig-paren">(</span><em>onset</em>, <em>frame</em>, <em>crds_tree</em>, <em>radius</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/correlation.html#overlap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.correlation.overlap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the overlap with a reference configuration defined in a CoordinatesTree.</p>
@@ -1171,29 +1098,21 @@ that holds the (non-avaraged) correlation data</p>
 <dl class="function">
 <dt id="mdevaluate.correlation.van_hove_distinct">
 <code class="descclassname">mdevaluate.correlation.</code><code class="descname">van_hove_distinct</code><span class="sig-paren">(</span><em>onset</em>, <em>frame</em>, <em>bins</em>, <em>box=None</em>, <em>use_dask=True</em>, <em>comp=False</em>, <em>bincount=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/correlation.html#van_hove_distinct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.correlation.van_hove_distinct" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute the distinct part of the Van Hove autocorrelation function.</p>
+<dd><p>Compute the distinct part of the Van Hove autocorrelation function.</p>
 <dl class="docutils">
 <dt>..math::</dt>
-<dd>G(r, t) = sum_{i, j} delta(|</dd>
+<dd>G(r, t) = sum_{i, j} delta(<a href="#id3"><span class="problematic" id="id4">|\vec r_i(0) - \vec r_j(t)|</span></a> - r)</dd>
 </dl>
-</div></blockquote>
-<p>ec r_i(0) -
-ec r_j(t)| - r)</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="mdevaluate.correlation.van_hove_self">
 <code class="descclassname">mdevaluate.correlation.</code><code class="descname">van_hove_self</code><span class="sig-paren">(</span><em>start</em>, <em>end</em>, <em>bins</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/correlation.html#van_hove_self"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.correlation.van_hove_self" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Compute the self part of the Van Hove autocorrelation function.</p>
+<dd><p>Compute the self part of the Van Hove autocorrelation function.</p>
 <dl class="docutils">
 <dt>..math::</dt>
-<dd>G(r, t) = sum_i delta(|</dd>
+<dd>G(r, t) = sum_i delta(<a href="#id5"><span class="problematic" id="id6">|\vec r_i(0) - \vec r_i(t)|</span></a> - r)</dd>
 </dl>
-</div></blockquote>
-<p>ec r_i(0) -
-ec r_i(t)| - r)</p>
 </dd></dl>
 
 </div>
@@ -1356,84 +1275,8 @@ averaged function</li>
 <dd></dd></dl>
 
 </div>
-<div class="section" id="module-mdevaluate.evaluation">
-<span id="mdevaluate-evaluation"></span><h2>mdevaluate.evaluation<a class="headerlink" href="#module-mdevaluate.evaluation" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="mdevaluate.evaluation.Evaluation">
-<em class="property">class </em><code class="descclassname">mdevaluate.evaluation.</code><code class="descname">Evaluation</code><a class="reference internal" href="_modules/mdevaluate/evaluation.html#Evaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.evaluation.Evaluation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<dl class="attribute">
-<dt id="mdevaluate.evaluation.Evaluation.base_filename">
-<code class="descname">base_filename</code><a class="headerlink" href="#mdevaluate.evaluation.Evaluation.base_filename" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="mdevaluate.evaluation.Evaluation.evaluate">
-<code class="descname">evaluate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/evaluation.html#Evaluation.evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.evaluation.Evaluation.evaluate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="mdevaluate.evaluation.Evaluation.load_results">
-<code class="descname">load_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/evaluation.html#Evaluation.load_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.evaluation.Evaluation.load_results" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="mdevaluate.evaluation.Evaluation.plot">
-<code class="descname">plot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/evaluation.html#Evaluation.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.evaluation.Evaluation.plot" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="mdevaluate.evaluation.Evaluation.plot_filename">
-<code class="descname">plot_filename</code><a class="headerlink" href="#mdevaluate.evaluation.Evaluation.plot_filename" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="mdevaluate.evaluation.Evaluation.publish_results">
-<code class="descname">publish_results</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/evaluation.html#Evaluation.publish_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.evaluation.Evaluation.publish_results" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="mdevaluate.evaluation.Evaluation.result_filename">
-<code class="descname">result_filename</code><a class="headerlink" href="#mdevaluate.evaluation.Evaluation.result_filename" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="mdevaluate.evaluation.Evaluation.results">
-<code class="descname">results</code><em class="property"> = None</em><a class="headerlink" href="#mdevaluate.evaluation.Evaluation.results" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="mdevaluate.evaluation.Evaluation.results_dir">
-<code class="descname">results_dir</code><em class="property"> = None</em><a class="headerlink" href="#mdevaluate.evaluation.Evaluation.results_dir" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="mdevaluate.evaluation.Evaluation.run">
-<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/evaluation.html#Evaluation.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.evaluation.Evaluation.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="mdevaluate.evaluation.Evaluation.save_plot">
-<code class="descname">save_plot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/evaluation.html#Evaluation.save_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.evaluation.Evaluation.save_plot" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="mdevaluate.evaluation.Evaluation.save_results">
-<code class="descname">save_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/evaluation.html#Evaluation.save_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.evaluation.Evaluation.save_results" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="mdevaluate.evaluation.Evaluation.simulation">
-<code class="descname">simulation</code><em class="property"> = None</em><a class="headerlink" href="#mdevaluate.evaluation.Evaluation.simulation" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="mdevaluate.evaluation.cli">
-<code class="descclassname">mdevaluate.evaluation.</code><code class="descname">cli</code><span class="sig-paren">(</span><em>evaluation</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/evaluation.html#cli"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.evaluation.cli" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<div class="section" id="mdevaluate-evaluation">
+<h2>mdevaluate.evaluation<a class="headerlink" href="#mdevaluate-evaluation" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-mdevaluate.functions">
 <span id="mdevaluate-functions"></span><h2>mdevaluate.functions<a class="headerlink" href="#module-mdevaluate.functions" title="Permalink to this headline">¶</a></h2>
@@ -1535,9 +1378,11 @@ each entry of the list defines tweo bonded atoms and the bond length.</li>
 <div class="section" id="module-mdevaluate.reader">
 <span id="mdevaluate-reader"></span><h2>mdevaluate.reader<a class="headerlink" href="#module-mdevaluate.reader" title="Permalink to this headline">¶</a></h2>
 <p>Module that provides different readers for trajectory files.</p>
+<p>It also provides a common interface layer between the file IO packages,
+namely pygmx and mdanalysis, and mdevaluate.</p>
 <dl class="class">
 <dt id="mdevaluate.reader.BaseReader">
-<em class="property">class </em><code class="descclassname">mdevaluate.reader.</code><code class="descname">BaseReader</code><span class="sig-paren">(</span><em>filename</em>, <em>reindex=False</em>, <em>ignore_index_timestamps=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/reader.html#BaseReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.BaseReader" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">mdevaluate.reader.</code><code class="descname">BaseReader</code><span class="sig-paren">(</span><em>rd</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/reader.html#BaseReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.BaseReader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Base class for trajectory readers.</p>
 <dl class="attribute">
@@ -1554,7 +1399,7 @@ each entry of the list defines tweo bonded atoms and the bond length.</li>
 
 <dl class="class">
 <dt id="mdevaluate.reader.CachedReader">
-<em class="property">class </em><code class="descclassname">mdevaluate.reader.</code><code class="descname">CachedReader</code><span class="sig-paren">(</span><em>filename</em>, <em>maxsize</em>, <em>reindex=False</em>, <em>ignore_index_timestamps=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/reader.html#CachedReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.CachedReader" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">mdevaluate.reader.</code><code class="descname">CachedReader</code><span class="sig-paren">(</span><em>rd</em>, <em>maxsize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/reader.html#CachedReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.CachedReader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#mdevaluate.reader.BaseReader" title="mdevaluate.reader.BaseReader"><code class="xref py py-class docutils literal"><span class="pre">mdevaluate.reader.BaseReader</span></code></a></p>
 <p>A reader that has a least-recently-used cache for frames.</p>
 <dl class="attribute">
@@ -1590,6 +1435,12 @@ each entry of the list defines tweo bonded atoms and the bond length.</li>
 </dd></dl>
 
 <dl class="exception">
+<dt id="mdevaluate.reader.NoReaderAvailabelError">
+<em class="property">exception </em><code class="descclassname">mdevaluate.reader.</code><code class="descname">NoReaderAvailabelError</code><a class="reference internal" href="_modules/mdevaluate/reader.html#NoReaderAvailabelError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.NoReaderAvailabelError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
 <dt id="mdevaluate.reader.NojumpError">
 <em class="property">exception </em><code class="descclassname">mdevaluate.reader.</code><code class="descname">NojumpError</code><a class="reference internal" href="_modules/mdevaluate/reader.html#NojumpError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.NojumpError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></a></p>
@@ -1604,7 +1455,8 @@ each entry of the list defines tweo bonded atoms and the bond length.</li>
 <dl class="function">
 <dt id="mdevaluate.reader.is_writeable">
 <code class="descclassname">mdevaluate.reader.</code><code class="descname">is_writeable</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/reader.html#is_writeable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.is_writeable" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test if a directory is actually writeable, by writing a temporary file.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="mdevaluate.reader.load_nojump_matrixes">
@@ -1618,8 +1470,8 @@ each entry of the list defines tweo bonded atoms and the bond length.</li>
 
 <dl class="function">
 <dt id="mdevaluate.reader.open">
-<code class="descclassname">mdevaluate.reader.</code><code class="descname">open</code><span class="sig-paren">(</span><em>filename</em>, <em>cached=False</em>, <em>reindex=False</em>, <em>ignore_index_timestamps=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/reader.html#open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.open" title="Permalink to this definition">¶</a></dt>
-<dd><p>Opens a trajectory file with the apropiate reader.</p>
+<code class="descclassname">mdevaluate.reader.</code><code class="descname">open</code><span class="sig-paren">(</span><em>topology</em>, <em>trajectory</em>, <em>cached=False</em>, <em>index_file=None</em>, <em>reindex=False</em>, <em>ignore_index_timestamps=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/reader.html#open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a trajectory file with the apropiate reader.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1637,6 +1489,18 @@ Use cached=None to get an unbound cache.</li>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mdevaluate.reader.open_with_mdanalysis">
+<code class="descclassname">mdevaluate.reader.</code><code class="descname">open_with_mdanalysis</code><span class="sig-paren">(</span><em>topology</em>, <em>trajectory</em>, <em>cached=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/reader.html#open_with_mdanalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.open_with_mdanalysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a the topology and trajectory with mdanalysis.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mdevaluate.reader.open_with_pygmx">
+<code class="descclassname">mdevaluate.reader.</code><code class="descname">open_with_pygmx</code><span class="sig-paren">(</span><em>topology</em>, <em>trajectory</em>, <em>cached=False</em>, <em>reindex=False</em>, <em>ignore_index_timestamps=False</em>, <em>index_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/reader.html#open_with_pygmx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.open_with_pygmx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a topology and trajectory with pygmx.</p>
 </dd></dl>
 
 <dl class="function">
@@ -1683,7 +1547,7 @@ will be returned, which will contain times and values of Fq(t) respectively.</p>
 <code class="descclassname">mdevaluate.utils.</code><code class="descname">Sq_from_gr</code><span class="sig-paren">(</span><em>r</em>, <em>gr</em>, <em>q</em>, <em>ρ</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/utils.html#Sq_from_gr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.utils.Sq_from_gr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the static structure factor as fourier transform of the pair correlation function. <a class="reference internal" href="#yarnell" id="id1">[Yarnell]</a></p>
 <div class="math">
-\[S(q) - 1 = \frac{4\pi \rho}{q}\int\limits_0^\infty (g(r) - 1)\,r \sin(qr) dr\]</div>
+\[\begin{split}S(q) - 1 = \\frac{4\\pi \\rho}{q}\\int\\limits_0^\\infty (g(r) - 1)\\,r \\sin(qr) dr\end{split}\]</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1914,21 +1778,6 @@ n is the minimum number of points around 1/e required</p>
 
 </div>
 </div>
-<div class="section" id="subpackages">
-<h1>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="mdevaluate.meta.html">mdevaluate.meta package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="mdevaluate.meta.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="mdevaluate.meta.html#module-mdevaluate.meta.annotate">mdevaluate.meta.annotate</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="mdevaluate.meta.html#module-mdevaluate.meta">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
 
 
            </div>
@@ -1939,8 +1788,6 @@ n is the minimum number of points around 1/e required</p>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="mdevaluate.meta.html" class="btn btn-neutral float-right" title="mdevaluate.meta package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="modules.html" class="btn btn-neutral" title="Reference Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -1974,7 +1821,7 @@ n is the minimum number of points around 1/e required</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'17.08',
+            VERSION:'dev-17.11',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

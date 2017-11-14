@@ -95,13 +95,13 @@ Example Gallery
 
   .. container:: sphx-glr-download
 
-    :download:`Download all examples in Python source code: gallery_python.zip <//home/phd/Projects/mdevaluate_master/doc/gallery/gallery_python.zip>`
+    :download:`Download all examples in Python source code: gallery_python.zip <//home/phd/Projects/mdevaluate/doc/gallery/gallery_python.zip>`
 
 
 
   .. container:: sphx-glr-download
 
-    :download:`Download all examples in Jupyter notebooks: gallery_jupyter.zip <//home/phd/Projects/mdevaluate_master/doc/gallery/gallery_jupyter.zip>`
+    :download:`Download all examples in Jupyter notebooks: gallery_jupyter.zip <//home/phd/Projects/mdevaluate/doc/gallery/gallery_jupyter.zip>`
 
 .. rst-class:: sphx-glr-signature
 
