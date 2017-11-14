@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Contribution Guide &mdash; mdevaluate 17.08 documentation</title>
+  <title>Contributing &mdash; mdevaluate dev-17.11 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="mdevaluate 17.08 documentation" href="index.html"/>
+    <link rel="top" title="mdevaluate dev-17.11 documentation" href="index.html"/>
         <link rel="next" title="Reference Guide" href="modules.html"/>
         <link rel="prev" title="Spatially resolved analysis in a cylindrical pore" href="gallery/plot_spatialisf.html"/> 
 
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                17.08
+                dev-17.11
               </div>
             
           
@@ -93,11 +93,11 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="general-hints.html">General Hints for Python Programming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery/index.html">Example Gallery</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Contribution Guide</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#extending-the-documentation">Extending the documentation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#building-the-docs">Building the docs</a></li>
 </ul>
@@ -123,8 +123,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#pulling-updates-from-remote">Pulling updates from remote</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#create-a-new-branch">Create a new branch</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#committing-changes">Committing changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#merging-into-master">Merging into master</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#push-to-remote">Push to remote</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-pullrequest">Create Pullrequest</a></li>
 </ul>
 </li>
 </ul>
@@ -174,13 +173,13 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Contribution Guide</li>
+      <li>Contributing</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/contribution.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/contributing.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -193,8 +192,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="contribution-guide">
-<h1>Contribution Guide<a class="headerlink" href="#contribution-guide" title="Permalink to this headline">¶</a></h1>
+  <a href="https://github.com/mdevaluate/mdevaluate"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a><div class="section" id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
 <p>This document aims to lay out the basics of contributing code to the <code class="docutils literal"><span class="pre">mdevaluate</span></code> package.
 The code is managed through a git repository, hence this guides gives basic information on the usage of <a class="reference external" href="https://git-scm.com">git</a>.
 Int this document the prefix <code class="docutils literal"><span class="pre">$</span></code> indicates commands which should be ran on a shell.
@@ -296,16 +295,7 @@ transformations and related functions.</p>
 </div>
 <div class="section" id="set-up-a-development-environment">
 <h2>Set up a development environment<a class="headerlink" href="#set-up-a-development-environment" title="Permalink to this headline">¶</a></h2>
-<p>The code is hosted in the groups git server <a class="reference external" href="https://chaos3.fkp.physik.tu-darmstadt.de">https://chaos3.fkp.physik.tu-darmstadt.de</a>,
-use your credentials of the institutes computers for login.
-Authentication has to be done through SSH-Keys, first add the SSH Key of
-your development machine to your account.</p>
-<ol class="arabic simple">
-<li>Copy the public key from the file <code class="docutils literal"><span class="pre">~/.ssh/id_rsa.pub</span></code></li>
-<li>Add it to your account at <a class="reference external" href="https://chaos3.fkp.physik.tu-darmstadt.de/settings/panel/ssh/">https://chaos3.fkp.physik.tu-darmstadt.de/settings/panel/ssh/</a></li>
-<li>Clone the repository</li>
-</ol>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git clone ssh://vcs@chaos3.fkp.physik.tu-darmstadt.de/diffusion/MDE/mdevaluate.git
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git clone https://github.com/mdevaluate/mdevaluate.git
 </pre></div>
 </div>
 <div class="section" id="organization-of-the-repository">
@@ -321,10 +311,10 @@ If a feature is complete, or at least works, the code can be pushed to the remot
 to make it accessible for others.</p>
 <p>A standard work flow to submit new code is the following</p>
 <ol class="arabic simple">
-<li>Create a new <strong>branch</strong> in your local repository</li>
-<li><strong>Commit</strong> the changes to your local repository</li>
-<li><strong>Merge</strong> the branch into master</li>
-<li><strong>Push</strong> the changes to the remote repository</li>
+<li>Fork the main repository o github and clone your fork to your local machine.</li>
+<li>Create a new branch locally and apply the desired changes.</li>
+<li>If the master branch was updated, merge it into the local branch.</li>
+<li>Push the changes to github and create a pull request for your fork.</li>
 </ol>
 <div class="section" id="pulling-updates-from-remote">
 <h3>Pulling updates from remote<a class="headerlink" href="#pulling-updates-from-remote" title="Permalink to this headline">¶</a></h3>
@@ -370,16 +360,17 @@ When all changes for a commit are staged, it can actually be created</p>
 <p>This will open up an editor where a commit message has to be entered.
 After writing the commit message, save &amp; close the file, which will create the commit.</p>
 </div>
-<div class="section" id="merging-into-master">
-<h3>Merging into master<a class="headerlink" href="#merging-into-master" title="Permalink to this headline">¶</a></h3>
-<p>When all changes are made and the new feature should be made public, first the branch has to be merged into master.
+<div class="section" id="create-pullrequest">
+<h3>Create Pullrequest<a class="headerlink" href="#create-pullrequest" title="Permalink to this headline">¶</a></h3>
+<p>When all changes are made and the new feature should be made public, you can open a new pull request on github.
 Most of the time, the master branch will have been updated, so first pull any updates</p>
 <div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git checkout master
 <span class="gp">$</span> git pull
 </pre></div>
 </div>
 <p>When the master branch is up to date, it can be merged into the feature branch</p>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git merge my-feature
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git checkout my-feature
+<span class="gp">$</span> git merge master
 </pre></div>
 </div>
 <p>If no conflicting changes were made, merging works automatically.
@@ -394,10 +385,7 @@ After resolving the conflict, the files need to be staged and the merge has to b
 </pre></div>
 </div>
 <p>The commit message will be generated automatically, indicating the merge.</p>
-</div>
-<div class="section" id="push-to-remote">
-<h3>Push to remote<a class="headerlink" href="#push-to-remote" title="Permalink to this headline">¶</a></h3>
-<p>After merging the changes can be pushed to the remote</p>
+<p>After merging, the changes can be pushed to the remote</p>
 <div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git push
 </pre></div>
 </div>
@@ -450,7 +438,7 @@ After resolving the conflict, the files need to be staged and the merge has to b
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'17.08',
+            VERSION:'dev-17.11',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
