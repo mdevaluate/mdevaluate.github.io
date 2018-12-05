@@ -24,28 +24,18 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../genindex.html"/>
-        <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="mdevaluate dev-17.11 documentation" href="../../index.html"/>
-        <link rel="up" title="mdevaluate" href="../mdevaluate.html"/> 
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -109,7 +99,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">mdevaluate</a>
@@ -117,9 +107,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -150,8 +141,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -244,7 +233,7 @@
     <span class="k">return</span> <span class="n">hist_results</span></div>
 
 
-<div class="viewcode-block" id="rdf"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.rdf">[docs]</a><span class="k">def</span> <span class="nf">rdf</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">,</span> <span class="n">atoms_b</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="mi">50000</span><span class="p">,</span> <span class="n">returnx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="rdf"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.distribution.rdf">[docs]</a><span class="k">def</span> <span class="nf">rdf</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">,</span> <span class="n">atoms_b</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="mi">50000</span><span class="p">,</span> <span class="n">returnx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the radial pair distribution of one or two sets of atoms.</span>
 
@@ -261,6 +250,7 @@
 <span class="sd">        atoms_b (opt.): Second set of atoms, used internally</span>
 <span class="sd">        bins: Bins of the radial distribution function</span>
 <span class="sd">        box (opt.): Simulations box, if not specified this is taken from ``atoms_a.box``</span>
+<span class="sd">        kind (opt.): Can be &#39;inter&#39;, &#39;intra&#39; or None (default).</span>
 <span class="sd">        chunksize (opt.):</span>
 <span class="sd">            For large systems (N &gt; 1000) the distaces have to be computed in chunks so the arrays</span>
 <span class="sd">            fit into memory, this parameter controlls the size of these chunks. It should be</span>
@@ -268,6 +258,7 @@
 <span class="sd">        returnx (opt.): If True the x ordinate of the histogram is returned.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">bins</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;Bins of the pair distribution have to be defined.&#39;</span>
+    <span class="k">assert</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;intra&#39;</span><span class="p">,</span> <span class="s1">&#39;inter&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="s1">&#39;Argument kind must be one of the following: intra, inter, None.&#39;</span>
     <span class="k">if</span> <span class="n">box</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">box</span> <span class="o">=</span> <span class="n">atoms_a</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">atoms_b</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -286,6 +277,13 @@
         <span class="n">sl</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">chunk</span> <span class="o">+</span> <span class="n">chunksize</span><span class="p">)</span>
         <span class="n">diff</span> <span class="o">=</span> <span class="n">pbc_diff</span><span class="p">(</span><span class="n">atoms_a</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">sl</span><span class="p">]],</span> <span class="n">atoms_b</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">sl</span><span class="p">]],</span> <span class="n">box</span><span class="p">)</span>
         <span class="n">dist</span> <span class="o">=</span> <span class="p">(</span><span class="n">diff</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;intra&#39;</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">atoms_a</span><span class="o">.</span><span class="n">residue_ids</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">sl</span><span class="p">]]</span> <span class="o">==</span> <span class="n">atoms_b</span><span class="o">.</span><span class="n">residue_ids</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">sl</span><span class="p">]]</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;inter&#39;</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">atoms_a</span><span class="o">.</span><span class="n">residue_ids</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">sl</span><span class="p">]]</span> <span class="o">!=</span> <span class="n">atoms_b</span><span class="o">.</span><span class="n">residue_ids</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">sl</span><span class="p">]]</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
         <span class="n">nr_of_samples</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
         <span class="n">hist</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">bins</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -517,9 +515,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -528,11 +524,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Niels Müller.
+        &copy; Copyright 2017, Niels Müller.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -551,6 +547,7 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
             VERSION:'dev-17.11',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -564,19 +561,13 @@
 
   
 
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

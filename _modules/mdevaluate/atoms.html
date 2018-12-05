@@ -24,28 +24,18 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../genindex.html"/>
-        <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="mdevaluate dev-17.11 documentation" href="../../index.html"/>
-        <link rel="up" title="mdevaluate" href="../mdevaluate.html"/> 
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -109,7 +99,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">mdevaluate</a>
@@ -117,9 +107,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -150,8 +141,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -206,8 +195,8 @@
     <span class="n">indices</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">index_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">indices</span> <span class="o">=</span> <span class="n">load_indices</span><span class="p">(</span><span class="n">index_file</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">Atoms</span><span class="p">(</span><span class="n">_atoms_from_grofile</span><span class="p">(</span><span class="n">grofile</span><span class="p">),</span> <span class="n">indices</span><span class="p">)</span><span class="o">.</span><span class="n">subset</span><span class="p">()</span></div>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">grofile</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;U8&#39;</span><span class="p">,</span> <span class="n">autostrip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skip_footer</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Atoms</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span><span class="o">.</span><span class="n">subset</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="from_tprfile"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.atoms.from_tprfile">[docs]</a><span class="k">def</span> <span class="nf">from_tprfile</span><span class="p">(</span><span class="n">tprfile</span><span class="p">,</span> <span class="n">index_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -457,9 +446,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -468,11 +455,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Niels Müller.
+        &copy; Copyright 2017, Niels Müller.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -491,6 +478,7 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
             VERSION:'dev-17.11',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -504,19 +492,13 @@
 
   
 
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

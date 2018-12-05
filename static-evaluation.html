@@ -24,30 +24,20 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="mdevaluate dev-17.11 documentation" href="index.html"/>
-        <link rel="up" title="User Guide" href="guide.html"/>
-        <link rel="next" title="Evaluation of dynamic properties" href="dynamic-evaluation.html"/>
-        <link rel="prev" title="Loading of simulation data" href="loading.html"/> 
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Evaluation of dynamic properties" href="dynamic-evaluation.html" />
+    <link rel="prev" title="Loading of simulation data" href="loading.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -122,7 +112,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">mdevaluate</a>
@@ -130,9 +120,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -181,22 +172,22 @@
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>All examples in this section assume, that the packages has been imported and a trajectory was loaded:</p>
-<div class="last highlight-python3"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mdevaluate.distribution</span> <span class="k">as</span> <span class="nn">dist</span>
+<div class="last highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mdevaluate.distribution</span> <span class="k">as</span> <span class="nn">dist</span>
 
 <span class="n">coords</span> <span class="o">=</span> <span class="n">mdevaluate</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;/path/to/simulation&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <p>Static properties of the system, like density distribution or pair correlation function,
-can be evaluated with the <a class="reference internal" href="mdevaluate.html#module-mdevaluate.distribution" title="mdevaluate.distribution"><code class="xref py py-mod docutils literal"><span class="pre">mdevaluate.distribution</span></code></a> module.
-It provides the function <a class="reference internal" href="mdevaluate.html#mdevaluate.distribution.time_average" title="mdevaluate.distribution.time_average"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.distribution.time_average()</span></code></a>
+can be evaluated with the <a class="reference internal" href="mdevaluate.html#module-mdevaluate.distribution" title="mdevaluate.distribution"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mdevaluate.distribution</span></code></a> module.
+It provides the function <a class="reference internal" href="mdevaluate.html#mdevaluate.distribution.time_average" title="mdevaluate.distribution.time_average"><code class="xref py py-func docutils literal notranslate"><span class="pre">mdevaluate.distribution.time_average()</span></code></a>
 that computes the average of a property over the whole trajectory.
 An example call of this function is:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">tetra</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">time_average</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">tetrahedral_order</span><span class="p">,</span> <span class="n">coords</span><span class="p">)</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">tetra</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">time_average</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">tetrahedral_order</span><span class="p">,</span> <span class="n">coords</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This will calculate the average of the tetrahedral order parameter for each atom.
-The first argument of <code class="xref py py-func docutils literal"><span class="pre">time_average()</span></code> is a function that takes one argument.
+The first argument of <code class="xref py py-func docutils literal notranslate"><span class="pre">time_average()</span></code> is a function that takes one argument.
 It will be called for each frame in the trajectory and the output of this function
 is than averaged over all these frames.</p>
 <div class="section" id="slicing-of-the-trajectory">
@@ -207,7 +198,7 @@ Hence it is sufficient to skip some frames without suffering significant statist
 The exact amount of frames which can be skipped before the statistics suffer depends strongly
 on the calculated property, therefore it has to be chosen manually.
 For this purpose the Coordinates objects can be sliced like any python list:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">tetra</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">time_average</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">tetrahedral_order</span><span class="p">,</span> <span class="n">coords</span><span class="p">[</span><span class="mi">1000</span><span class="p">::</span><span class="mi">50</span><span class="p">])</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">tetra</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">time_average</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">tetrahedral_order</span><span class="p">,</span> <span class="n">coords</span><span class="p">[</span><span class="mi">1000</span><span class="p">::</span><span class="mi">50</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>This makes it possible to skip a number of frames at the start (or end) and with every step.
@@ -218,27 +209,27 @@ Since the number of frames read and evaluated is reduced by about a factor of 50
 <h2>Calculating distributions<a class="headerlink" href="#calculating-distributions" title="Permalink to this headline">¶</a></h2>
 <p>In many cases the static distributions of a property is of interest.
 For example, the tetrahedral order parameter is often wanted as a distribution.
-This can too be calculated with <code class="docutils literal"><span class="pre">time_average</span></code> but the bins of the distribution have to be specified:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+This can too be calculated with <code class="docutils literal notranslate"><span class="pre">time_average</span></code> but the bins of the distribution have to be specified:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 <span class="n">func</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">tetrahedral_order_distribution</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span>
 <span class="n">tetra_dist</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">time_average</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">coords</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The bins (which are ultimately used with the function <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram.html#numpy.histogram" title="(in NumPy v1.13)"><code class="xref py py-func docutils literal"><span class="pre">numpy.histogram()</span></code></a>) are specified
-by partially evaluating the evaluation function with <a class="reference external" href="https://docs.python.org/3/library/functools.html#functools.partial" title="(in Python v3.6)"><code class="xref py py-func docutils literal"><span class="pre">functools.partial()</span></code></a>.
-See the documentation of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram.html#numpy.histogram" title="(in NumPy v1.13)"><code class="xref py py-func docutils literal"><span class="pre">numpy.histogram()</span></code></a> for details on bin specification.</p>
+<p>The bins (which are ultimately used with the function <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram.html#numpy.histogram" title="(in NumPy v1.15)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.histogram()</span></code></a>) are specified
+by partially evaluating the evaluation function with <a class="reference external" href="https://docs.python.org/3/library/functools.html#functools.partial" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">functools.partial()</span></code></a>.
+See the documentation of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram.html#numpy.histogram" title="(in NumPy v1.15)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.histogram()</span></code></a> for details on bin specification.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">If <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram.html#numpy.histogram" title="(in NumPy v1.13)"><code class="xref py py-func docutils literal"><span class="pre">numpy.histogram()</span></code></a> is used with <code class="xref py py-func docutils literal"><span class="pre">time_average()</span></code> the bins have to be given explicitly.
-When not specified, the bins will be chosen automatically for each call of <code class="docutils literal"><span class="pre">histogram</span></code> leading to
+<p class="last">If <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram.html#numpy.histogram" title="(in NumPy v1.15)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.histogram()</span></code></a> is used with <code class="xref py py-func docutils literal notranslate"><span class="pre">time_average()</span></code> the bins have to be given explicitly.
+When not specified, the bins will be chosen automatically for each call of <code class="docutils literal notranslate"><span class="pre">histogram</span></code> leading to
 different bins for each frame, hence an incorrect average.</p>
 </div>
 </div>
 <div class="section" id="advanced-evaluations">
 <h2>Advanced evaluations<a class="headerlink" href="#advanced-evaluations" title="Permalink to this headline">¶</a></h2>
-<p>The function that will be evaluated by <code class="docutils literal"><span class="pre">time_average</span></code> can return numpy arrays of arbitrary shape.
+<p>The function that will be evaluated by <code class="docutils literal notranslate"><span class="pre">time_average</span></code> can return numpy arrays of arbitrary shape.
 It is for example possible to calculate the distribution of a property for several subsets of the system at once:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">subset_tetra</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">bins</span><span class="p">):</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">subset_tetra</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">bins</span><span class="p">):</span>
     <span class="n">tetra</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">tetrahedral_order</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">tetra</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">2</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">),</span>
                   <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">tetra</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">),])</span>
@@ -254,9 +245,7 @@ Then the distribution is calculated for two subsets, containing atoms (0, 2, 4, 
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -274,11 +263,11 @@ Then the distribution is calculated for two subsets, containing atoms (0, 2, 4, 
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Niels Müller.
+        &copy; Copyright 2017, Niels Müller.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -297,6 +286,7 @@ Then the distribution is calculated for two subsets, containing atoms (0, 2, 4, 
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
             VERSION:'dev-17.11',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -310,19 +300,13 @@ Then the distribution is calculated for two subsets, containing atoms (0, 2, 4, 
 
   
 
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

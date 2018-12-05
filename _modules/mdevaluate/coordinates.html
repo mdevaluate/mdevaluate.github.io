@@ -24,28 +24,18 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../genindex.html"/>
-        <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="mdevaluate dev-17.11 documentation" href="../../index.html"/>
-        <link rel="up" title="mdevaluate" href="../mdevaluate.html"/> 
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -109,7 +99,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">mdevaluate</a>
@@ -117,9 +107,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -150,8 +141,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -192,7 +181,7 @@
     <span class="n">rotation_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">zaxis</span><span class="p">)</span>
     <span class="n">rotation_axis</span> <span class="o">=</span> <span class="n">rotation_axis</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rotation_axis</span><span class="p">)</span>
 
-<div class="viewcode-block" id="spherical_radius"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.spherical_radius">[docs]</a>    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">axis</span> <span class="o">@</span> <span class="n">zaxis</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">axis</span><span class="p">))</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">axis</span> <span class="o">@</span> <span class="n">zaxis</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">axis</span><span class="p">))</span>
 
     <span class="c1"># return theta/pi, rotation_axis</span>
 
@@ -213,7 +202,7 @@
     <span class="k">return</span> <span class="n">rotated</span></div>
 
 
-<span class="k">def</span> <span class="nf">spherical_radius</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="spherical_radius"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.spherical_radius">[docs]</a><span class="k">def</span> <span class="nf">spherical_radius</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transform a frame of cartesian coordinates into the sperical radius.</span>
 <span class="sd">    If origin=None the center of the box is taken as the coordinates origin.</span>
@@ -233,11 +222,11 @@
 <div class="viewcode-block" id="spherical_coordinates"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.spherical_coordinates">[docs]</a><span class="k">def</span> <span class="nf">spherical_coordinates</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Convert cartesian to spherical coordinates.&quot;&quot;&quot;</span>
     <span class="n">xy</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">polar_coordinates</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">z</span> <span class="o">/</span> <span class="n">xy</span><span class="p">)</span>
     <span class="n">radius</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">z</span> <span class="o">/</span> <span class="n">radius</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">radius</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">theta</span></div>
 
-
+    
 <div class="viewcode-block" id="radial_selector"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.coordinates.radial_selector">[docs]</a><span class="k">def</span> <span class="nf">radial_selector</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">,</span> <span class="n">rmin</span><span class="p">,</span> <span class="n">rmax</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a selection of all atoms with radius in the interval [rmin, rmax].</span>
@@ -304,6 +293,14 @@
     <span class="k">def</span> <span class="nf">atom_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">atom_subset</span><span class="o">.</span><span class="n">atom_names</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">indices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">atom_subset</span><span class="o">.</span><span class="n">indices</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">atom_subset</span><span class="o">.</span><span class="n">selection</span> 
+    
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">whole</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="n">whole</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -454,7 +451,7 @@
 
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">AtomSubset</span><span class="o">.</span><span class="n">subset</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">subset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Coordinates</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">,</span> <span class="n">atom_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">atom_subset</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Coordinates</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">,</span> <span class="n">atom_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">atom_subset</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_mode</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -497,7 +494,13 @@
 
     <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">:</span>
-            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">step</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">CoordinateFrame</span><span class="p">):</span>
+                <span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">CoordinateFrame</span><span class="p">)</span>
+                <span class="n">frame</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="bp">self</span>
+                <span class="n">frame</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">step</span>
+            <span class="k">yield</span> <span class="n">frame</span>
 
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
@@ -581,7 +584,7 @@
         <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kdtree</span><span class="p">(</span><span class="n">frame</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="p">(</span><span class="n">frame</span><span class="p">)])</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maxcache</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">ckdtree</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maxcache</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">ckdtree</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            frames: Trajectory of the simulation, can be Coordinates object or reader</span>
@@ -595,6 +598,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">frames</span> <span class="o">=</span> <span class="n">frames</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kdtree</span> <span class="o">=</span> <span class="n">cKDTree</span> <span class="k">if</span> <span class="n">ckdtree</span> <span class="k">else</span> <span class="n">KDTree</span>
+        <span class="k">if</span> <span class="n">boxsize</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kdtree</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kdtree</span><span class="p">,</span> <span class="n">boxsize</span><span class="o">=</span><span class="n">boxsize</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_tree_at_index</span> <span class="o">=</span> <span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">maxcache</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_tree_at_index</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
@@ -709,9 +714,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -720,11 +723,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Niels Müller.
+        &copy; Copyright 2017, Niels Müller.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -743,6 +746,7 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
             VERSION:'dev-17.11',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -756,19 +760,13 @@
 
   
 
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

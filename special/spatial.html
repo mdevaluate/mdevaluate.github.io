@@ -24,30 +24,20 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="mdevaluate dev-17.11 documentation" href="../index.html"/>
-        <link rel="up" title="Special Topics" href="../special-topics.html"/>
-        <link rel="next" title="Computing the Overlap Function" href="overlap.html"/>
-        <link rel="prev" title="Automatic Saving of Analysis Data" href="autosave.html"/> 
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Computing the Overlap Function" href="overlap.html" />
+    <link rel="prev" title="Automatic Saving of Analysis Data" href="autosave.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -123,7 +113,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">mdevaluate</a>
@@ -131,9 +121,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -182,16 +173,16 @@
   <a href="https://github.com/mdevaluate/mdevaluate"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a><div class="section" id="spatial-resolved-analysis">
 <h1>Spatial Resolved Analysis<a class="headerlink" href="#spatial-resolved-analysis" title="Permalink to this headline">¶</a></h1>
 <p>This section describes how spatially resolved correlation can be analyzed with mdevaluate.
-This guide assumes that the variable <code class="docutils literal"><span class="pre">traj</span></code> holds a trajectory where the subset of atoms that should be analyzed are selected.
+This guide assumes that the variable <code class="docutils literal notranslate"><span class="pre">traj</span></code> holds a trajectory where the subset of atoms that should be analyzed are selected.
 For example:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">traj</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;/path/to/sim&#39;</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">atom_name</span><span class="o">=</span><span class="s1">&#39;OW&#39;</span><span class="p">)</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">traj</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;/path/to/sim&#39;</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">atom_name</span><span class="o">=</span><span class="s1">&#39;OW&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Which would load a simulation from the directory <code class="docutils literal"><span class="pre">/path/to/sim</span></code> and select all <code class="docutils literal"><span class="pre">OW</span></code> atoms.
+<p>Which would load a simulation from the directory <code class="docutils literal notranslate"><span class="pre">/path/to/sim</span></code> and select all <code class="docutils literal notranslate"><span class="pre">OW</span></code> atoms.
 Note that for this use case, the caching is quite useful since it enables us to iterate over spatial regions
 without significant time penalty.
 Moving on let’s calculate the ISF of water oxygens with spherical radius between 0.5 and 0.7 nm:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 <span class="n">func</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">md</span><span class="o">.</span><span class="n">correlation</span><span class="o">.</span><span class="n">isf</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="mf">22.7</span><span class="p">)</span>
 <span class="n">selector</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
   <span class="n">md</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">spatial_selector</span><span class="p">,</span>
@@ -206,12 +197,12 @@ Moving on let’s calculate the ISF of water oxygens with spherical radius betwe
 </div>
 <p>To explain how this works, let’s go through the code from bottom to top.
 The spatial filtering is done inside the shifted_correlation by the function
-<a class="reference internal" href="../mdevaluate.html#mdevaluate.correlation.subensemble_correlation" title="mdevaluate.correlation.subensemble_correlation"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.correlation.subensemble_correlation()</span></code></a>.
+<a class="reference internal" href="../mdevaluate.html#mdevaluate.correlation.subensemble_correlation" title="mdevaluate.correlation.subensemble_correlation"><code class="xref py py-func docutils literal notranslate"><span class="pre">mdevaluate.correlation.subensemble_correlation()</span></code></a>.
 This function takes a selector function as argument that should take a frame as input
 and return the selection of the coordinates that should be selected.
 A new selection is taken for the starting frame of each shifted time segment.</p>
-<p>In this case the selection is done with the function <a class="reference internal" href="../mdevaluate.html#mdevaluate.coordinates.spatial_selector" title="mdevaluate.coordinates.spatial_selector"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.coordinates.spatial_selector()</span></code></a>.
-This function takes four arguments, the first being the frame of coordinates which is handed by <code class="xref py py-func docutils literal"><span class="pre">subensemble_correlation()</span></code>.
+<p>In this case the selection is done with the function <a class="reference internal" href="../mdevaluate.html#mdevaluate.coordinates.spatial_selector" title="mdevaluate.coordinates.spatial_selector"><code class="xref py py-func docutils literal notranslate"><span class="pre">mdevaluate.coordinates.spatial_selector()</span></code></a>.
+This function takes four arguments, the first being the frame of coordinates which is handed by <code class="xref py py-func docutils literal notranslate"><span class="pre">subensemble_correlation()</span></code>.
 The second argument is a transformation function, which transforms the input coordinates to the coordinate which will be filtered,
 in this case the spherical radius.
 The two last arguments define the minimum and maximum value of this quantity.</p>
@@ -219,9 +210,7 @@ The two last arguments define the minimum and maximum value of this quantity.</p
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -239,11 +228,11 @@ The two last arguments define the minimum and maximum value of this quantity.</p
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Niels Müller.
+        &copy; Copyright 2017, Niels Müller.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -262,6 +251,7 @@ The two last arguments define the minimum and maximum value of this quantity.</p
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
             VERSION:'dev-17.11',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -275,19 +265,13 @@ The two last arguments define the minimum and maximum value of this quantity.</p
 
   
 
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

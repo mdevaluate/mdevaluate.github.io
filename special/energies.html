@@ -24,30 +24,20 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="mdevaluate dev-17.11 documentation" href="../index.html"/>
-        <link rel="up" title="Special Topics" href="../special-topics.html"/>
-        <link rel="next" title="Example Gallery" href="../gallery/index.html"/>
-        <link rel="prev" title="Computing the Overlap Function" href="overlap.html"/> 
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Example Gallery" href="../gallery/index.html" />
+    <link rel="prev" title="Computing the Overlap Function" href="overlap.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -123,7 +113,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">mdevaluate</a>
@@ -131,9 +121,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -185,12 +176,12 @@
 Those files contain thermodynamic properties of the system, like temperature or pressure.
 The exact contents of an energy file depend on the type of ensemble that was simulated,
 an NVT simulation’s energy file for example will not contain information about the box size.</p>
-<p>To open these files use the function <a class="reference internal" href="../mdevaluate.html#mdevaluate.open_energy" title="mdevaluate.open_energy"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.open_energy()</span></code></a>, which takes the filename of an energy file.
-The types of energies stored in the file can be shown with the <code class="xref py py-attr docutils literal"><span class="pre">types</span></code> attribute of the class <a class="reference internal" href="../mdevaluate.html#mdevaluate.reader.EnergyReader" title="mdevaluate.reader.EnergyReader"><code class="xref py py-class docutils literal"><span class="pre">EnergyReader</span></code></a>,
-the <code class="xref py py-attr docutils literal"><span class="pre">units</span></code> attribute gives the units of these energy types.
-The timesteps at which those energies were written out are accessible through the <code class="xref py py-attr docutils literal"><span class="pre">time</span></code> property.
+<p>To open these files use the function <a class="reference internal" href="../mdevaluate.html#mdevaluate.open_energy" title="mdevaluate.open_energy"><code class="xref py py-func docutils literal notranslate"><span class="pre">mdevaluate.open_energy()</span></code></a>, which takes the filename of an energy file.
+The types of energies stored in the file can be shown with the <code class="xref py py-attr docutils literal notranslate"><span class="pre">types</span></code> attribute of the class <a class="reference internal" href="../mdevaluate.html#mdevaluate.reader.EnergyReader" title="mdevaluate.reader.EnergyReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">EnergyReader</span></code></a>,
+the <code class="xref py py-attr docutils literal notranslate"><span class="pre">units</span></code> attribute gives the units of these energy types.
+The timesteps at which those energies were written out are accessible through the <code class="xref py py-attr docutils literal notranslate"><span class="pre">time</span></code> property.
 The time series of one of these energies can be accessed through the named index, comparable to python dictionaries.</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mdevaluate</span> <span class="k">as</span> <span class="nn">md</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mdevaluate</span> <span class="k">as</span> <span class="nn">md</span>
 <span class="n">edr</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">open_energy</span><span class="p">(</span><span class="s1">&#39;/path/to/energy.edr&#39;</span><span class="p">)</span>
 <span class="c1"># plot the evolution of temperature</span>
 <span class="n">plot</span><span class="p">(</span><span class="n">edr</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">edr</span><span class="p">[</span><span class="s1">&#39;Temperature&#39;</span><span class="p">])</span>
@@ -200,9 +191,7 @@ The time series of one of these energies can be accessed through the named index
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -220,11 +209,11 @@ The time series of one of these energies can be accessed through the named index
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Niels Müller.
+        &copy; Copyright 2017, Niels Müller.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -243,6 +232,7 @@ The time series of one of these energies can be accessed through the named index
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
             VERSION:'dev-17.11',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -256,19 +246,13 @@ The time series of one of these energies can be accessed through the named index
 
   
 
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

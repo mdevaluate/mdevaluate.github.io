@@ -24,29 +24,19 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="mdevaluate dev-17.11 documentation" href="index.html"/>
-        <link rel="up" title="Reference Guide" href="modules.html"/>
-        <link rel="prev" title="Reference Guide" href="modules.html"/> 
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Reference Guide" href="modules.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -125,7 +115,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">mdevaluate</a>
@@ -133,9 +123,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -215,7 +206,7 @@ regardless of the timestamp</li>
 <p>Open a simulation located in ‘/path/to/sim’, where the trajectory is
 located in a sub-directory ‘/path/to/sim/out’ and named for Example
 ‘nojump_traj.xtc’. All read frames will be cached in memory.</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/path/to/sim&#39;</span><span class="p">,</span> <span class="n">trajectory</span><span class="o">=</span><span class="s1">&#39;out/nojump*.xtc&#39;</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/path/to/sim&#39;</span><span class="p">,</span> <span class="n">trajectory</span><span class="o">=</span><span class="s1">&#39;out/nojump*.xtc&#39;</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The file descriptors can use unix style pathname expansion to define the filenames.
@@ -263,7 +254,7 @@ the function code, hence the checksum does not depend on the function code.</li>
 <dl class="class">
 <dt id="mdevaluate.autosave.disabled">
 <em class="property">class </em><code class="descclassname">mdevaluate.autosave.</code><code class="descname">disabled</code><a class="reference internal" href="_modules/mdevaluate/autosave.html#disabled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.autosave.disabled" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A context manager that disbales the autosave module within its context.</p>
 <p class="rubric">Example</p>
 <p>import mdevaluate as md
@@ -282,14 +273,14 @@ md.correlation.shifted_correlation(</p>
 <dl class="function">
 <dt id="mdevaluate.autosave.enable">
 <code class="descclassname">mdevaluate.autosave.</code><code class="descname">enable</code><span class="sig-paren">(</span><em>dir</em>, <em>load_data=True</em>, <em>verbose=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/autosave.html#enable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.autosave.enable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enable auto saving results of functions decorated with <a class="reference internal" href="#mdevaluate.autosave.autosave_data" title="mdevaluate.autosave.autosave_data"><code class="xref py py-func docutils literal"><span class="pre">autosave_data()</span></code></a>.</p>
+<dd><p>Enable auto saving results of functions decorated with <a class="reference internal" href="#mdevaluate.autosave.autosave_data" title="mdevaluate.autosave.autosave_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">autosave_data()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>dir</strong> – Directory where the data should be saved.</li>
-<li><strong>load_data</strong> (<em>opt.</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – If data should also be loaded.</li>
+<li><strong>load_data</strong> (<em>opt.</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If data should also be loaded.</li>
 </ul>
 </td>
 </tr>
@@ -338,13 +329,13 @@ md.correlation.shifted_correlation(</p>
 <dl class="exception">
 <dt id="mdevaluate.atoms.AtomMismatch">
 <em class="property">exception </em><code class="descclassname">mdevaluate.atoms.</code><code class="descname">AtomMismatch</code><a class="reference internal" href="_modules/mdevaluate/atoms.html#AtomMismatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.atoms.AtomMismatch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="mdevaluate.atoms.AtomSubset">
 <em class="property">class </em><code class="descclassname">mdevaluate.atoms.</code><code class="descname">AtomSubset</code><span class="sig-paren">(</span><em>atoms</em>, <em>selection=None</em>, <em>description=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/atoms.html#AtomSubset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.atoms.AtomSubset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="attribute">
 <dt id="mdevaluate.atoms.AtomSubset.atom_names">
 <code class="descname">atom_names</code><a class="headerlink" href="#mdevaluate.atoms.AtomSubset.atom_names" title="Permalink to this definition">¶</a></dt>
@@ -396,7 +387,7 @@ the keyworss below. Names are matched as a regular expression with <cite>re.matc
 <dl class="class">
 <dt id="mdevaluate.atoms.Atoms">
 <em class="property">class </em><code class="descclassname">mdevaluate.atoms.</code><code class="descname">Atoms</code><span class="sig-paren">(</span><em>atoms</em>, <em>indices=None</em>, <em>masses=None</em>, <em>charges=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/atoms.html#Atoms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.atoms.Atoms" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Basic container class for atom information.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -438,7 +429,7 @@ the keyworss below. Names are matched as a regular expression with <cite>re.matc
 <dt id="mdevaluate.atoms.Atoms.subset">
 <code class="descname">subset</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/atoms.html#Atoms.subset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.atoms.Atoms.subset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a subset of these atoms with all atoms selected.</p>
-<p>All arguments are passed to the <a class="reference internal" href="#mdevaluate.atoms.AtomSubset.subset" title="mdevaluate.atoms.AtomSubset.subset"><code class="xref py py-meth docutils literal"><span class="pre">AtomSubset.subset()</span></code></a> method directly.</p>
+<p>All arguments are passed to the <a class="reference internal" href="#mdevaluate.atoms.AtomSubset.subset" title="mdevaluate.atoms.AtomSubset.subset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AtomSubset.subset()</span></code></a> method directly.</p>
 </dd></dl>
 
 </dd></dl>
@@ -480,8 +471,8 @@ If box is not given then periodic boundary conditions are not applied!</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>grofile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – Filename of the grofile</li>
-<li><strong>index_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a><em>, </em><em>optional</em>) – Filename of the gromacs indexfile</li>
+<li><strong>grofile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Filename of the grofile</li>
+<li><strong>index_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>, </em><em>optional</em>) – Filename of the gromacs indexfile</li>
 </ul>
 </td>
 </tr>
@@ -504,7 +495,7 @@ If box is not given then periodic boundary conditions are not applied!</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>tprile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – Filename of the tpr file</li>
+<li><strong>tprile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Filename of the tpr file</li>
 <li><strong>index_file</strong> (<em>opt.</em>) – Index file that should be loaded alongside.</li>
 </ul>
 </td>
@@ -540,9 +531,9 @@ If box is not given then periodic boundary conditions are not applied!</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>atoms</strong> – The reference atoms and also the atoms which are queried if <cite>query_atoms</cite> is net provided</li>
 <li><strong>query_atoms</strong> (<em>opt.</em>) – If this is not None, these atoms will be queried</li>
-<li><strong>number_of_neighbors</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a><em>, </em><em>opt.</em>) – Number of neighboring atoms to find</li>
-<li><strong>distance_upper_bound</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>opt.</em>) – Upper bound of the distance between neighbors</li>
-<li><strong>distinct</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a><em>, </em><em>opt.</em>) – If this is true, the atoms and query atoms are taken as distinct sets of atoms</li>
+<li><strong>number_of_neighbors</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em>, </em><em>opt.</em>) – Number of neighboring atoms to find</li>
+<li><strong>distance_upper_bound</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>opt.</em>) – Upper bound of the distance between neighbors</li>
+<li><strong>distinct</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a><em>, </em><em>opt.</em>) – If this is true, the atoms and query atoms are taken as distinct sets of atoms</li>
 </ul>
 </td>
 </tr>
@@ -556,7 +547,7 @@ If box is not given then periodic boundary conditions are not applied!</p>
 <dl class="class">
 <dt id="mdevaluate.coordinates.CoordinateFrame">
 <em class="property">class </em><code class="descclassname">mdevaluate.coordinates.</code><code class="descname">CoordinateFrame</code><a class="reference internal" href="_modules/mdevaluate/coordinates.html#CoordinateFrame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.coordinates.CoordinateFrame" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.13)"><code class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 <dl class="attribute">
 <dt id="mdevaluate.coordinates.CoordinateFrame.atom_names">
 <code class="descname">atom_names</code><a class="headerlink" href="#mdevaluate.coordinates.CoordinateFrame.atom_names" title="Permalink to this definition">¶</a></dt>
@@ -570,6 +561,11 @@ If box is not given then periodic boundary conditions are not applied!</p>
 <dl class="attribute">
 <dt id="mdevaluate.coordinates.CoordinateFrame.charges">
 <code class="descname">charges</code><a class="headerlink" href="#mdevaluate.coordinates.CoordinateFrame.charges" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mdevaluate.coordinates.CoordinateFrame.indices">
+<code class="descname">indices</code><a class="headerlink" href="#mdevaluate.coordinates.CoordinateFrame.indices" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -598,6 +594,11 @@ If box is not given then periodic boundary conditions are not applied!</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="mdevaluate.coordinates.CoordinateFrame.selection">
+<code class="descname">selection</code><a class="headerlink" href="#mdevaluate.coordinates.CoordinateFrame.selection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="mdevaluate.coordinates.CoordinateFrame.time">
 <code class="descname">time</code><a class="headerlink" href="#mdevaluate.coordinates.CoordinateFrame.time" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -617,7 +618,7 @@ If box is not given then periodic boundary conditions are not applied!</p>
 <dl class="class">
 <dt id="mdevaluate.coordinates.Coordinates">
 <em class="property">class </em><code class="descclassname">mdevaluate.coordinates.</code><code class="descname">Coordinates</code><span class="sig-paren">(</span><em>frames</em>, <em>atom_filter=None</em>, <em>atom_subset: mdevaluate.atoms.AtomSubset = None</em>, <em>mode=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/coordinates.html#Coordinates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.coordinates.Coordinates" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Coordinates represent trajectory data, which is used for evaluation functions.</p>
 <p>Atoms may be selected by specifing a atom_subset or a atom_filter.</p>
 <dl class="method">
@@ -688,7 +689,7 @@ the keyworss below. Names are matched as a regular expression with <cite>re.matc
 <dl class="class">
 <dt id="mdevaluate.coordinates.CoordinatesFilter">
 <em class="property">class </em><code class="descclassname">mdevaluate.coordinates.</code><code class="descname">CoordinatesFilter</code><span class="sig-paren">(</span><em>coordinates</em>, <em>atom_filter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/coordinates.html#CoordinatesFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.coordinates.CoordinatesFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="attribute">
 <dt id="mdevaluate.coordinates.CoordinatesFilter.atom_subset">
 <code class="descname">atom_subset</code><a class="headerlink" href="#mdevaluate.coordinates.CoordinatesFilter.atom_subset" title="Permalink to this definition">¶</a></dt>
@@ -698,10 +699,10 @@ the keyworss below. Names are matched as a regular expression with <cite>re.matc
 
 <dl class="class">
 <dt id="mdevaluate.coordinates.CoordinatesKDTree">
-<em class="property">class </em><code class="descclassname">mdevaluate.coordinates.</code><code class="descname">CoordinatesKDTree</code><span class="sig-paren">(</span><em>frames</em>, <em>selector=None</em>, <em>maxcache=128</em>, <em>ckdtree=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/coordinates.html#CoordinatesKDTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.coordinates.CoordinatesKDTree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<p>A KDTree of coordinates frames. The KDtrees are cached by a <a class="reference external" href="https://docs.python.org/3/library/functools.html#functools.lru_cache" title="(in Python v3.6)"><code class="xref py py-func docutils literal"><span class="pre">functools.lru_cache()</span></code></a>.
-Uses <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.cKDTree.html#scipy.spatial.cKDTree" title="(in SciPy v1.0.0)"><code class="xref py py-class docutils literal"><span class="pre">scipy.spatial.cKDTree</span></code></a> by default, since it’s significantly faster.
+<em class="property">class </em><code class="descclassname">mdevaluate.coordinates.</code><code class="descname">CoordinatesKDTree</code><span class="sig-paren">(</span><em>frames</em>, <em>selector=None</em>, <em>boxsize=None</em>, <em>maxcache=128</em>, <em>ckdtree=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/coordinates.html#CoordinatesKDTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.coordinates.CoordinatesKDTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A KDTree of coordinates frames. The KDtrees are cached by a <a class="reference external" href="https://docs.python.org/3/library/functools.html#functools.lru_cache" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">functools.lru_cache()</span></code></a>.
+Uses <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.cKDTree.html#scipy.spatial.cKDTree" title="(in SciPy v1.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.spatial.cKDTree</span></code></a> by default, since it’s significantly faster.
 Make sure to use scipy 0.17 or later or switch to the normal KDTree, since cKDTree has
 a memory leak in earlier versions.</p>
 <dl class="attribute">
@@ -721,7 +722,7 @@ a memory leak in earlier versions.</p>
 <dl class="class">
 <dt id="mdevaluate.coordinates.CoordinatesMap">
 <em class="property">class </em><code class="descclassname">mdevaluate.coordinates.</code><code class="descname">CoordinatesMap</code><span class="sig-paren">(</span><em>coordinates</em>, <em>function</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/coordinates.html#CoordinatesMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.coordinates.CoordinatesMap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="attribute">
 <dt id="mdevaluate.coordinates.CoordinatesMap.description">
 <code class="descname">description</code><a class="headerlink" href="#mdevaluate.coordinates.CoordinatesMap.description" title="Permalink to this definition">¶</a></dt>
@@ -768,7 +769,7 @@ the keyworss below. Names are matched as a regular expression with <cite>re.matc
 <dl class="class">
 <dt id="mdevaluate.coordinates.MeanCoordinates">
 <em class="property">class </em><code class="descclassname">mdevaluate.coordinates.</code><code class="descname">MeanCoordinates</code><span class="sig-paren">(</span><em>frames</em>, <em>atom_filter=None</em>, <em>mean=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/coordinates.html#MeanCoordinates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.coordinates.MeanCoordinates" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#mdevaluate.coordinates.Coordinates" title="mdevaluate.coordinates.Coordinates"><code class="xref py py-class docutils literal"><span class="pre">mdevaluate.coordinates.Coordinates</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#mdevaluate.coordinates.Coordinates" title="mdevaluate.coordinates.Coordinates"><code class="xref py py-class docutils literal notranslate"><span class="pre">mdevaluate.coordinates.Coordinates</span></code></a></p>
 <dl class="method">
 <dt id="mdevaluate.coordinates.MeanCoordinates.len">
 <code class="descname">len</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/coordinates.html#MeanCoordinates.len"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.coordinates.MeanCoordinates.len" title="Permalink to this definition">¶</a></dt>
@@ -779,7 +780,7 @@ the keyworss below. Names are matched as a regular expression with <cite>re.matc
 <dl class="exception">
 <dt id="mdevaluate.coordinates.UnknownCoordinatesMode">
 <em class="property">exception </em><code class="descclassname">mdevaluate.coordinates.</code><code class="descname">UnknownCoordinatesMode</code><a class="reference internal" href="_modules/mdevaluate/coordinates.html#UnknownCoordinatesMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.coordinates.UnknownCoordinatesMode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 </dd></dl>
 
 <dl class="function">
@@ -851,7 +852,7 @@ com = centers_of_mass(coordinates, (1.0, 2.0, 1.0, 3.0))</p>
 <code class="descclassname">mdevaluate.coordinates.</code><code class="descname">spatial_selector</code><span class="sig-paren">(</span><em>frame</em>, <em>transform</em>, <em>rmin</em>, <em>rmax</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/coordinates.html#spatial_selector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.coordinates.spatial_selector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select a subset of atoms which have a radius between rmin and rmax.
 Coordinates are filtered by the condition:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">rmin</span> <span class="o">&lt;=</span> <span class="n">transform</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">rmax</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">rmin</span> <span class="o">&lt;=</span> <span class="n">transform</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">rmax</span>
 </pre></div>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
@@ -910,7 +911,7 @@ indices selecting the atoms of these indices from each frame.</p>
 <p>It is possible to compute the mean of several atoms before calculating the vectors,
 by using a two-dimensional list of indices. The following code computes the vectors
 between atoms 0, 3, 6 and the mean coordinate of atoms 1, 4, 7 and 2, 5, 8:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inds_a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inds_a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">inds_b</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">]]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">vectors</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">inds_a</span><span class="p">,</span> <span class="n">inds_b</span><span class="p">)</span>
 <span class="go">array([</span>
@@ -963,6 +964,23 @@ water_isf = functools.partial(isf, q=22.77) # q has the value 22.77 nm^-1</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="mdevaluate.correlation.multi_subensemble_correlation">
+<code class="descclassname">mdevaluate.correlation.</code><code class="descname">multi_subensemble_correlation</code><span class="sig-paren">(</span><em>selector_function</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/correlation.html#multi_subensemble_correlation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.correlation.multi_subensemble_correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>selector_function has to expect a frame and to
+return either valid indices (as with subensemble_correlation)
+or a multidimensional array whose entries are valid indices</p>
+<p>e.g. slice(10,100,2)</p>
+<p>e.g. [1,2,3,4,5]</p>
+<p>e.g. [[[0,1],[2],[3]],[[4],[5],[6]] -&gt; shape: 2,3 with
+list of indices of varying length</p>
+<p>e.g. [slice(1653),slice(1653,None,3)]</p>
+<p>e.g. [np.ones(len_of_frames, bool)]</p>
+<p>in general using slices is the most efficient.
+if the selections are small subsets of a frame or when many subsets are empty
+using indices will be more efficient than using masks.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="mdevaluate.correlation.non_gaussian">
 <code class="descclassname">mdevaluate.correlation.</code><code class="descname">non_gaussian</code><span class="sig-paren">(</span><em>onset</em>, <em>frame</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/correlation.html#non_gaussian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.correlation.non_gaussian" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
@@ -995,13 +1013,13 @@ angle^2} - 1</p>
 </tr>
 </tbody>
 </table>
-<p>This function is intended to be used with <a class="reference internal" href="#mdevaluate.correlation.shifted_correlation" title="mdevaluate.correlation.shifted_correlation"><code class="xref py py-func docutils literal"><span class="pre">shifted_correlation()</span></code></a>.
+<p>This function is intended to be used with <a class="reference internal" href="#mdevaluate.correlation.shifted_correlation" title="mdevaluate.correlation.shifted_correlation"><code class="xref py py-func docutils literal notranslate"><span class="pre">shifted_correlation()</span></code></a>.
 As usual the first two arguments are used internally and the remaining ones
-should be defined with <a class="reference external" href="https://docs.python.org/3/library/functools.html#functools.partial" title="(in Python v3.6)"><code class="xref py py-func docutils literal"><span class="pre">functools.partial()</span></code></a>.</p>
+should be defined with <a class="reference external" href="https://docs.python.org/3/library/functools.html#functools.partial" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">functools.partial()</span></code></a>.</p>
 <p>If the overlap of a subset of the system should be calculated, this has to be
 defined through a selection of the reference configurations in the CoordinatesTree.</p>
 <p class="rubric">Example</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shifted_correlation</span><span class="p">(</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shifted_correlation</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">partial</span><span class="p">(</span><span class="n">overlap</span><span class="p">,</span> <span class="n">crds_tree</span><span class="o">=</span><span class="n">CoordinatesTree</span><span class="p">(</span><span class="n">traj</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.11</span><span class="p">),</span>
 <span class="gp">... </span>    <span class="n">traj</span>
 <span class="gp">... </span><span class="p">)</span>
@@ -1031,11 +1049,16 @@ defined through a selection of the reference configurations in the CoordinatesTr
 </dd></dl>
 
 <dl class="function">
+<dt id="mdevaluate.correlation.set_has_counter">
+<code class="descclassname">mdevaluate.correlation.</code><code class="descname">set_has_counter</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/correlation.html#set_has_counter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.correlation.set_has_counter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="mdevaluate.correlation.shifted_correlation">
 <code class="descclassname">mdevaluate.correlation.</code><code class="descname">shifted_correlation</code><span class="sig-paren">(</span><em>function</em>, <em>frames</em>, <em>index_distribution=&lt;function log_indices&gt;</em>, <em>correlation=&lt;function correlation&gt;</em>, <em>segments=10</em>, <em>window=0.5</em>, <em>skip=None</em>, <em>average=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/correlation.html#shifted_correlation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.correlation.shifted_correlation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the time series for a correlation function.</p>
 <p>The times at which the correlation is calculated are determined automatically by the
-function given as <code class="docutils literal"><span class="pre">index_distribution</span></code>. The default is a logarithmic distribution.</p>
+function given as <code class="docutils literal notranslate"><span class="pre">index_distribution</span></code>. The default is a logarithmic distribution.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1046,27 +1069,35 @@ function given as <code class="docutils literal"><span class="pre">index_distrib
 <li><strong>index_distribution</strong> (<em>opt.</em>) – A function that returns the indices for which the timeseries
 will be calculated</li>
 <li><strong>correlation</strong> (<em>function</em><em>, </em><em>opt.</em>) – The correlation function</li>
-<li><strong>segments</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a><em>, </em><em>opt.</em>) – The number of segments the time window will be shifted</li>
-<li><strong>window</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>opt.</em>) – The fraction of the simulation the time series will cover</li>
-<li><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>opt.</em>) – The fraction of the trajectory that will be skipped at the beginning,
+<li><strong>segments</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em>, </em><em>opt.</em>) – The number of segments the time window will be shifted</li>
+<li><strong>window</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>opt.</em>) – The fraction of the simulation the time series will cover</li>
+<li><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>opt.</em>) – The fraction of the trajectory that will be skipped at the beginning,
 if this is None the start index of the frames slice will be used,
 which defaults to 0.</li>
+<li><strong>counter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a><em>, </em><em>opt.</em>) – If True, returns length of frames (in general number of particles specified)</li>
+<li><strong>average</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a><em>, </em><em>opt.</em>) – If True, returns averaged correlation function</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of length N that contains the indices of the frames at which
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>A list of length N that contains the indices of the frames at which
 the time series was calculated and a numpy array of shape (segments, N)
 that holds the (non-avaraged) correlation data</p>
+<dl class="docutils">
+<dt>if has_counter == True: adds number of counts to output tupel.</dt>
+<dd><p class="first last">if average is returned it will be weighted.</p>
+</dd>
+</dl>
+</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.6)">tuple</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)">tuple</a></p>
 </td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Example</p>
-<p>Calculating the mean square displacement of a coordinates object named <code class="docutils literal"><span class="pre">coords</span></code>:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">indices</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">shifted_correlation</span><span class="p">(</span><span class="n">msd</span><span class="p">,</span> <span class="n">coords</span><span class="p">)</span>
+<p>Calculating the mean square displacement of a coordinates object named <code class="docutils literal notranslate"><span class="pre">coords</span></code>:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">indices</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">shifted_correlation</span><span class="p">(</span><span class="n">msd</span><span class="p">,</span> <span class="n">coords</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1087,7 +1118,7 @@ that holds the (non-avaraged) correlation data</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>time</strong> – Timesteps of the correlation data</li>
 <li><strong>correlation</strong> – Value of the correlation function</li>
-<li><strong>**kwargs</strong> (<em>opt.</em>) – Additional keyword arguments will be passed to <code class="xref py py-func docutils literal"><span class="pre">filon_fourier_transformation()</span></code>.</li>
+<li><strong>**kwargs</strong> (<em>opt.</em>) – Additional keyword arguments will be passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">filon_fourier_transformation()</span></code>.</li>
 </ul>
 </td>
 </tr>
@@ -1177,14 +1208,14 @@ default is z-axis.</li>
 
 <dl class="function">
 <dt id="mdevaluate.distribution.rdf">
-<code class="descclassname">mdevaluate.distribution.</code><code class="descname">rdf</code><span class="sig-paren">(</span><em>atoms_a</em>, <em>atoms_b=None</em>, <em>bins=None</em>, <em>box=None</em>, <em>chunksize=50000</em>, <em>returnx=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/distribution.html#rdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.distribution.rdf" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mdevaluate.distribution.</code><code class="descname">rdf</code><span class="sig-paren">(</span><em>atoms_a</em>, <em>atoms_b=None</em>, <em>bins=None</em>, <em>box=None</em>, <em>kind=None</em>, <em>chunksize=50000</em>, <em>returnx=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/distribution.html#rdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.distribution.rdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the radial pair distribution of one or two sets of atoms.</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[g_{AB}(r) = \frac{1}{\langle \rho_B\rangle N_A}\sum\limits_{i\in A}^{N_A}
 \sum\limits_{j\in B}^{N_B}\frac{\delta(r_{ij} -r)}{4\pi r^2}\]</div>
-<p>For use with <a class="reference internal" href="#mdevaluate.distribution.time_average" title="mdevaluate.distribution.time_average"><code class="xref py py-func docutils literal"><span class="pre">time_average()</span></code></a>, define bins through the use of <a class="reference external" href="https://docs.python.org/3/library/functools.html#functools.partial" title="(in Python v3.6)"><code class="xref py py-func docutils literal"><span class="pre">partial()</span></code></a>,
-the atom sets are passed to <a class="reference internal" href="#mdevaluate.distribution.time_average" title="mdevaluate.distribution.time_average"><code class="xref py py-func docutils literal"><span class="pre">time_average()</span></code></a>, if a second set of atoms should be used
-specify it as <code class="docutils literal"><span class="pre">coordinates_b</span></code> and it will be passed to this function.</p>
+<p>For use with <a class="reference internal" href="#mdevaluate.distribution.time_average" title="mdevaluate.distribution.time_average"><code class="xref py py-func docutils literal notranslate"><span class="pre">time_average()</span></code></a>, define bins through the use of <a class="reference external" href="https://docs.python.org/3/library/functools.html#functools.partial" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">partial()</span></code></a>,
+the atom sets are passed to <a class="reference internal" href="#mdevaluate.distribution.time_average" title="mdevaluate.distribution.time_average"><code class="xref py py-func docutils literal notranslate"><span class="pre">time_average()</span></code></a>, if a second set of atoms should be used
+specify it as <code class="docutils literal notranslate"><span class="pre">coordinates_b</span></code> and it will be passed to this function.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1193,7 +1224,8 @@ specify it as <code class="docutils literal"><span class="pre">coordinates_b</sp
 <li><strong>atoms_a</strong> – First set of atoms, used internally</li>
 <li><strong>atoms_b</strong> (<em>opt.</em>) – Second set of atoms, used internally</li>
 <li><strong>bins</strong> – Bins of the radial distribution function</li>
-<li><strong>box</strong> (<em>opt.</em>) – Simulations box, if not specified this is taken from <code class="docutils literal"><span class="pre">atoms_a.box</span></code></li>
+<li><strong>box</strong> (<em>opt.</em>) – Simulations box, if not specified this is taken from <code class="docutils literal notranslate"><span class="pre">atoms_a.box</span></code></li>
+<li><strong>kind</strong> (<em>opt.</em>) – Can be ‘inter’, ‘intra’ or None (default).</li>
 <li><strong>chunksize</strong> (<em>opt.</em>) – For large systems (N &gt; 1000) the distaces have to be computed in chunks so the arrays
 fit into memory, this parameter controlls the size of these chunks. It should be
 as large as possible, depending on the available memory.</li>
@@ -1304,7 +1336,7 @@ averaged function</li>
 <dt id="mdevaluate.functions.havriliak_negami">
 <code class="descclassname">mdevaluate.functions.</code><code class="descname">havriliak_negami</code><span class="sig-paren">(</span><em>ω</em>, <em>A</em>, <em>β</em>, <em>α</em>, <em>τ</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/functions.html#havriliak_negami"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.functions.havriliak_negami" title="Permalink to this definition">¶</a></dt>
 <dd><p>Imaginary part of the Havriliak-Negami function.</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\chi_{HN}(\omega) = \Im\left(\frac{A}{(1 + (i\omega\tau)^\alpha)^\beta}\right)\]</div>
 </dd></dl>
 
@@ -1323,15 +1355,28 @@ averaged function</li>
 <span id="mdevaluate-pbc"></span><h2>mdevaluate.pbc<a class="headerlink" href="#module-mdevaluate.pbc" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="mdevaluate.pbc.nojump">
-<code class="descclassname">mdevaluate.pbc.</code><code class="descname">nojump</code><span class="sig-paren">(</span><em>frame</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/pbc.html#nojump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.pbc.nojump" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mdevaluate.pbc.</code><code class="descname">nojump</code><span class="sig-paren">(</span><em>frame</em>, <em>usecache=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/pbc.html#nojump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.pbc.nojump" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the nojump coordinates of a frame, based on a jump matrix.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mdevaluate.pbc.pbc_backfold_compact">
+<code class="descclassname">mdevaluate.pbc.</code><code class="descname">pbc_backfold_compact</code><span class="sig-paren">(</span><em>act_frame</em>, <em>box_matrix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/pbc.html#pbc_backfold_compact"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.pbc.pbc_backfold_compact" title="Permalink to this definition">¶</a></dt>
+<dd><p>mimics “trjconv … -pbc atom -ur compact”</p>
+<p>folds coords of act_frame in wigner-seitz-cell (e.g. dodecahedron)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mdevaluate.pbc.pbc_backfold_rect">
+<code class="descclassname">mdevaluate.pbc.</code><code class="descname">pbc_backfold_rect</code><span class="sig-paren">(</span><em>act_frame</em>, <em>box_matrix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/pbc.html#pbc_backfold_rect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.pbc.pbc_backfold_rect" title="Permalink to this definition">¶</a></dt>
+<dd><p>mimics “trjconv … -pbc atom -ur rect”</p>
+<p>folds coords of act_frame in cuboid</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="mdevaluate.pbc.pbc_diff">
 <code class="descclassname">mdevaluate.pbc.</code><code class="descname">pbc_diff</code><span class="sig-paren">(</span><em>v1</em>, <em>v2=None</em>, <em>box=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/pbc.html#pbc_diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.pbc.pbc_diff" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the difference of two vectors, considering periodic boundary conditions.</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="mdevaluate.pbc.pbc_diff_numba">
@@ -1345,6 +1390,47 @@ averaged function</li>
 </dd></dl>
 
 <dl class="function">
+<dt id="mdevaluate.pbc.pbc_diff_rect">
+<code class="descclassname">mdevaluate.pbc.</code><code class="descname">pbc_diff_rect</code><span class="sig-paren">(</span><em>v1</em>, <em>v2</em>, <em>box</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/pbc.html#pbc_diff_rect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.pbc.pbc_diff_rect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the difference of two vectors, considering periodic boundary conditions.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mdevaluate.pbc.pbc_diff_tric">
+<code class="descclassname">mdevaluate.pbc.</code><code class="descname">pbc_diff_tric</code><span class="sig-paren">(</span><em>v1</em>, <em>v2=None</em>, <em>box=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/pbc.html#pbc_diff_tric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.pbc.pbc_diff_tric" title="Permalink to this definition">¶</a></dt>
+<dd><p>difference vector for arbitrary pbc</p>
+<blockquote>
+<div>Args:
+box_matrix: CoordinateFrame.box</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="mdevaluate.pbc.pbc_dist">
+<code class="descclassname">mdevaluate.pbc.</code><code class="descname">pbc_dist</code><span class="sig-paren">(</span><em>a1</em>, <em>a2</em>, <em>box=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/pbc.html#pbc_dist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.pbc.pbc_dist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="mdevaluate.pbc.pbc_extend">
+<code class="descclassname">mdevaluate.pbc.</code><code class="descname">pbc_extend</code><span class="sig-paren">(</span><em>c</em>, <em>box</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/pbc.html#pbc_extend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.pbc.pbc_extend" title="Permalink to this definition">¶</a></dt>
+<dd><p>in: c is frame, box is frame.box
+out: all atoms in frame and their perio. image (shape =&gt; array(len(c)*27,3))</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mdevaluate.pbc.pbc_kdtree">
+<code class="descclassname">mdevaluate.pbc.</code><code class="descname">pbc_kdtree</code><span class="sig-paren">(</span><em>v1</em>, <em>box</em>, <em>leafsize=32</em>, <em>compact_nodes=False</em>, <em>balanced_tree=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/pbc.html#pbc_kdtree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.pbc.pbc_kdtree" title="Permalink to this definition">¶</a></dt>
+<dd><p>kd_tree with periodic images
+box - whole matrix
+rest: optional optimization</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mdevaluate.pbc.pbc_kdtree_query">
+<code class="descclassname">mdevaluate.pbc.</code><code class="descname">pbc_kdtree_query</code><span class="sig-paren">(</span><em>v1</em>, <em>v2</em>, <em>box</em>, <em>n=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/pbc.html#pbc_kdtree_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.pbc.pbc_kdtree_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>kd_tree query with periodic images</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="mdevaluate.pbc.pbc_points">
 <code class="descclassname">mdevaluate.pbc.</code><code class="descname">pbc_points</code><span class="sig-paren">(</span><em>coordinates</em>, <em>box</em>, <em>thickness=0</em>, <em>index=False</em>, <em>inclusive=True</em>, <em>center=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/pbc.html#pbc_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.pbc.pbc_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the points their first periodic images. Does not fold them back into the box.
@@ -1355,23 +1441,8 @@ inclusive=False returns only images, does not work with thickness &lt;= 0</p>
 
 <dl class="function">
 <dt id="mdevaluate.pbc.whole">
-<code class="descclassname">mdevaluate.pbc.</code><code class="descname">whole</code><span class="sig-paren">(</span><em>frame</em>, <em>residue_ids=None</em>, <em>len_res=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/pbc.html#whole"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.pbc.whole" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply <code class="docutils literal"><span class="pre">-pbc</span> <span class="pre">whole</span></code> to a CoordinateFrame.
-At the moment this function needs additonal information about the bonds within the residue.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>frame</strong> – The original CoordinateFrame</li>
-<li><strong>bonds</strong> – Information about bonds within the residue, as a list of shape (N, 3) where
-each entry of the list defines tweo bonded atoms and the bond length.</li>
-<li><strong>residue_ids</strong> – The residue_ids of the atoms, if None this is taken from the CoordinateFrame</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+<code class="descclassname">mdevaluate.pbc.</code><code class="descname">whole</code><span class="sig-paren">(</span><em>frame</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/pbc.html#whole"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.pbc.whole" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply <code class="docutils literal notranslate"><span class="pre">-pbc</span> <span class="pre">whole</span></code> to a CoordinateFrame.</p>
 </dd></dl>
 
 </div>
@@ -1383,7 +1454,7 @@ namely pygmx and mdanalysis, and mdevaluate.</p>
 <dl class="class">
 <dt id="mdevaluate.reader.BaseReader">
 <em class="property">class </em><code class="descclassname">mdevaluate.reader.</code><code class="descname">BaseReader</code><span class="sig-paren">(</span><em>rd</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/reader.html#BaseReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.BaseReader" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for trajectory readers.</p>
 <dl class="attribute">
 <dt id="mdevaluate.reader.BaseReader.filename">
@@ -1400,7 +1471,7 @@ namely pygmx and mdanalysis, and mdevaluate.</p>
 <dl class="class">
 <dt id="mdevaluate.reader.CachedReader">
 <em class="property">class </em><code class="descclassname">mdevaluate.reader.</code><code class="descname">CachedReader</code><span class="sig-paren">(</span><em>rd</em>, <em>maxsize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/reader.html#CachedReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.CachedReader" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#mdevaluate.reader.BaseReader" title="mdevaluate.reader.BaseReader"><code class="xref py py-class docutils literal"><span class="pre">mdevaluate.reader.BaseReader</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#mdevaluate.reader.BaseReader" title="mdevaluate.reader.BaseReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">mdevaluate.reader.BaseReader</span></code></a></p>
 <p>A reader that has a least-recently-used cache for frames.</p>
 <dl class="attribute">
 <dt id="mdevaluate.reader.CachedReader.cache_info">
@@ -1419,7 +1490,7 @@ namely pygmx and mdanalysis, and mdevaluate.</p>
 <dl class="class">
 <dt id="mdevaluate.reader.DelayedReader">
 <em class="property">class </em><code class="descclassname">mdevaluate.reader.</code><code class="descname">DelayedReader</code><span class="sig-paren">(</span><em>filename</em>, <em>reindex=False</em>, <em>ignore_index_timestamps=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/reader.html#DelayedReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.DelayedReader" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#mdevaluate.reader.BaseReader" title="mdevaluate.reader.BaseReader"><code class="xref py py-class docutils literal"><span class="pre">mdevaluate.reader.BaseReader</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#mdevaluate.reader.BaseReader" title="mdevaluate.reader.BaseReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">mdevaluate.reader.BaseReader</span></code></a></p>
 <dl class="attribute">
 <dt id="mdevaluate.reader.DelayedReader.filename">
 <code class="descname">filename</code><a class="headerlink" href="#mdevaluate.reader.DelayedReader.filename" title="Permalink to this definition">¶</a></dt>
@@ -1430,20 +1501,20 @@ namely pygmx and mdanalysis, and mdevaluate.</p>
 <dl class="class">
 <dt id="mdevaluate.reader.EnergyReader">
 <em class="property">class </em><code class="descclassname">mdevaluate.reader.</code><code class="descname">EnergyReader</code><span class="sig-paren">(</span><em>edrfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/reader.html#EnergyReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.EnergyReader" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A reader for Gromacs energy files.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="mdevaluate.reader.NoReaderAvailabelError">
 <em class="property">exception </em><code class="descclassname">mdevaluate.reader.</code><code class="descname">NoReaderAvailabelError</code><a class="reference internal" href="_modules/mdevaluate/reader.html#NoReaderAvailabelError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.NoReaderAvailabelError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="mdevaluate.reader.NojumpError">
 <em class="property">exception </em><code class="descclassname">mdevaluate.reader.</code><code class="descname">NojumpError</code><a class="reference internal" href="_modules/mdevaluate/reader.html#NojumpError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.reader.NojumpError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 </dd></dl>
 
 <dl class="function">
@@ -1477,7 +1548,7 @@ namely pygmx and mdanalysis, and mdevaluate.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – Trajectory file to open, the reader will be chosen
+<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Trajectory file to open, the reader will be chosen
 according to the file extension.</li>
 <li><strong>cached</strong> (<em>opt.</em>) – If Reader should be cached with lru_cache. If this is True, maxsize for
 the cache is 128, otherwise the argument is passed as maxsize.
@@ -1521,7 +1592,7 @@ Use cached=None to get an unbound cache.</li>
 <dt id="mdevaluate.utils.Fqt_from_Grt">
 <code class="descclassname">mdevaluate.utils.</code><code class="descname">Fqt_from_Grt</code><span class="sig-paren">(</span><em>data</em>, <em>q</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/utils.html#Fqt_from_Grt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.utils.Fqt_from_Grt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the ISF from the van Hove function for a given q value by fourier transform.</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[F_q(t) = \int\limits_0^\infty dr \; G(r, t) \frac{\sin(qr)}{qr}\]</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1546,7 +1617,7 @@ will be returned, which will contain times and values of Fq(t) respectively.</p>
 <dt id="mdevaluate.utils.Sq_from_gr">
 <code class="descclassname">mdevaluate.utils.</code><code class="descname">Sq_from_gr</code><span class="sig-paren">(</span><em>r</em>, <em>gr</em>, <em>q</em>, <em>ρ</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/utils.html#Sq_from_gr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.utils.Sq_from_gr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the static structure factor as fourier transform of the pair correlation function. <a class="reference internal" href="#yarnell" id="id1">[Yarnell]</a></p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\begin{split}S(q) - 1 = \\frac{4\\pi \\rho}{q}\\int\\limits_0^\\infty (g(r) - 1)\\,r \\sin(qr) dr\end{split}\]</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1576,7 +1647,7 @@ will be returned, which will contain times and values of Fq(t) respectively.</p>
 <code class="descclassname">mdevaluate.utils.</code><code class="descname">coherent_histogram</code><span class="sig-paren">(</span><em>func</em>, <em>coord_a</em>, <em>coord_b</em>, <em>bins</em>, <em>distinct=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/utils.html#coherent_histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.utils.coherent_histogram" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute a coherent histogram over two arrays, equivalent to coherent_sum.
 For numpy arrays ofthis is equal to:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">N</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
 <span class="n">M</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span>
 <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
 <span class="n">coherent_histogram</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">bins</span><span class="p">)</span> <span class="o">==</span> <span class="n">histogram</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">d</span><span class="p">),</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">d</span><span class="p">)),</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
@@ -1600,11 +1671,11 @@ For numpy arrays ofthis is equal to:</p>
 <dl class="function">
 <dt id="mdevaluate.utils.coherent_sum">
 <code class="descclassname">mdevaluate.utils.</code><code class="descname">coherent_sum</code><span class="sig-paren">(</span><em>func</em>, <em>coord_a</em>, <em>coord_b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/utils.html#coherent_sum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.utils.coherent_sum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform a coherent sum over two arrays <span class="math">\(A, B\)</span>.</p>
-<div class="math">
+<dd><p>Perform a coherent sum over two arrays <span class="math notranslate nohighlight">\(A, B\)</span>.</p>
+<div class="math notranslate nohighlight">
 \[\frac{1}{N_A N_B}\sum_i\sum_j f(A_i, B_j)\]</div>
 <p>For numpy arrays this is equal to:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">N</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
 <span class="n">M</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span>
 <span class="n">coherent_sum</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">d</span><span class="p">),</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 </pre></div>
@@ -1654,7 +1725,7 @@ in this regime.</p>
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id2">[Blochowicz]</a></td><td>T. Blochowicz, Broadband dielectric spectroscopy in neat and binary
-molecular glass formers, Ph.D. thesis, Uni-versität Bayreuth (2003)</td></tr>
+molecular glass formers, Ph.D. thesis, Universität Bayreuth (2003)</td></tr>
 </tbody>
 </table>
 </dd></dl>
@@ -1696,7 +1767,7 @@ data it is only an approximation, albeit a quite good one.</p>
 <dd><p>Return the selected indices of an array mask.
 If the mask is two-dimensional, the indices will be calculated for the second axis.</p>
 <p class="rubric">Example</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask2indices</span><span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask2indices</span><span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
 <span class="go">array([0, 2])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mask2indices</span><span class="p">([[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]])</span>
 <span class="go">array([[0, 1], [0, 2]])</span>
@@ -1781,9 +1852,7 @@ n is the minimum number of points around 1/e required</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -1799,11 +1868,11 @@ n is the minimum number of points around 1/e required</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Niels Müller.
+        &copy; Copyright 2017, Niels Müller.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1822,6 +1891,7 @@ n is the minimum number of points around 1/e required</p>
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
             VERSION:'dev-17.11',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -1835,19 +1905,13 @@ n is the minimum number of points around 1/e required</p>
 
   
 
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

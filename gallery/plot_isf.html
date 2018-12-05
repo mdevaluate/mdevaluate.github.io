@@ -24,30 +24,20 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="mdevaluate dev-17.11 documentation" href="../index.html"/>
-        <link rel="up" title="Example Gallery" href="index.html"/>
-        <link rel="next" title="Spatially resolved analysis in a cylindrical pore" href="plot_spatialisf.html"/>
-        <link rel="prev" title="Four-Point susceptibility" href="plot_chi4.html"/> 
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Spatially resolved analysis in a cylindrical pore" href="plot_spatialisf.html" />
+    <link rel="prev" title="Four-Point susceptibility" href="plot_chi4.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -117,7 +107,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">mdevaluate</a>
@@ -125,9 +115,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -177,16 +168,16 @@
 Additionally a KWW function is fitted to the results.</p>
 <img alt="../_images/sphx_glr_plot_isf_001.png" class="align-center" src="../_images/sphx_glr_plot_isf_001.png" />
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-python3"><div class="highlight"><pre><span></span><span class="n">Loading</span> <span class="n">topology</span><span class="p">:</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">niels</span><span class="o">/</span><span class="n">sim</span><span class="o">/</span><span class="n">water</span><span class="o">/</span><span class="n">bulk</span><span class="o">/</span><span class="mi">260</span><span class="n">K</span><span class="o">/</span><span class="n">topol</span><span class="o">.</span><span class="n">tpr</span>
+<div class="sphx-glr-script-out highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Loading</span> <span class="n">topology</span><span class="p">:</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">niels</span><span class="o">/</span><span class="n">sim</span><span class="o">/</span><span class="n">water</span><span class="o">/</span><span class="n">bulk</span><span class="o">/</span><span class="mi">260</span><span class="n">K</span><span class="o">/</span><span class="n">topol</span><span class="o">.</span><span class="n">tpr</span>
 <span class="n">Loading</span> <span class="n">trajectory</span><span class="p">:</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">niels</span><span class="o">/</span><span class="n">sim</span><span class="o">/</span><span class="n">water</span><span class="o">/</span><span class="n">bulk</span><span class="o">/</span><span class="mi">260</span><span class="n">K</span><span class="o">/</span><span class="n">out</span><span class="o">/</span><span class="n">traj_full_water1000bulk260</span><span class="o">.</span><span class="n">xtc</span>
 </pre></div>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html#scipy.optimize.curve_fit" title="View documentation for scipy.optimize.curve_fit"><span class="n">curve_fit</span></a>
 <span class="kn">import</span> <span class="nn">mdevaluate</span> <span class="kn">as</span> <span class="nn">md</span>
 <span class="kn">import</span> <span class="nn">tudplot</span>
 
@@ -198,7 +189,7 @@ Additionally a KWW function is fitted to the results.</p>
 <span class="p">)</span>
 <span class="c1"># Only include data-points of the alpha-relaxation for the fit</span>
 <span class="n">mask</span> <span class="o">=</span> <span class="n">t</span> <span class="o">&gt;</span> <span class="mf">3e-1</span>
-<span class="n">fit</span><span class="p">,</span> <span class="n">cov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">md</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">kww</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
+<span class="n">fit</span><span class="p">,</span> <span class="n">cov</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html#scipy.optimize.curve_fit" title="View documentation for scipy.optimize.curve_fit"><span class="n">curve_fit</span></a><span class="p">(</span><span class="n">md</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">kww</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
 <span class="n">tau</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">kww_1e</span><span class="p">(</span><span class="o">*</span><span class="n">fit</span><span class="p">)</span>
 
 <span class="n">tudplot</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
@@ -212,17 +203,15 @@ Additionally a KWW function is fitted to the results.</p>
 <p><strong>Total running time of the script:</strong>
 (0 minutes 0.906 seconds)</p>
 <div class="sphx-glr-download docutils container">
-<strong>Download Python source code:</strong> <a class="reference download internal" href="../_downloads/plot_isf.py" download=""><code class="xref download docutils literal"><span class="pre">plot_isf.py</span></code></a></div>
+<strong>Download Python source code:</strong> <a class="reference download internal" href="../_downloads/plot_isf.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">plot_isf.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<strong>Download IPython notebook:</strong> <a class="reference download internal" href="../_downloads/plot_isf.ipynb" download=""><code class="xref download docutils literal"><span class="pre">plot_isf.ipynb</span></code></a></div>
+<strong>Download IPython notebook:</strong> <a class="reference download internal" href="../_downloads/plot_isf.ipynb" download=""><code class="xref download docutils literal notranslate"><span class="pre">plot_isf.ipynb</span></code></a></div>
 <p class="sphx-glr-signature"><a class="reference external" href="http://sphinx-gallery.readthedocs.io">Generated by Sphinx-Gallery</a></p>
 </div>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -240,11 +229,11 @@ Additionally a KWW function is fitted to the results.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Niels Müller.
+        &copy; Copyright 2017, Niels Müller.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -263,6 +252,7 @@ Additionally a KWW function is fitted to the results.</p>
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
             VERSION:'dev-17.11',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -276,19 +266,13 @@ Additionally a KWW function is fitted to the results.</p>
 
   
 
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

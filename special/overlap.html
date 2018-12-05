@@ -24,30 +24,20 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="mdevaluate dev-17.11 documentation" href="../index.html"/>
-        <link rel="up" title="Special Topics" href="../special-topics.html"/>
-        <link rel="next" title="Gromacs Energy Files" href="energies.html"/>
-        <link rel="prev" title="Spatial Resolved Analysis" href="spatial.html"/> 
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Gromacs Energy Files" href="energies.html" />
+    <link rel="prev" title="Spatial Resolved Analysis" href="spatial.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -127,7 +117,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">mdevaluate</a>
@@ -135,9 +125,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -186,23 +177,23 @@
   <a href="https://github.com/mdevaluate/mdevaluate"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a><div class="section" id="computing-the-overlap-function">
 <h1>Computing the Overlap Function<a class="headerlink" href="#computing-the-overlap-function" title="Permalink to this headline">¶</a></h1>
 <p>The overlap function is defined as the portion of particles of a given set,
-whose positions <em>overlap</em> after a given time <span class="math">\(t\)</span> with the reference configuration at <span class="math">\(t=0\)</span>.
+whose positions <em>overlap</em> after a given time <span class="math notranslate nohighlight">\(t\)</span> with the reference configuration at <span class="math notranslate nohighlight">\(t=0\)</span>.
 This is calculated as follows:
-The Initial positions define spheres of a given radius <span class="math">\(r\)</span> which then are used
+The Initial positions define spheres of a given radius <span class="math notranslate nohighlight">\(r\)</span> which then are used
 to test how many of the particles at a later time are found within those spheres.
 Normalized by the number of spheres this gives the correlation of the configurational overlap.</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[Q(t) = \frac{1}{N} \left\langle \sum\limits_{i=1}^N n_i(t) \right\rangle\]</div>
-<p>Where <span class="math">\(n_i(t)\)</span> defines the <span class="math">\(N\)</span> spheres, with <span class="math">\(n_i(t)=1\)</span> if a particle
-is found within this sphere at time <span class="math">\(t\)</span> and <span class="math">\(n_i(0) = 1\)</span> for <span class="math">\(1\leq i \leq N\)</span>.</p>
+<p>Where <span class="math notranslate nohighlight">\(n_i(t)\)</span> defines the <span class="math notranslate nohighlight">\(N\)</span> spheres, with <span class="math notranslate nohighlight">\(n_i(t)=1\)</span> if a particle
+is found within this sphere at time <span class="math notranslate nohighlight">\(t\)</span> and <span class="math notranslate nohighlight">\(n_i(0) = 1\)</span> for <span class="math notranslate nohighlight">\(1\leq i \leq N\)</span>.</p>
 <div class="section" id="evaluation-with-mdevaluate">
 <h2>Evaluation with mdevaluate<a class="headerlink" href="#evaluation-with-mdevaluate" title="Permalink to this headline">¶</a></h2>
 <p>Computation of the overlap requires the relatively expensive computation of next neighbor distances,
-which scales with the order of <span class="math">\(\mathcal{O}(N^2)\)</span>.
+which scales with the order of <span class="math notranslate nohighlight">\(\mathcal{O}(N^2)\)</span>.
 There are more efficient ways for the solution of this problem, the one used here is
-the so called <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.cKDTree.html#scipy.spatial.cKDTree" title="(in SciPy v1.0.0)"><code class="xref py py-class docutils literal"><span class="pre">cKDTree</span></code></a>.
+the so called <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.cKDTree.html#scipy.spatial.cKDTree" title="(in SciPy v1.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">cKDTree</span></code></a>.
 This is much more efficient and allows to compute the overlap relatively fast:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">OW</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;/path/to/sim&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">atom_name</span><span class="o">=</span><span class="s1">&#39;OW&#39;</span><span class="p">)</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">OW</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;/path/to/sim&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">atom_name</span><span class="o">=</span><span class="s1">&#39;OW&#39;</span><span class="p">)</span>
 <span class="n">tree</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">CoordinatesKDTree</span><span class="p">(</span><span class="n">OW</span><span class="p">)</span>
 <span class="n">Qol</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">correlation</span><span class="o">.</span><span class="n">shifted_correlation</span><span class="p">(</span>
     <span class="n">partial</span><span class="p">(</span><span class="n">md</span><span class="o">.</span><span class="n">correlation</span><span class="o">.</span><span class="n">overlap</span><span class="p">,</span> <span class="n">crds_tree</span><span class="o">=</span><span class="n">tree</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.11</span><span class="p">),</span>
@@ -210,15 +201,15 @@ This is much more efficient and allows to compute the overlap relatively fast:</
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>As seen above, mdevaluate provides the function <a class="reference internal" href="../mdevaluate.html#mdevaluate.correlation.overlap" title="mdevaluate.correlation.overlap"><code class="xref py py-func docutils literal"><span class="pre">overlap()</span></code></a>
-for this evaluation, which uses a special object of type <a class="reference internal" href="../mdevaluate.html#mdevaluate.coordinates.CoordinatesKDTree" title="mdevaluate.coordinates.CoordinatesKDTree"><code class="xref py py-class docutils literal"><span class="pre">CoordinatesKDTree</span></code></a>
+<p>As seen above, mdevaluate provides the function <a class="reference internal" href="../mdevaluate.html#mdevaluate.correlation.overlap" title="mdevaluate.correlation.overlap"><code class="xref py py-func docutils literal notranslate"><span class="pre">overlap()</span></code></a>
+for this evaluation, which uses a special object of type <a class="reference internal" href="../mdevaluate.html#mdevaluate.coordinates.CoordinatesKDTree" title="mdevaluate.coordinates.CoordinatesKDTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">CoordinatesKDTree</span></code></a>
 for the neighbor search.
 The latter provides two features, necessary for the computation:
-First it computes a <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.cKDTree.html#scipy.spatial.cKDTree" title="(in SciPy v1.0.0)"><code class="xref py py-class docutils literal"><span class="pre">cKDTree</span></code></a> for each necessary frame of the trajectory;
+First it computes a <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.cKDTree.html#scipy.spatial.cKDTree" title="(in SciPy v1.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">cKDTree</span></code></a> for each necessary frame of the trajectory;
 second it caches those trees, since assembly of KDTrees is expensive.
-The size of the cache can be controlled with the keyword argument <code class="docutils literal"><span class="pre">maxsize</span></code> of the CoordinatesKDTree initialization.</p>
+The size of the cache can be controlled with the keyword argument <code class="docutils literal notranslate"><span class="pre">maxsize</span></code> of the CoordinatesKDTree initialization.</p>
 <p>Note that this class uses the C version (hence the lowercase C) rather than
-the pure Python version <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.KDTree.html#scipy.spatial.KDTree" title="(in SciPy v1.0.0)"><code class="xref py py-class docutils literal"><span class="pre">KDTree</span></code></a> since the latter is significantly slower.
+the pure Python version <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.KDTree.html#scipy.spatial.KDTree" title="(in SciPy v1.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">KDTree</span></code></a> since the latter is significantly slower.
 The only downside is, that the C version had a memory leak before SciPy 0.17,
 but as long as a recent version of SciPy is used, this shouldn’t be a problem.</p>
 </div>
@@ -232,8 +223,8 @@ This has two benefits:</p>
 <li>It yields the correct results</li>
 <li>The KDTree structures are smaller and thereby less computation and memory expensive</li>
 </ol>
-<p>An example of a spatial resolved analysis, where <code class="docutils literal"><span class="pre">OW</span></code> is loaded as above:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">selector</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+<p>An example of a spatial resolved analysis, where <code class="docutils literal notranslate"><span class="pre">OW</span></code> is loaded as above:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">selector</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
     <span class="n">md</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">spatial_selector</span><span class="p">,</span>
     <span class="n">transform</span><span class="o">=</span><span class="n">md</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">spherical_radius</span><span class="p">,</span>
     <span class="n">rmin</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
@@ -246,10 +237,10 @@ This has two benefits:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>This computes the overlap of OW atoms in the region <span class="math">\(1.0 \leq r \leq 1.5\)</span>.
+<p>This computes the overlap of OW atoms in the region <span class="math notranslate nohighlight">\(1.0 \leq r \leq 1.5\)</span>.
 This method can of course be used to probe the overlap of any subsystem, which is selected by the given selector function.
 It should return a viable index for a (m, 3) sized NumPy array when called with original frame of size (N, 3):</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">subset</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="n">selector</span><span class="p">(</span><span class="n">frame</span><span class="p">)]</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">subset</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="n">selector</span><span class="p">(</span><span class="n">frame</span><span class="p">)]</span>
 </pre></div>
 </div>
 </div>
@@ -257,9 +248,7 @@ It should return a viable index for a (m, 3) sized NumPy array when called with 
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -277,11 +266,11 @@ It should return a viable index for a (m, 3) sized NumPy array when called with 
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Niels Müller.
+        &copy; Copyright 2017, Niels Müller.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -300,6 +289,7 @@ It should return a viable index for a (m, 3) sized NumPy array when called with 
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
             VERSION:'dev-17.11',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -313,19 +303,13 @@ It should return a viable index for a (m, 3) sized NumPy array when called with 
 
   
 
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

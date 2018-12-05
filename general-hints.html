@@ -24,29 +24,20 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="mdevaluate dev-17.11 documentation" href="index.html"/>
-        <link rel="next" title="User Guide" href="guide.html"/>
-        <link rel="prev" title="Installation" href="installation.html"/> 
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="User Guide" href="guide.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -115,7 +106,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">mdevaluate</a>
@@ -123,9 +114,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -181,22 +173,22 @@ Some resources for tutorials on the topics can be found here:</p>
 <p>There exist different environments for Python programming, each with their pros and cons.
 Some examples are:</p>
 <ul class="simple">
-<li><strong>IPython Console</strong>: The most basic way to use Python is on the interactive console, the ipython console is a suffisticated Python console. After the mdevaluate module is loaded, ipython can be started with the command <code class="docutils literal"><span class="pre">ipython</span></code>.</li>
-<li><strong>Jupyter Notebook</strong>: Provides a Mathematica-style notebook, which is accesed through a web browser. After the mdevaluate module is loaded a (local) notebook server can be started with the command <code class="docutils literal"><span class="pre">jupyter-notebook</span></code>. See the help menu in the notebook for a short introduction and <a class="reference external" href="http://jupyter.org/">http://jupyter.org/</a> for a detailed user guide.</li>
+<li><strong>IPython Console</strong>: The most basic way to use Python is on the interactive console, the ipython console is a suffisticated Python console. After the mdevaluate module is loaded, ipython can be started with the command <code class="docutils literal notranslate"><span class="pre">ipython</span></code>.</li>
+<li><strong>Jupyter Notebook</strong>: Provides a Mathematica-style notebook, which is accesed through a web browser. After the mdevaluate module is loaded a (local) notebook server can be started with the command <code class="docutils literal notranslate"><span class="pre">jupyter-notebook</span></code>. See the help menu in the notebook for a short introduction and <a class="reference external" href="http://jupyter.org/">http://jupyter.org/</a> for a detailed user guide.</li>
 <li><strong>Atom Editor</strong>: When developing more complex code, like modules an editor comes in handy. Besides basic preinstalled editors (e.g. Gedit) the <a class="reference external" href="https://atom.io">atom editor</a> is a nice option. Recommended atpm packages for Python development are: language-python, autocomplete-python and linter-flake8.</li>
 </ul>
 </div>
 <div class="section" id="common-pitfalls">
 <h2>Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><strong>For-Loops</strong>: The biggest pitfall of data-intensive Python programming are <code class="docutils literal"><span class="pre">for</span></code>-loops. Those loops perform bad in Python, but can be avoided in most cases through Numpy arrays, see the mentioned talk by Jake VdP.</li>
+<li><strong>For-Loops</strong>: The biggest pitfall of data-intensive Python programming are <code class="docutils literal notranslate"><span class="pre">for</span></code>-loops. Those loops perform bad in Python, but can be avoided in most cases through Numpy arrays, see the mentioned talk by Jake VdP.</li>
 <li><strong>Non-Portable Code</strong>: Most non-programmers tend to write complex scripts. It’s always advisable to source out your code into seperate Python modules (i.e. seperate files) and split the code into reusable functions. Since these modules can be imported from any Python code, this will save time in the long run and often reduces errors.</li>
 </ul>
 </div>
 <div class="section" id="pandas-dataframes">
 <h2>Pandas Dataframes<a class="headerlink" href="#pandas-dataframes" title="Permalink to this headline">¶</a></h2>
 <p>Most data in Mdevaluate is handled as Numpy arrays.
-For example the function <a class="reference internal" href="mdevaluate.html#mdevaluate.correlation.shifted_correlation" title="mdevaluate.correlation.shifted_correlation"><code class="xref py py-func docutils literal"><span class="pre">shifted_correlation()</span></code></a> returns a multidimensional array, which contains the time steps and the value of the correlation function.
+For example the function <a class="reference internal" href="mdevaluate.html#mdevaluate.correlation.shifted_correlation" title="mdevaluate.correlation.shifted_correlation"><code class="xref py py-func docutils literal notranslate"><span class="pre">shifted_correlation()</span></code></a> returns a multidimensional array, which contains the time steps and the value of the correlation function.
 As pointed out above, those arrays a good for computation and can be used to plot data with, e.g. matplotlib.
 But often there is metadata associated with this data, for example the temperature or the specific subset of atoms that were analyzed.
 This is the point where <strong>`Pandas dataframes &lt;http://pandas.pydata.org/&gt;`_</strong> come in handy.
@@ -204,7 +196,7 @@ Dataframes are most basically tables of samples, with named columns.
 The dataframe class allows easy acces of columns by label and complex operations, like grouping by columns or merging different datasets.</p>
 <p>As an example say we have simulations at some temperatures and want to calculate the ISF and do a KWW-Fit for each of these trajectories.
 Details of the analysis will be explained at a later point of this document, thereby they will be omitted here:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span>
 <span class="n">datasets</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="k">for</span> <span class="n">T</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">250</span><span class="p">,</span> <span class="mi">260</span><span class="p">,</span> <span class="mi">270</span><span class="p">,</span> <span class="mi">280</span><span class="p">,</span> <span class="mi">290</span><span class="p">,</span> <span class="mi">300</span><span class="p">]:</span>
@@ -250,9 +242,7 @@ Details of the analysis will be explained at a later point of this document, the
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -270,11 +260,11 @@ Details of the analysis will be explained at a later point of this document, the
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Niels Müller.
+        &copy; Copyright 2017, Niels Müller.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -293,6 +283,7 @@ Details of the analysis will be explained at a later point of this document, the
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
             VERSION:'dev-17.11',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -306,19 +297,13 @@ Details of the analysis will be explained at a later point of this document, the
 
   
 
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

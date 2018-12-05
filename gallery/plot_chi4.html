@@ -24,30 +24,20 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="mdevaluate dev-17.11 documentation" href="../index.html"/>
-        <link rel="up" title="Example Gallery" href="index.html"/>
-        <link rel="next" title="Calculating the ISF of Water" href="plot_isf.html"/>
-        <link rel="prev" title="Plotting the Temperature from an Energy File" href="plot_temperature.html"/> 
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Calculating the ISF of Water" href="plot_isf.html" />
+    <link rel="prev" title="Plotting the Temperature from an Energy File" href="plot_temperature.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -117,7 +107,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">mdevaluate</a>
@@ -125,9 +115,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -173,17 +164,17 @@
             
   <a href="https://github.com/mdevaluate/mdevaluate"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a><div class="section" id="four-point-susceptibility">
 <span id="sphx-glr-gallery-plot-chi4-py"></span><h1>Four-Point susceptibility<a class="headerlink" href="#four-point-susceptibility" title="Permalink to this headline">¶</a></h1>
-<p>The dynamic four-point susceptibility <span class="math">\(\chi_4(t)\)</span> is a measure for heterogenous dynamics. <a class="reference internal" href="#berthier" id="id1">[Berthier]</a>
+<p>The dynamic four-point susceptibility <span class="math notranslate nohighlight">\(\chi_4(t)\)</span> is a measure for heterogenous dynamics. <a class="reference internal" href="#berthier" id="id1">[Berthier]</a>
 It can be calculated from the variance of the incoherent intermediate scattering function
-<span class="math">\(F_q(t)\)</span>.</p>
-<div class="math">
+<span class="math notranslate nohighlight">\(F_q(t)\)</span>.</p>
+<div class="math notranslate nohighlight">
 \[\chi_4 (t) = N\cdot\left( \left\langle F_q^2(t) \right\rangle - \left\langle F_q(t) \right\rangle^2 \right)\]</div>
 <p>This is astraight forward calculation in mdevaluate.
 First calculate the ISF without time average and then take the variance along the first axis of this data.
 Note that this quantity requires good statistics, hence it is adviced to use a small time window
 and a sufficient number of segments for the analysis.
 Another way to reduce scatter is to smooth the data with a running mean,
-calling <a class="reference internal" href="../mdevaluate.html#mdevaluate.utils.runningmean" title="mdevaluate.utils.runningmean"><code class="xref py py-func docutils literal"><span class="pre">runningmean()</span></code></a> as shown below.</p>
+calling <a class="reference internal" href="../mdevaluate.html#mdevaluate.utils.runningmean" title="mdevaluate.utils.runningmean"><code class="xref py py-func docutils literal notranslate"><span class="pre">runningmean()</span></code></a> as shown below.</p>
 <table class="docutils citation" frame="void" id="berthier" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
@@ -192,14 +183,14 @@ calling <a class="reference internal" href="../mdevaluate.html#mdevaluate.utils.
 </table>
 <img alt="../_images/sphx_glr_plot_chi4_001.png" class="align-center" src="../_images/sphx_glr_plot_chi4_001.png" />
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-python3"><div class="highlight"><pre><span></span><span class="n">Loading</span> <span class="n">topology</span><span class="p">:</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">niels</span><span class="o">/</span><span class="n">sim</span><span class="o">/</span><span class="n">water</span><span class="o">/</span><span class="n">bulk</span><span class="o">/</span><span class="mi">260</span><span class="n">K</span><span class="o">/</span><span class="n">topol</span><span class="o">.</span><span class="n">tpr</span>
+<div class="sphx-glr-script-out highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Loading</span> <span class="n">topology</span><span class="p">:</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">niels</span><span class="o">/</span><span class="n">sim</span><span class="o">/</span><span class="n">water</span><span class="o">/</span><span class="n">bulk</span><span class="o">/</span><span class="mi">260</span><span class="n">K</span><span class="o">/</span><span class="n">topol</span><span class="o">.</span><span class="n">tpr</span>
 <span class="n">Loading</span> <span class="n">trajectory</span><span class="p">:</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">niels</span><span class="o">/</span><span class="n">sim</span><span class="o">/</span><span class="n">water</span><span class="o">/</span><span class="n">bulk</span><span class="o">/</span><span class="mi">260</span><span class="n">K</span><span class="o">/</span><span class="n">out</span><span class="o">/</span><span class="n">traj_full_water1000bulk260</span><span class="o">.</span><span class="n">xtc</span>
 </pre></div>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">mdevaluate</span> <span class="kn">as</span> <span class="nn">md</span>
 <span class="kn">import</span> <span class="nn">tudplot</span>
@@ -230,17 +221,15 @@ calling <a class="reference internal" href="../mdevaluate.html#mdevaluate.utils.
 <p><strong>Total running time of the script:</strong>
 (0 minutes 0.537 seconds)</p>
 <div class="sphx-glr-download docutils container">
-<strong>Download Python source code:</strong> <a class="reference download internal" href="../_downloads/plot_chi4.py" download=""><code class="xref download docutils literal"><span class="pre">plot_chi4.py</span></code></a></div>
+<strong>Download Python source code:</strong> <a class="reference download internal" href="../_downloads/plot_chi4.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">plot_chi4.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<strong>Download IPython notebook:</strong> <a class="reference download internal" href="../_downloads/plot_chi4.ipynb" download=""><code class="xref download docutils literal"><span class="pre">plot_chi4.ipynb</span></code></a></div>
+<strong>Download IPython notebook:</strong> <a class="reference download internal" href="../_downloads/plot_chi4.ipynb" download=""><code class="xref download docutils literal notranslate"><span class="pre">plot_chi4.ipynb</span></code></a></div>
 <p class="sphx-glr-signature"><a class="reference external" href="http://sphinx-gallery.readthedocs.io">Generated by Sphinx-Gallery</a></p>
 </div>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -258,11 +247,11 @@ calling <a class="reference internal" href="../mdevaluate.html#mdevaluate.utils.
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Niels Müller.
+        &copy; Copyright 2017, Niels Müller.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -281,6 +270,7 @@ calling <a class="reference internal" href="../mdevaluate.html#mdevaluate.utils.
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
             VERSION:'dev-17.11',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -294,19 +284,13 @@ calling <a class="reference internal" href="../mdevaluate.html#mdevaluate.utils.
 
   
 
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

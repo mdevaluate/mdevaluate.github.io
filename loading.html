@@ -24,30 +24,20 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="mdevaluate dev-17.11 documentation" href="index.html"/>
-        <link rel="up" title="User Guide" href="guide.html"/>
-        <link rel="next" title="Evaluation of static properties" href="static-evaluation.html"/>
-        <link rel="prev" title="User Guide" href="guide.html"/> 
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Evaluation of static properties" href="static-evaluation.html" />
+    <link rel="prev" title="User Guide" href="guide.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -126,7 +116,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">mdevaluate</a>
@@ -134,9 +124,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -182,7 +173,7 @@
             
   <a href="https://github.com/mdevaluate/mdevaluate"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a><div class="section" id="loading-of-simulation-data">
 <h1>Loading of simulation data<a class="headerlink" href="#loading-of-simulation-data" title="Permalink to this headline">¶</a></h1>
-<p>Mdevaulate provides a convenient function <code class="xref py py-func docutils literal"><span class="pre">mdevaluate.load_simulation()</span></code>
+<p>Mdevaulate provides a convenient function <code class="xref py py-func docutils literal notranslate"><span class="pre">mdevaluate.load_simulation()</span></code>
 that loads a simulation more or less automatically.
 It takes a path as input and looks for all files it needs in this directory.</p>
 <p>For information about the topology either a <cite>tpr</cite> or <cite>gro</cite> a file is read,
@@ -190,11 +181,11 @@ where the former is the preferred choice.
 Trajectory data will be read from a xtc file.
 If the directory contains more than one file of any type, the desired file
 has to be specified with the appropriate keyword argument.
-For details see <a class="reference internal" href="mdevaluate.html#mdevaluate.open" title="mdevaluate.open"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.open()</span></code></a>.</p>
+For details see <a class="reference internal" href="mdevaluate.html#mdevaluate.open" title="mdevaluate.open"><code class="xref py py-func docutils literal notranslate"><span class="pre">mdevaluate.open()</span></code></a>.</p>
 <p>The function will return a coordinates object, for the whole system.
 A subset of the system may be obtained directly from the coordinates object by
-calling its <a class="reference internal" href="mdevaluate.html#mdevaluate.coordinates.Coordinates.subset" title="mdevaluate.coordinates.Coordinates.subset"><code class="xref py py-func docutils literal"><span class="pre">subset()</span></code></a> method.
-This function accepts the same input as <a class="reference internal" href="mdevaluate.html#mdevaluate.atoms.AtomSubset.subset" title="mdevaluate.atoms.AtomSubset.subset"><code class="xref py py-func docutils literal"><span class="pre">mdevaluate.atoms.AtomSubset.subset()</span></code></a>.
+calling its <a class="reference internal" href="mdevaluate.html#mdevaluate.coordinates.Coordinates.subset" title="mdevaluate.coordinates.Coordinates.subset"><code class="xref py py-func docutils literal notranslate"><span class="pre">subset()</span></code></a> method.
+This function accepts the same input as <a class="reference internal" href="mdevaluate.html#mdevaluate.atoms.AtomSubset.subset" title="mdevaluate.atoms.AtomSubset.subset"><code class="xref py py-func docutils literal notranslate"><span class="pre">mdevaluate.atoms.AtomSubset.subset()</span></code></a>.
 A new feature that was introduced in the function is the possibility to chose
 atoms with regular expressions.</p>
 <div class="section" id="example">
@@ -202,7 +193,7 @@ atoms with regular expressions.</p>
 <p>The following code loads the example trajectory and selects a subset of all CW atoms.
 Since there are two CW atoms in each molecule (CW1 and CW2) a regular expression is
 used when selecting the subset.</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mdevaluate</span> <span class="k">as</span> <span class="nn">md</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mdevaluate</span> <span class="k">as</span> <span class="nn">md</span>
 
 <span class="n">trajectory</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;/data/niels/tutorial&#39;</span><span class="p">)</span>
 <span class="n">CW_atoms</span> <span class="o">=</span> <span class="n">trajectory</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">atom_name</span><span class="o">=</span><span class="s1">&#39;CW.&#39;</span><span class="p">)</span>
@@ -214,14 +205,14 @@ used when selecting the subset.</p>
 <h2>Selecting a subset<a class="headerlink" href="#selecting-a-subset" title="Permalink to this headline">¶</a></h2>
 <p>As shown in the example above it is often necessary to select a subset of the system for analysis.
 This can be a special group of atoms (e.g. all C atoms) or a whole residue for which the center of mass should be computed.
-Subsets are selected with the <code class="xref py py-func docutils literal"><span class="pre">subset()</span></code> method of Coordinates objects.</p>
+Subsets are selected with the <code class="xref py py-func docutils literal notranslate"><span class="pre">subset()</span></code> method of Coordinates objects.</p>
 <p>This method accepts four keyword arguments, with which the atom name, residue name and residue id or atom indices can be specified.
 The former two name arguments accept a regular expression which allows two include several different names in one subset.
 Some examples:</p>
 <ul class="simple">
-<li>All carbon atoms (which are named CW1, CT1, CA, …): <code class="docutils literal"><span class="pre">tr.subset(atom_name='C.*')</span></code></li>
-<li>Atoms NA1, NA2 and OW: <code class="docutils literal"><span class="pre">tr.subset(atom_name='NA.|OW')</span></code></li>
-<li>All oxygen atoms of residue EG: <code class="docutils literal"><span class="pre">tr.subset(atom_name='O.*',</span> <span class="pre">residue_name='EG')</span></code></li>
+<li>All carbon atoms (which are named CW1, CT1, CA, …): <code class="docutils literal notranslate"><span class="pre">tr.subset(atom_name='C.*')</span></code></li>
+<li>Atoms NA1, NA2 and OW: <code class="docutils literal notranslate"><span class="pre">tr.subset(atom_name='NA.|OW')</span></code></li>
+<li>All oxygen atoms of residue EG: <code class="docutils literal notranslate"><span class="pre">tr.subset(atom_name='O.*',</span> <span class="pre">residue_name='EG')</span></code></li>
 </ul>
 </div>
 <div class="section" id="specifying-data-files">
@@ -229,17 +220,17 @@ Some examples:</p>
 <p>The above example only works if the directory contains exactly one tpr file and
 one xtc file.
 If your data files are located in subdirectories or multiple files of these types exist,
-they can be specified by the keywords <code class="docutils literal"><span class="pre">topology</span></code> and <code class="docutils literal"><span class="pre">trajectory</span></code>.
+they can be specified by the keywords <code class="docutils literal notranslate"><span class="pre">topology</span></code> and <code class="docutils literal notranslate"><span class="pre">trajectory</span></code>.
 Those filenames can be a relative path to the simulation directory and can also make
 use of <em>shell globing</em>. For example:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">traj</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;/path/to/sim&#39;</span><span class="p">,</span> <span class="n">topology</span><span class="o">=</span><span class="s1">&#39;atoms.gro&#39;</span><span class="p">,</span> <span class="n">trajectory</span><span class="o">=</span><span class="s1">&#39;out/traj_*.xtc&#39;</span><span class="p">)</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">traj</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;/path/to/sim&#39;</span><span class="p">,</span> <span class="n">topology</span><span class="o">=</span><span class="s1">&#39;atoms.gro&#39;</span><span class="p">,</span> <span class="n">trajectory</span><span class="o">=</span><span class="s1">&#39;out/traj_*.xtc&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Note that the topology can be specified as a gro file, with the limitation that
 only atom and residue names will be read from those files.
 Information about atom masses and charges for example will only be read from tpr files,
 therefore it is generally recommended to use the latter topologies.</p>
-<p>The trajectory above is specified through a shell globing, meaning the <code class="docutils literal"><span class="pre">*</span></code> may be
+<p>The trajectory above is specified through a shell globing, meaning the <code class="docutils literal notranslate"><span class="pre">*</span></code> may be
 expanded to any string (without containing a forward slash).
 If more than one file exists which match this pattern an error will be raised,
 since the trajectory can not be identified clearly.</p>
@@ -252,25 +243,25 @@ data from disk (or worse over the network) is huge.
 Therefore the mdevaluate package implements a simple caching mechanism, which holds
 on to a number of read frames.
 The downside if this is increased memory usage which may slow down the computation too.</p>
-<p>Caching is done on the level of the trajectory readers, so that all <code class="docutils literal"><span class="pre">Coordinate</span></code> and
-<code class="docutils literal"><span class="pre">CoordinateMap</span></code> objects working on the same trajectory will be sharing a cache.
+<p>Caching is done on the level of the trajectory readers, so that all <code class="docutils literal notranslate"><span class="pre">Coordinate</span></code> and
+<code class="docutils literal notranslate"><span class="pre">CoordinateMap</span></code> objects working on the same trajectory will be sharing a cache.
 Caching has to be activated when opening a trajectory:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">traj</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;/path/to/sim&#39;</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">traj</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;/path/to/sim&#39;</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal"><span class="pre">cached</span></code> keyword takes either a boolean, a integer or None as input value.
-The value of <code class="docutils literal"><span class="pre">cached</span></code> controls the size of the cache and thereby the additional memory usage.
+<p>The <code class="docutils literal notranslate"><span class="pre">cached</span></code> keyword takes either a boolean, a integer or None as input value.
+The value of <code class="docutils literal notranslate"><span class="pre">cached</span></code> controls the size of the cache and thereby the additional memory usage.
 Setting it to True will activate the caching with a maximum size of 128 frames,
 with an integer any other maximum size may be set.
-The special value <code class="docutils literal"><span class="pre">None</span></code> will set the cache size to infinite, so all frames will be cached.
+The special value <code class="docutils literal notranslate"><span class="pre">None</span></code> will set the cache size to infinite, so all frames will be cached.
 This will prevent the frames from being loaded twice but can also consume a whole lot of memory,
 since a single frame can easily take 1 MB of memory.</p>
 <div class="section" id="clearing-cached-frames">
 <h3>Clearing cached frames<a class="headerlink" href="#clearing-cached-frames" title="Permalink to this headline">¶</a></h3>
 <p>In some scenarios it may be advisable to free cached frames which are no longer needed.
-For this case the reader has a function <code class="docutils literal"><span class="pre">clear_cache()</span></code>.
-The current state of the cache can be displayed with the <code class="docutils literal"><span class="pre">cache_info</span></code> property:</p>
-<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">traj</span><span class="o">.</span><span class="n">frames</span><span class="o">.</span><span class="n">cache_info</span>
+For this case the reader has a function <code class="docutils literal notranslate"><span class="pre">clear_cache()</span></code>.
+The current state of the cache can be displayed with the <code class="docutils literal notranslate"><span class="pre">cache_info</span></code> property:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">traj</span><span class="o">.</span><span class="n">frames</span><span class="o">.</span><span class="n">cache_info</span>
 <span class="go">CacheInfo(hits=12, misses=20, maxsize=128, currsize=20)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">traj</span><span class="o">.</span><span class="n">frames</span><span class="o">.</span><span class="n">clear_cache</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">traj</span><span class="o">.</span><span class="n">frames</span><span class="o">.</span><span class="n">cache_info</span>
@@ -285,9 +276,7 @@ Python interpreter to reuse the memory.</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -305,11 +294,11 @@ Python interpreter to reuse the memory.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Niels Müller.
+        &copy; Copyright 2017, Niels Müller.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -328,6 +317,7 @@ Python interpreter to reuse the memory.</p>
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
             VERSION:'dev-17.11',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -341,19 +331,13 @@ Python interpreter to reuse the memory.</p>
 
   
 
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

@@ -24,29 +24,20 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="mdevaluate dev-17.11 documentation" href="index.html"/>
-        <link rel="next" title="Reference Guide" href="modules.html"/>
-        <link rel="prev" title="Spatially resolved analysis in a cylindrical pore" href="gallery/plot_spatialisf.html"/> 
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Reference Guide" href="modules.html" />
+    <link rel="prev" title="Spatially resolved analysis in a cylindrical pore" href="gallery/plot_spatialisf.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -140,7 +131,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">mdevaluate</a>
@@ -148,9 +139,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -194,30 +186,30 @@
             
   <a href="https://github.com/mdevaluate/mdevaluate"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a><div class="section" id="contributing">
 <h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
-<p>This document aims to lay out the basics of contributing code to the <code class="docutils literal"><span class="pre">mdevaluate</span></code> package.
+<p>This document aims to lay out the basics of contributing code to the <code class="docutils literal notranslate"><span class="pre">mdevaluate</span></code> package.
 The code is managed through a git repository, hence this guides gives basic information on the usage of <a class="reference external" href="https://git-scm.com">git</a>.
-Int this document the prefix <code class="docutils literal"><span class="pre">$</span></code> indicates commands which should be ran on a shell.
+Int this document the prefix <code class="docutils literal notranslate"><span class="pre">$</span></code> indicates commands which should be ran on a shell.
 For a brief 15 min interactive tutorial visit <a class="reference external" href="https://try.gitbhub.org">try.github.org</a>.</p>
 <p>Let’s start with a short introduction to the terminology.
 Python code is organized in <em>packages</em> and <em>modules</em>:</p>
 <dl class="docutils">
 <dt>Modules:</dt>
-<dd>Any python file (e.g. <code class="docutils literal"><span class="pre">test.py</span></code>) is called a module. A module can be imported (<code class="docutils literal"><span class="pre">import</span> <span class="pre">test</span></code>) an then used
+<dd>Any python file (e.g. <code class="docutils literal notranslate"><span class="pre">test.py</span></code>) is called a module. A module can be imported (<code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">test</span></code>) an then used
 in other python code if in the python path, for example the working directory.
 In principle, importing a package means executing the code inside the file.
 All definitions, like variables or functions, are then available under the modules name.</dd>
 <dt>Packages:</dt>
 <dd>Python modules can be grouped into packages. A python package is basically a folder,
-which contains at least one mandatory file <code class="docutils literal"><span class="pre">__init__.py</span></code>. This file is the entry
+which contains at least one mandatory file <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>. This file is the entry
 point into the module that is imported if the package is imported.
 All modules in the folder are treated as submodules, which can be accessed via
-a dot syntax, e.g. <code class="docutils literal"><span class="pre">import</span> <span class="pre">package.test</span></code>. Packages can also contain sub packages.</dd>
+a dot syntax, e.g. <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">package.test</span></code>. Packages can also contain sub packages.</dd>
 </dl>
 <p>A more <a class="reference external" href="https://docs.python.org/3/tutorial/modules.html">detailed explanation</a> can be found in the official python documentation.</p>
 <div class="section" id="extending-the-documentation">
 <h2>Extending the documentation<a class="headerlink" href="#extending-the-documentation" title="Permalink to this headline">¶</a></h2>
 <p>One of the most important parts of software is its documentation.
-For modular packages like <code class="docutils literal"><span class="pre">mdevaluate</span></code> it’s crucial to have a good coverage of the API,
+For modular packages like <code class="docutils literal notranslate"><span class="pre">mdevaluate</span></code> it’s crucial to have a good coverage of the API,
 since users need to know which functions are provided and how they are used.
 To help others by extending the documentation is thereby a nice way of contributing to mdevaluate.</p>
 <p>The documentation is generated with a third party tools named <a class="reference external" href="http://www.sphinx-doc.org/en/stable/">Sphinx</a>.
@@ -225,25 +217,25 @@ The contents of the documentation are based on the source code (for the referenc
 and documents written in the markup language <em>reStructuredText</em> (rst).
 The source of every page can be viewed in the browser through the <em>View page source</em> link in the upper right of the page.
 The name of the rst files can also be derived from the page URL.
-The rst files are placed in the <code class="docutils literal"><span class="pre">doc</span></code> directory of the repository.</p>
+The rst files are placed in the <code class="docutils literal notranslate"><span class="pre">doc</span></code> directory of the repository.</p>
 <p>Extending the documentation can be done in different ways, e.g.</p>
 <ul class="simple">
 <li>Correct, clarify or extend existing sections</li>
 <li>Add new sections about the general use of mdevaluate</li>
 <li>Add use cases to the special topics section.</li>
 </ul>
-<p>To add a new sections to special topics, first create a new file for this guide in <code class="docutils literal"><span class="pre">doc/special</span></code>.
-Then add the name of this file (without the .rst extension) to the toctree in the file <code class="docutils literal"><span class="pre">special-topics.rst</span></code>.
+<p>To add a new sections to special topics, first create a new file for this guide in <code class="docutils literal notranslate"><span class="pre">doc/special</span></code>.
+Then add the name of this file (without the .rst extension) to the toctree in the file <code class="docutils literal notranslate"><span class="pre">special-topics.rst</span></code>.
 Now write the guide in the newly created file.</p>
 <div class="section" id="building-the-docs">
 <h3>Building the docs<a class="headerlink" href="#building-the-docs" title="Permalink to this headline">¶</a></h3>
 <p>When you have made changes to the docs, first re-build them locally.
-You will need to have the <code class="docutils literal"><span class="pre">sphinx</span></code> python package installed and of course a working environment for <code class="docutils literal"><span class="pre">mdevaluate</span></code>.
+You will need to have the <code class="docutils literal notranslate"><span class="pre">sphinx</span></code> python package installed and of course a working environment for <code class="docutils literal notranslate"><span class="pre">mdevaluate</span></code>.
 When those requirements are fulfilled build the docs by:</p>
 <ol class="arabic simple">
-<li>Navigate to the <code class="docutils literal"><span class="pre">doc</span></code> directory</li>
-<li>Run <code class="docutils literal"><span class="pre">make</span> <span class="pre">html</span></code> in the shell</li>
-<li>View the produced html files in the browser: <code class="docutils literal"><span class="pre">firefox</span> <span class="pre">_build/html/index.html</span></code></li>
+<li>Navigate to the <code class="docutils literal notranslate"><span class="pre">doc</span></code> directory</li>
+<li>Run <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> in the shell</li>
+<li>View the produced html files in the browser: <code class="docutils literal notranslate"><span class="pre">firefox</span> <span class="pre">_build/html/index.html</span></code></li>
 </ol>
 </div>
 </div>
@@ -251,10 +243,10 @@ When those requirements are fulfilled build the docs by:</p>
 <h2>Organization of the code<a class="headerlink" href="#organization-of-the-code" title="Permalink to this headline">¶</a></h2>
 <p>The code for the evaluation software is organized in two python packages:</p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">pygmx</span></code>: This package provides a python wrapper for the Gromacs library and
+<li><code class="docutils literal notranslate"><span class="pre">pygmx</span></code>: This package provides a python wrapper for the Gromacs library and
 thereby functionality to read file formats used within Gromacs.</li>
-<li><code class="docutils literal"><span class="pre">mdevaluate</span></code>: This package provides functionality for evaluation of molecular
-dynamics simulations. It uses the <code class="docutils literal"><span class="pre">pygmx</span></code> package to read files, but is
+<li><code class="docutils literal notranslate"><span class="pre">mdevaluate</span></code>: This package provides functionality for evaluation of molecular
+dynamics simulations. It uses the <code class="docutils literal notranslate"><span class="pre">pygmx</span></code> package to read files, but is
 (in theory) not  limited to Gromacs data.</li>
 </ul>
 <div class="section" id="submodules">
@@ -262,7 +254,7 @@ dynamics simulations. It uses the <code class="docutils literal"><span class="pr
 <p>Below the content of the submodules of the package is described.</p>
 <div class="section" id="atoms-py">
 <h4>atoms.py<a class="headerlink" href="#atoms-py" title="Permalink to this headline">¶</a></h4>
-<p>Definition of the <code class="docutils literal"><span class="pre">Atom</span></code> class and related functions for atom selection and information.</p>
+<p>Definition of the <code class="docutils literal notranslate"><span class="pre">Atom</span></code> class and related functions for atom selection and information.</p>
 </div>
 <div class="section" id="autosave-py">
 <h4>autosave.py<a class="headerlink" href="#autosave-py" title="Permalink to this headline">¶</a></h4>
@@ -272,7 +264,7 @@ from the input, which changes if the output of the function changes.</p>
 </div>
 <div class="section" id="coordinates-py">
 <h4>coordinates.py<a class="headerlink" href="#coordinates-py" title="Permalink to this headline">¶</a></h4>
-<p>Definition of the <code class="docutils literal"><span class="pre">Coordinates</span></code> class and <code class="docutils literal"><span class="pre">CoordinatesMap</span></code> for coordinates
+<p>Definition of the <code class="docutils literal notranslate"><span class="pre">Coordinates</span></code> class and <code class="docutils literal notranslate"><span class="pre">CoordinatesMap</span></code> for coordinates
 transformations and related functions.</p>
 </div>
 <div class="section" id="correlation-py">
@@ -295,7 +287,7 @@ transformations and related functions.</p>
 </div>
 <div class="section" id="set-up-a-development-environment">
 <h2>Set up a development environment<a class="headerlink" href="#set-up-a-development-environment" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git clone https://github.com/mdevaluate/mdevaluate.git
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> git clone https://github.com/mdevaluate/mdevaluate.git
 </pre></div>
 </div>
 <div class="section" id="organization-of-the-repository">
@@ -319,7 +311,7 @@ to make it accessible for others.</p>
 <div class="section" id="pulling-updates-from-remote">
 <h3>Pulling updates from remote<a class="headerlink" href="#pulling-updates-from-remote" title="Permalink to this headline">¶</a></h3>
 <p>Before working with the code, the latest updates should be pulled for the master branch</p>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git checkout master
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> git checkout master
 <span class="gp">$</span> git pull
 </pre></div>
 </div>
@@ -329,7 +321,7 @@ to make it accessible for others.</p>
 <p>Before changing any code, create a new branch in your local repository.
 This helps to keep an overview of all the changes and simplifies merging.
 To create a new branch locally enter the following commands</p>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git checkout master
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> git checkout master
 <span class="gp">$</span> git branch my-feature
 <span class="gp">$</span> git checkout my-feature
 </pre></div>
@@ -342,19 +334,19 @@ Now you can start making changes in the code.</p>
 <h3>Committing changes<a class="headerlink" href="#committing-changes" title="Permalink to this headline">¶</a></h3>
 <p>A bundle of changes in the code is called a <em>commit</em>.
 These changes can happen in different files and should be associated with each other.
-Let’s assume, two files have been changed (<code class="docutils literal"><span class="pre">atoms.py</span></code> and <code class="docutils literal"><span class="pre">utils.py</span></code>).
+Let’s assume, two files have been changed (<code class="docutils literal notranslate"><span class="pre">atoms.py</span></code> and <code class="docutils literal notranslate"><span class="pre">utils.py</span></code>).
 The command</p>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git diff atoms.py
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> git diff atoms.py
 </pre></div>
 </div>
 <p>will show you all changes that were made in the file since the latest commit.
 Before committing changes have to be <em>staged</em>, which is done by</p>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git add atoms.py utils.py
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> git add atoms.py utils.py
 </pre></div>
 </div>
 <p>This my be repeated as often as necessary.
 When all changes for a commit are staged, it can actually be created</p>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git commit
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> git commit
 </pre></div>
 </div>
 <p>This will open up an editor where a commit message has to be entered.
@@ -364,12 +356,12 @@ After writing the commit message, save &amp; close the file, which will create t
 <h3>Create Pullrequest<a class="headerlink" href="#create-pullrequest" title="Permalink to this headline">¶</a></h3>
 <p>When all changes are made and the new feature should be made public, you can open a new pull request on github.
 Most of the time, the master branch will have been updated, so first pull any updates</p>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git checkout master
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> git checkout master
 <span class="gp">$</span> git pull
 </pre></div>
 </div>
 <p>When the master branch is up to date, it can be merged into the feature branch</p>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git checkout my-feature
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> git checkout my-feature
 <span class="gp">$</span> git merge master
 </pre></div>
 </div>
@@ -380,13 +372,13 @@ The respective lines will be marked with conflict-resolution markers in the file
 The most basic way of resolving a conflict is by editing these files and choosing the appropriate version of the code.
 See the <a class="reference external" href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging#Basic-Merge-Conflicts">git documentation</a> for an explanation.
 After resolving the conflict, the files need to be staged and the merge has to be committed</p>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git add utils.py
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> git add utils.py
 <span class="gp">$</span> git commit
 </pre></div>
 </div>
 <p>The commit message will be generated automatically, indicating the merge.</p>
 <p>After merging, the changes can be pushed to the remote</p>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git push
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> git push
 </pre></div>
 </div>
 <p>The new code is now available in the remote.</p>
@@ -396,9 +388,7 @@ After resolving the conflict, the files need to be staged and the merge has to b
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -416,11 +406,11 @@ After resolving the conflict, the files need to be staged and the merge has to b
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Niels Müller.
+        &copy; Copyright 2017, Niels Müller.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -439,6 +429,7 @@ After resolving the conflict, the files need to be staged and the merge has to b
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
             VERSION:'dev-17.11',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -452,19 +443,13 @@ After resolving the conflict, the files need to be staged and the merge has to b
 
   
 
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>
