@@ -17,33 +17,45 @@
   
 
   
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'dev-17.11',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -157,21 +169,21 @@
 
 
 <div class="viewcode-block" id="kww"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.functions.kww">[docs]</a><span class="k">def</span> <span class="nf">kww</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">τ</span><span class="p">,</span> <span class="n">β</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">A</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="n">τ</span><span class="p">)</span><span class="o">**</span><span class="n">β</span><span class="p">)</span>
-</div>
+    <span class="k">return</span> <span class="n">A</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="n">τ</span><span class="p">)</span><span class="o">**</span><span class="n">β</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="kww_1e"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.functions.kww_1e">[docs]</a><span class="k">def</span> <span class="nf">kww_1e</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">τ</span><span class="p">,</span> <span class="n">β</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">τ</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">e</span> <span class="o">*</span> <span class="n">A</span><span class="p">)))</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">β</span><span class="p">)</span>
-</div>
+    <span class="k">return</span> <span class="n">τ</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">e</span> <span class="o">*</span> <span class="n">A</span><span class="p">)))</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">β</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="cole_davidson"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.functions.cole_davidson">[docs]</a><span class="k">def</span> <span class="nf">cole_davidson</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">t0</span><span class="p">):</span>
     <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">t0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">A</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">P</span><span class="p">)</span><span class="o">**</span><span class="n">b</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span> <span class="o">*</span> <span class="n">P</span><span class="p">)</span>
-</div>
+    <span class="k">return</span> <span class="n">A</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">P</span><span class="p">)</span><span class="o">**</span><span class="n">b</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span> <span class="o">*</span> <span class="n">P</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="cole_cole"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.functions.cole_cole">[docs]</a><span class="k">def</span> <span class="nf">cole_cole</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">t0</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">A</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">t0</span><span class="p">)</span><span class="o">**</span><span class="n">b</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">b</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">t0</span><span class="p">)</span><span class="o">**</span><span class="n">b</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">b</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">t0</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">b</span><span class="p">))</span>
-</div>
+    <span class="k">return</span> <span class="n">A</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">t0</span><span class="p">)</span><span class="o">**</span><span class="n">b</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">b</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">t0</span><span class="p">)</span><span class="o">**</span><span class="n">b</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">b</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">t0</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">b</span><span class="p">))</span></div>
+
 
 <div class="viewcode-block" id="havriliak_negami"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.functions.havriliak_negami">[docs]</a><span class="k">def</span> <span class="nf">havriliak_negami</span><span class="p">(</span><span class="n">ω</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">β</span><span class="p">,</span> <span class="n">α</span><span class="p">,</span> <span class="n">τ</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -180,18 +192,18 @@
 <span class="sd">    .. math::</span>
 <span class="sd">       \chi_{HN}(\omega) = \Im\left(\frac{A}{(1 + (i\omega\tau)^\alpha)^\beta}\right)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="o">-</span><span class="p">(</span><span class="n">A</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">ω</span> <span class="o">*</span> <span class="n">τ</span><span class="p">)</span><span class="o">**</span><span class="n">α</span><span class="p">)</span><span class="o">**</span><span class="n">β</span><span class="p">)</span><span class="o">.</span><span class="n">imag</span>
-</div>
+    <span class="k">return</span> <span class="o">-</span><span class="p">(</span><span class="n">A</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">ω</span> <span class="o">*</span> <span class="n">τ</span><span class="p">)</span><span class="o">**</span><span class="n">α</span><span class="p">)</span><span class="o">**</span><span class="n">β</span><span class="p">)</span><span class="o">.</span><span class="n">imag</span></div>
+
 
 <span class="c1"># fits decay of correlation times, e.g. with distance to pore walls</span>
 <div class="viewcode-block" id="colen"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.functions.colen">[docs]</a><span class="k">def</span> <span class="nf">colen</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">t8</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">t8</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">A</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">d</span><span class="o">/</span><span class="n">X</span><span class="p">))</span>
-</div>
+    <span class="k">return</span> <span class="n">t8</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">A</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">d</span><span class="o">/</span><span class="n">X</span><span class="p">))</span></div>
+
 
 <span class="c1"># fits decay of the plateau height of the overlap function, e.g. with distance to pore walls</span>
 <div class="viewcode-block" id="colenQ"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.functions.colenQ">[docs]</a><span class="k">def</span> <span class="nf">colenQ</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Qb</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">Qb</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">d</span><span class="o">/</span><span class="n">X</span><span class="p">)</span><span class="o">**</span><span class="n">g</span><span class="p">)</span><span class="o">+</span><span class="n">Qb</span>
-</pre></div></div>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">Qb</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">d</span><span class="o">/</span><span class="n">X</span><span class="p">)</span><span class="o">**</span><span class="n">g</span><span class="p">)</span><span class="o">+</span><span class="n">Qb</span></div>
+</pre></div>
 
            </div>
            
@@ -203,7 +215,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Niels Müller.
+        &copy; Copyright 2017, Niels Müller
 
     </p>
   </div>
@@ -220,33 +232,16 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'dev-17.11',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

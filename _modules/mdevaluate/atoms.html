@@ -17,33 +17,45 @@
   
 
   
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'dev-17.11',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -375,10 +387,32 @@
         <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">position</span><span class="p">)</span> <span class="o">*</span> <span class="n">position</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="gyration_radius"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.atoms.gyration_radius">[docs]</a><span class="k">def</span> <span class="nf">gyration_radius</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">mass</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">r_s</span> <span class="o">=</span> <span class="n">center_of_mass</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">mass</span><span class="p">)</span>
+<div class="viewcode-block" id="gyration_radius"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.atoms.gyration_radius">[docs]</a><span class="k">def</span> <span class="nf">gyration_radius</span><span class="p">(</span><span class="n">position</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates a list of all radii of gyration of all molecules given in the coordinate frame,</span>
+<span class="sd">    weighted with the masses of the individual atoms.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">            position: Coordinate frame object</span>
+<span class="sd">    </span>
+<span class="sd">    ..math::</span>
+<span class="sd">        R_G = \left(\frac{\sum_{i=1}^{n} m_i |\vec{r_i} - \vec{r_{COM}}|^2 }{\sum_{i=1}^{n} m_i }   </span>
+<span class="sd">        \rigth)^{\frac{1}{2}}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    
+    <span class="n">gyration_radii</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+    
+    <span class="k">for</span> <span class="n">resid</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">position</span><span class="o">.</span><span class="n">residue_ids</span><span class="p">):</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">whole</span><span class="p">[</span><span class="n">position</span><span class="o">.</span><span class="n">residue_ids</span><span class="o">==</span><span class="n">resid</span><span class="p">]</span>
+        <span class="n">mass</span> <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">masses</span><span class="p">[</span><span class="n">position</span><span class="o">.</span><span class="n">residue_ids</span><span class="o">==</span><span class="n">resid</span><span class="p">][:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+        <span class="n">COM</span> <span class="o">=</span> <span class="n">center_of_mass</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span><span class="n">mass</span><span class="p">)</span>
+        <span class="n">r_sq</span> <span class="o">=</span> <span class="p">((</span><span class="n">pbc_diff</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span><span class="n">COM</span><span class="p">,</span><span class="n">pos</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+        <span class="n">g_radius</span> <span class="o">=</span> <span class="p">((</span><span class="n">r_sq</span><span class="o">*</span><span class="n">mass</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">/</span><span class="n">mass</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="o">**</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+        
+        <span class="n">gyration_radii</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gyration_radii</span><span class="p">,</span><span class="n">g_radius</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">position</span><span class="p">)</span> <span class="o">*</span> <span class="n">cdist</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="p">[</span><span class="n">r_s</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span></div>
+    <span class="k">return</span> <span class="n">gyration_radii</span></div>
 
 
 <div class="viewcode-block" id="layer_of_atoms"><a class="viewcode-back" href="../../mdevaluate.html#mdevaluate.atoms.layer_of_atoms">[docs]</a><span class="k">def</span> <span class="nf">layer_of_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span>
@@ -455,7 +489,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Niels Müller.
+        &copy; Copyright 2017, Niels Müller
 
     </p>
   </div>
@@ -472,33 +506,16 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'dev-17.11',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

@@ -17,34 +17,46 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'dev-17.11',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="Reference Guide" href="modules.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -170,7 +182,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <a href="https://github.com/mdevaluate/mdevaluate"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a><div class="section" id="module-mdevaluate">
+  <div class="section" id="module-mdevaluate">
 <span id="module-contents"></span><h1>Module contents<a class="headerlink" href="#module-mdevaluate" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="mdevaluate.open">
@@ -512,8 +524,23 @@ If box is not given then periodic boundary conditions are not applied!</p>
 
 <dl class="function">
 <dt id="mdevaluate.atoms.gyration_radius">
-<code class="descclassname">mdevaluate.atoms.</code><code class="descname">gyration_radius</code><span class="sig-paren">(</span><em>position</em>, <em>mass=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/atoms.html#gyration_radius"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.atoms.gyration_radius" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">mdevaluate.atoms.</code><code class="descname">gyration_radius</code><span class="sig-paren">(</span><em>position</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/atoms.html#gyration_radius"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.atoms.gyration_radius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates a list of all radii of gyration of all molecules given in the coordinate frame,
+weighted with the masses of the individual atoms.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>position</strong> – Coordinate frame object</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>..math::</dt>
+<dd>R_G = left(frac{sum_{i=1}^{n} m_i <a href="#id1"><span class="problematic" id="id2">|</span></a>vec{r_i} - vec{r_{COM}}|^2 }{sum_{i=1}^{n} m_i }
+rigth)^{frac{1}{2}}</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="mdevaluate.atoms.layer_of_atoms">
@@ -547,7 +574,7 @@ If box is not given then periodic boundary conditions are not applied!</p>
 <dl class="class">
 <dt id="mdevaluate.coordinates.CoordinateFrame">
 <em class="property">class </em><code class="descclassname">mdevaluate.coordinates.</code><code class="descname">CoordinateFrame</code><a class="reference internal" href="_modules/mdevaluate/coordinates.html#CoordinateFrame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.coordinates.CoordinateFrame" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 <dl class="attribute">
 <dt id="mdevaluate.coordinates.CoordinateFrame.atom_names">
 <code class="descname">atom_names</code><a class="headerlink" href="#mdevaluate.coordinates.CoordinateFrame.atom_names" title="Permalink to this definition">¶</a></dt>
@@ -702,7 +729,7 @@ the keyworss below. Names are matched as a regular expression with <cite>re.matc
 <em class="property">class </em><code class="descclassname">mdevaluate.coordinates.</code><code class="descname">CoordinatesKDTree</code><span class="sig-paren">(</span><em>frames</em>, <em>selector=None</em>, <em>boxsize=None</em>, <em>maxcache=128</em>, <em>ckdtree=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/coordinates.html#CoordinatesKDTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.coordinates.CoordinatesKDTree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A KDTree of coordinates frames. The KDtrees are cached by a <a class="reference external" href="https://docs.python.org/3/library/functools.html#functools.lru_cache" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">functools.lru_cache()</span></code></a>.
-Uses <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.cKDTree.html#scipy.spatial.cKDTree" title="(in SciPy v1.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.spatial.cKDTree</span></code></a> by default, since it’s significantly faster.
+Uses <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.cKDTree.html#scipy.spatial.cKDTree" title="(in SciPy v1.3.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.spatial.cKDTree</span></code></a> by default, since it’s significantly faster.
 Make sure to use scipy 0.17 or later or switch to the normal KDTree, since cKDTree has
 a memory leak in earlier versions.</p>
 <dl class="attribute">
@@ -1132,7 +1159,7 @@ that holds the (non-avaraged) correlation data</p>
 <dd><p>Compute the distinct part of the Van Hove autocorrelation function.</p>
 <dl class="docutils">
 <dt>..math::</dt>
-<dd>G(r, t) = sum_{i, j} delta(<a href="#id3"><span class="problematic" id="id4">|\vec r_i(0) - \vec r_j(t)|</span></a> - r)</dd>
+<dd>G(r, t) = sum_{i, j} delta(<a href="#id5"><span class="problematic" id="id6">|\vec r_i(0) - \vec r_j(t)|</span></a> - r)</dd>
 </dl>
 </dd></dl>
 
@@ -1142,7 +1169,7 @@ that holds the (non-avaraged) correlation data</p>
 <dd><p>Compute the self part of the Van Hove autocorrelation function.</p>
 <dl class="docutils">
 <dt>..math::</dt>
-<dd>G(r, t) = sum_i delta(<a href="#id5"><span class="problematic" id="id6">|\vec r_i(0) - \vec r_i(t)|</span></a> - r)</dd>
+<dd>G(r, t) = sum_i delta(<a href="#id7"><span class="problematic" id="id8">|\vec r_i(0) - \vec r_i(t)|</span></a> - r)</dd>
 </dl>
 </dd></dl>
 
@@ -1616,7 +1643,7 @@ will be returned, which will contain times and values of Fq(t) respectively.</p>
 <dl class="function">
 <dt id="mdevaluate.utils.Sq_from_gr">
 <code class="descclassname">mdevaluate.utils.</code><code class="descname">Sq_from_gr</code><span class="sig-paren">(</span><em>r</em>, <em>gr</em>, <em>q</em>, <em>ρ</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/utils.html#Sq_from_gr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.utils.Sq_from_gr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the static structure factor as fourier transform of the pair correlation function. <a class="reference internal" href="#yarnell" id="id1">[Yarnell]</a></p>
+<dd><p>Compute the static structure factor as fourier transform of the pair correlation function. <a class="reference internal" href="#yarnell" id="id3">[Yarnell]</a></p>
 <div class="math notranslate nohighlight">
 \[\begin{split}S(q) - 1 = \\frac{4\\pi \\rho}{q}\\int\\limits_0^\\infty (g(r) - 1)\\,r \\sin(qr) dr\end{split}\]</div>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1636,7 +1663,7 @@ will be returned, which will contain times and values of Fq(t) respectively.</p>
 <table class="docutils citation" frame="void" id="yarnell" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[Yarnell]</a></td><td>Yarnell, J. L., Katz, M. J., Wenzel, R. G., &amp; Koenig, S. H. (1973). Physical Review A, 7(6), 2130–2144.
+<tr><td class="label"><a class="fn-backref" href="#id3">[Yarnell]</a></td><td>Yarnell, J. L., Katz, M. J., Wenzel, R. G., &amp; Koenig, S. H. (1973). Physical Review A, 7(6), 2130–2144.
 <a class="reference external" href="http://doi.org/10.1017/CBO9781107415324.004">http://doi.org/10.1017/CBO9781107415324.004</a></td></tr>
 </tbody>
 </table>
@@ -1698,7 +1725,7 @@ For numpy arrays ofthis is equal to:</p>
 <dt id="mdevaluate.utils.filon_fourier_transformation">
 <code class="descclassname">mdevaluate.utils.</code><code class="descname">filon_fourier_transformation</code><span class="sig-paren">(</span><em>time</em>, <em>correlation</em>, <em>frequencies=None</em>, <em>derivative='linear'</em>, <em>imag=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mdevaluate/utils.html#filon_fourier_transformation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mdevaluate.utils.filon_fourier_transformation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fourier-transformation for slow varrying functions. The filon algorithmus is
-described in detail in ref <a class="reference internal" href="#blochowicz" id="id2">[Blochowicz]</a>, ch. 3.2.3.</p>
+described in detail in ref <a class="reference internal" href="#blochowicz" id="id4">[Blochowicz]</a>, ch. 3.2.3.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1724,7 +1751,7 @@ in this regime.</p>
 <table class="docutils citation" frame="void" id="blochowicz" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[Blochowicz]</a></td><td>T. Blochowicz, Broadband dielectric spectroscopy in neat and binary
+<tr><td class="label"><a class="fn-backref" href="#id4">[Blochowicz]</a></td><td>T. Blochowicz, Broadband dielectric spectroscopy in neat and binary
 molecular glass formers, Ph.D. thesis, Universität Bayreuth (2003)</td></tr>
 </tbody>
 </table>
@@ -1859,7 +1886,7 @@ n is the minimum number of points around 1/e required</p>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="modules.html" class="btn btn-neutral" title="Reference Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-left" title="Reference Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -1868,7 +1895,7 @@ n is the minimum number of points around 1/e required</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Niels Müller.
+        &copy; Copyright 2017, Niels Müller
 
     </p>
   </div>
@@ -1885,33 +1912,16 @@ n is the minimum number of points around 1/e required</p>
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'dev-17.11',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

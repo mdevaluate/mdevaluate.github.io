@@ -17,13 +17,30 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'dev-17.11',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
@@ -31,21 +48,16 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Gromacs Energy Files" href="energies.html" />
     <link rel="prev" title="Spatial Resolved Analysis" href="spatial.html" /> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -174,7 +186,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <a href="https://github.com/mdevaluate/mdevaluate"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a><div class="section" id="computing-the-overlap-function">
+  <div class="section" id="computing-the-overlap-function">
 <h1>Computing the Overlap Function<a class="headerlink" href="#computing-the-overlap-function" title="Permalink to this headline">¶</a></h1>
 <p>The overlap function is defined as the portion of particles of a given set,
 whose positions <em>overlap</em> after a given time <span class="math notranslate nohighlight">\(t\)</span> with the reference configuration at <span class="math notranslate nohighlight">\(t=0\)</span>.
@@ -191,7 +203,7 @@ is found within this sphere at time <span class="math notranslate nohighlight">\
 <p>Computation of the overlap requires the relatively expensive computation of next neighbor distances,
 which scales with the order of <span class="math notranslate nohighlight">\(\mathcal{O}(N^2)\)</span>.
 There are more efficient ways for the solution of this problem, the one used here is
-the so called <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.cKDTree.html#scipy.spatial.cKDTree" title="(in SciPy v1.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">cKDTree</span></code></a>.
+the so called <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.cKDTree.html#scipy.spatial.cKDTree" title="(in SciPy v1.3.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">cKDTree</span></code></a>.
 This is much more efficient and allows to compute the overlap relatively fast:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">OW</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;/path/to/sim&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">atom_name</span><span class="o">=</span><span class="s1">&#39;OW&#39;</span><span class="p">)</span>
 <span class="n">tree</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">CoordinatesKDTree</span><span class="p">(</span><span class="n">OW</span><span class="p">)</span>
@@ -205,11 +217,11 @@ This is much more efficient and allows to compute the overlap relatively fast:</
 for this evaluation, which uses a special object of type <a class="reference internal" href="../mdevaluate.html#mdevaluate.coordinates.CoordinatesKDTree" title="mdevaluate.coordinates.CoordinatesKDTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">CoordinatesKDTree</span></code></a>
 for the neighbor search.
 The latter provides two features, necessary for the computation:
-First it computes a <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.cKDTree.html#scipy.spatial.cKDTree" title="(in SciPy v1.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">cKDTree</span></code></a> for each necessary frame of the trajectory;
+First it computes a <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.cKDTree.html#scipy.spatial.cKDTree" title="(in SciPy v1.3.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">cKDTree</span></code></a> for each necessary frame of the trajectory;
 second it caches those trees, since assembly of KDTrees is expensive.
 The size of the cache can be controlled with the keyword argument <code class="docutils literal notranslate"><span class="pre">maxsize</span></code> of the CoordinatesKDTree initialization.</p>
 <p>Note that this class uses the C version (hence the lowercase C) rather than
-the pure Python version <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.KDTree.html#scipy.spatial.KDTree" title="(in SciPy v1.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">KDTree</span></code></a> since the latter is significantly slower.
+the pure Python version <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.KDTree.html#scipy.spatial.KDTree" title="(in SciPy v1.3.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">KDTree</span></code></a> since the latter is significantly slower.
 The only downside is, that the C version had a memory leak before SciPy 0.17,
 but as long as a recent version of SciPy is used, this shouldn’t be a problem.</p>
 </div>
@@ -257,7 +269,7 @@ It should return a viable index for a (m, 3) sized NumPy array when called with 
         <a href="energies.html" class="btn btn-neutral float-right" title="Gromacs Energy Files" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="spatial.html" class="btn btn-neutral" title="Spatial Resolved Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="spatial.html" class="btn btn-neutral float-left" title="Spatial Resolved Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -266,7 +278,7 @@ It should return a viable index for a (m, 3) sized NumPy array when called with 
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Niels Müller.
+        &copy; Copyright 2017, Niels Müller
 
     </p>
   </div>
@@ -283,33 +295,16 @@ It should return a viable index for a (m, 3) sized NumPy array when called with 
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'dev-17.11',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  <script type="text/javascript" src="../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
